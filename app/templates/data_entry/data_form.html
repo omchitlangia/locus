@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOCUS - Add {{ entry_type }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #121212;
+      color: white;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      color: #00e5ff;
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .back-btn i {
+      margin-right: 0.5rem;
+    }
+
+    .header-section {
+      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      border-left: 4px solid #00e5ff;
+    }
+
+    .header-section h2 {
+      color: #00e5ff;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+    }
+
+    form {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+    }
+
+    input[type="number"], 
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    input[type="number"]:focus, 
+    textarea:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+    }
+
+    button[type="submit"] {
+      background-color: #00e5ff;
+      color: #000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #00c0d2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{{ url_for('dataentry.index') }}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Data Entry
+    </a>
+    
+    <div class="header-section">
+      <h2>Add {{ entry_type }}</h2>
+    </div>
+
+    <form method="POST">
+      <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+      <textarea name="remarks" placeholder="Remarks" rows="4"></textarea>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

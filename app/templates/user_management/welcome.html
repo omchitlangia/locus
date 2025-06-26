@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="AI-powered business analytics with real-time insights and growth forecasting." />
+  <title>Business Demo - LOCUS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #333;
+      background-color: #f4f4f4;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background-color: #1a1a1a;
+      padding: 1rem 0;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .logo-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-container img {
+      height: 60px;
+      transition: transform 0.3s ease;
+    }
+    .logo-container img:hover {
+      transform: scale(1.1);
+    }
+    .logo {
+      font-size: 2rem;
+      margin-left: 10px;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    .navbar a:hover {
+      color: #00bcd4;
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 188, 212, 0.2);
+    }
+
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 1rem;
+    }
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      margin-bottom: 1rem;
+    }
+    .hero .btn {
+      display: inline-block;
+      padding: 0.7rem 2rem;
+      background: #00bcd4;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .hero .btn:hover {
+      background: #019bab;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .about, .services {
+      padding: 4rem 1rem;
+      background: linear-gradient(to right, #6b6b6b, #000);
+      color: #fff;
+      text-align: center;
+      background-size: 200% 200%;
+      animation: gradientBG 5s ease infinite;
+    }
+    @keyframes gradientBG {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .services h2, .about h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .service-boxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .service {
+      background: white;
+      color: #333;
+      padding: 2rem;
+      border-radius: 10px;
+      flex: 1 1 250px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    .service:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(0,188,212,0.3);
+    }
+    .service h3 {
+      color: #00bcd4;
+      margin-bottom: 1rem;
+    }
+
+    .footer {
+      background: #1a1a1a;
+      color: white;
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+    .footer a {
+      color: #00bcd4;
+      margin: 0 0.5rem;
+    }
+
+    #contactModal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 500px;
+      text-align: center;
+    }
+    .close {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .navbar ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .service-boxes {
+        flex-direction: column;
+      }
+    }
+    #musicControls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+  z-index: 9999;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+}
+
+#currentTrack {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.music-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.music-btn {
+  background: #00bcd4;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.music-btn:hover {
+  background: #019bab;
+  transform: scale(1.1);
+}
+
+  </style>
+</head>
+<body>
+    <!-- Music Controls -->
+<div id="musicControls">
+  <audio id="bgMusic" autoplay loop>
+    <source src="static/audio/track1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
+  <div class="music-buttons">
+    <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
+    <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
+    <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
+  </div>
+</div>
+  <header class="header">
+    <div class="container logo-bar">
+      <div class="logo-container" style="display: flex; align-items: center; gap: 10px;">
+  <img src="static/photos/logo.png" alt="LOCUS Logo" style="height: 50px;">
+  <h1 class="logo" style="font-size: 2rem; margin: 0;">Business Analysis</h1>
+</div>
+      <nav class="navbar">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#" id="contactLink">Contact</a></li>
+          <li><a href="http://localhost:5000/login">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <video autoplay muted loop playsinline class="hero-bg">
+      <source src="static/videos/chart.mp4" type="video/mp4" />
+    </video>
+    <div class="overlay"></div>
+    <div class="container hero-content animate__animated animate__fadeInUp">
+      <h2>Unlock Your Business Potential with LOCUS</h2>
+      <p>Transform raw data into strategic decisions with our AI-powered analytics platform. LOCUS delivers real-time insights, accurate forecasts, and actionable recommendations tailored to your business needs.</p>
+      <a href="http://localhost:5000/register" class="btn">Get Started</a>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="container">
+      <h2>About Us</h2>
+      <p>This app transforms business management into an engaging, game-like experience. It tracks key metrics, forecasts growth using linear regression, and visualizes data with interactive graphs.</p>
+    </div>
+  </section>
+
+  <section class="services" id="services">
+    <div class="container">
+      <h2>Our Services</h2>
+      <div class="service-boxes">
+        <div class="service">
+          <h3>Basic Stats</h3>
+          <p>Explore statistics within business context including populations, samples, and key terms.</p>
+        </div>
+        <div class="service">
+          <h3>Revenue Forecast</h3>
+          <p>Predict future revenue using AI-driven insights based on past and present data.</p>
+        </div>
+        <div class="service">
+          <h3>SKU Performance</h3>
+          <p>Analyze SKU data for unit sales and performance metrics year-over-year.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Business Analysis. All rights reserved.</p>
+      <div>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="contactModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Contact Info</h2>
+      <p>Phone: +91-9667225745</p>
+      <p>Phone: +91-7042441608</p>
+      <p>Email: support@locus.com</p>
+    </div>
+  </div>
+  
+
+  <script>
+    document.getElementById('contactLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('contactModal').style.display = 'block';
+    });
+    document.querySelector('.close').onclick = function() {
+      document.getElementById('contactModal').style.display = 'none';
+    };
+    window.onclick = function(event) {
+      if (event.target == document.getElementById('contactModal')) {
+        document.getElementById('contactModal').style.display = 'none';
+      }
+    };
+  </script>
+<script>
+  const bgMusic = document.getElementById("bgMusic");
+  const toggleBtn = document.getElementById("toggleMusic");
+  const prevBtn = document.getElementById("prevTrack");
+  const nextBtn = document.getElementById("nextTrack");
+  const trackNum = document.getElementById("trackNum");
+
+  const tracks = [
+    "static/audio/track1.mp3",
+    "static/audio/track2.mp3",
+    "static/audio/track3.mp3",
+    "static/audio/track4.mp3",
+    "static/audio/track5.mp3"
+  ];
+
+  let isPlaying = true;
+  let currentIndex = 0;
+
+  // Start with muted volume
+  bgMusic.volume = 0;
+
+  function fadeIn(audio, duration = 3000) {
+    let step = 0.01;
+    let interval = duration / (1 / step);
+    let vol = 0;
+    const fade = setInterval(() => {
+      vol += step;
+      if (vol >= 1) {
+        audio.volume = 1;
+        clearInterval(fade);
+      } else {
+        audio.volume = vol;
+      }
+    }, interval);
+  }
+
+  function loadTrack(index) {
+    bgMusic.src = tracks[index];
+    bgMusic.load();
+    if (isPlaying) {
+      bgMusic.play().then(() => {
+        bgMusic.volume = 0;
+        fadeIn(bgMusic, 2000);
+      }).catch(() => {});
+    }
+    trackNum.textContent = index + 1;
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    if (isPlaying) {
+      bgMusic.pause();
+      toggleBtn.textContent = "🔇";
+    } else {
+      bgMusic.play().then(() => {
+        bgMusic.volume = 0;
+        fadeIn(bgMusic);
+      }).catch(() => {});
+      toggleBtn.textContent = "🔊";
+    }
+    isPlaying = !isPlaying;
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % tracks.length;
+    loadTrack(currentIndex);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    loadTrack(currentIndex);
+  });
+
+  // Start on user interaction (autoplay-safe)
+  let audioStarted = false;
+  window.addEventListener('click', () => {
+    if (!audioStarted) {
+      bgMusic.play().then(() => {
+        fadeIn(bgMusic, 2000);
+      }).catch(() => {});
+      audioStarted = true;
+    }
+  });
+
+  loadTrack(currentIndex);
+</script>
+
+
+</body>
+</html>

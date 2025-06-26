@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOCUS - Profit & Loss</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border: 1px solid #00e5ff;
+    }
+    .table-dark {
+      background-color: #1e1e1e;
+    }
+    .bg-success {
+      background-color: #28a745 !important;
+    }
+    .bg-danger {
+      background-color: #dc3545 !important;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-download {
+      background-color: #28a745;
+      color: white;
+    }
+    .timeframe-selector {
+      margin-bottom: 20px;
+    }
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .transaction-table {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <h1 class="text-light mb-4">Profit & Loss Statement</h1>
+    
+    <div class="timeframe-selector">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="btn-group">
+            <button class="btn btn-secondary timeframe-btn" data-timeframe="month">Last Month</button>
+            <button class="btn btn-secondary timeframe-btn" data-timeframe="quarter">Last Quarter</button>
+            <button class="btn btn-secondary timeframe-btn" data-timeframe="year">Last Year</button>
+            <button class="btn btn-secondary timeframe-btn" data-timeframe="all_time">All Time</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="loadingSpinner" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading data...</p>
+    </div>
+    
+    <div id="contentArea">
+      <!-- Content will be loaded here dynamically -->
+    </div>
+    
+    <a href="/dashboard/visualization" class="btn btn-secondary mt-4">
+      <i class="fas fa-arrow-left"></i> Back to Visualizations
+    </a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const timeframe = new URLSearchParams(window.location.search).get('timeframe') || 'month';
+      loadData(timeframe);
+      
+      // Set active timeframe button
+      document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        if (btn.dataset.timeframe === timeframe) {
+          btn.classList.add('active');
+        }
+        
+        btn.addEventListener('click', function() {
+          const newTimeframe = this.dataset.timeframe;
+          loadData(newTimeframe);
+          history.pushState(null, '', `?timeframe=${newTimeframe}`);
+          
+          // Update active button
+          document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+      
+      // Download button
+      document.getElementById('downloadBtn').addEventListener('click', function() {
+        const timeframe = new URLSearchParams(window.location.search).get('timeframe') || 'month';
+        window.location.href = `/dashboard/visualization/profit-loss/download?timeframe=${timeframe}`;
+      });
+    });
+    
+    function loadData(timeframe) {
+      const contentArea = document.getElementById('contentArea');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      
+      contentArea.style.display = 'none';
+      loadingSpinner.style.display = 'block';
+      
+      fetch(`/dashboard/visualization/profit-loss/data?timeframe=${timeframe}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            contentArea.innerHTML = `
+              <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i> ${data.error}
+              </div>
+            `;
+          } else {
+            contentArea.innerHTML = generateContent(data);
+          }
+        })
+        .catch(error => {
+          contentArea.innerHTML = `
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle"></i> Error loading data
+            </div>
+          `;
+        })
+        .finally(() => {
+          loadingSpinner.style.display = 'none';
+          contentArea.style.display = 'block';
+        });
+    }
+    
+    function generateContent(data) {
+      return `
+        <div class="card text-light mb-4">
+          <div class="card-header bg-primary text-light">
+            <h5 class="mb-0">
+              <i class="fas fa-file-invoice-dollar mr-2"></i>
+              Financial Summary - ${data.timeframe.replace('_', ' ').toUpperCase()}
+            </h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-dark table-hover">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="text-end">Amount (₹)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Total Revenue</td>
+                  <td class="text-end">${data.totals.revenue.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td>Total Fixed Costs</td>
+                  <td class="text-end text-danger">- ${data.totals.fixed_costs.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td>Total Variable Costs</td>
+                  <td class="text-end text-danger">- ${data.totals.variable_costs.toFixed(2)}</td>
+                </tr>
+                <tr class="${data.totals.gross_profit >= 0 ? 'bg-success' : 'bg-danger'}">
+                  <td><strong>Gross Profit</strong></td>
+                  <td class="text-end"><strong>${data.totals.gross_profit.toFixed(2)}</strong></td>
+                </tr>
+                <tr class="${data.totals.net_profit >= 0 ? 'bg-success' : 'bg-danger'}">
+                  <td><strong>Net Profit/Loss</strong></td>
+                  <td class="text-end"><strong>${data.totals.net_profit.toFixed(2)}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        ${generateTransactionSection('Revenue Transactions', data.revenue)}
+        ${generateTransactionSection('Fixed Cost Transactions', data.fixed_costs)}
+        ${generateTransactionSection('Variable Cost Transactions', data.variable_costs)}
+      `;
+    }
+    
+    function generateTransactionSection(title, transactions) {
+      if (!transactions || transactions.length === 0) return '';
+      
+      return `
+        <div class="card text-light mb-4">
+          <div class="card-header bg-primary text-light">
+            <h5 class="mb-0">
+              <i class="fas fa-list mr-2"></i>
+              ${title}
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="transaction-table">
+              <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th class="text-end">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${transactions.map(t => `
+                    <tr>
+                      <td>${t.date}</td>
+                      <td>${t.description}</td>
+                      <td class="text-end">${t.amount.toFixed(2)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

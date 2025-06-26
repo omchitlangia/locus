@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCUS - Transaction History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      
+      body {
+        background-color: #121212;
+        color: white;
+        padding: 2rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        color: #00e5ff;
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+      }
+
+      .back-btn i {
+        margin-right: 0.5rem;
+      }
+
+      .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #00e5ff;
+      }
+
+      .header-section h2 {
+        color: #00e5ff;
+        margin: 0;
+      }
+
+      .dropdown select {
+        padding: 8px 12px;
+        background: #2a2a2a;
+        color: white;
+        border: 1px solid #333;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 200px;
+      }
+
+      .dropdown select:focus {
+        outline: none;
+        border-color: #00e5ff;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+        margin-bottom: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #1e1e1e;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #333;
+      }
+
+      th {
+        background-color: #00e5ff;
+        color: #000;
+        font-weight: bold;
+      }
+
+      tr:hover {
+        background-color: #2a2a2a;
+      }
+
+      .alert {
+        padding: 15px;
+        background-color: #2a2a2a;
+        color: #00e5ff;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #00e5ff;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .pagination a {
+        color: #00e5ff;
+        padding: 8px 16px;
+        text-decoration: none;
+        border: 1px solid #333;
+        margin: 0 4px;
+        border-radius: 6px;
+        background: #1e1e1e;
+      }
+
+      .pagination a.active {
+        background-color: #00e5ff;
+        color: #000;
+        border: 1px solid #00e5ff;
+      }
+
+      .pagination a:hover:not(.active) {
+        background-color: #2a2a2a;
+      }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{{ url_for('dataentry.index') }}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Data Entry
+    </a>
+    
+    <div class="header-section">
+      <h2>Transaction History</h2>
+      <div class="dropdown">
+        <select onchange="window.location.href=this.value">
+          <option value="{{ url_for('dataentry.view_entries', entry_type='Revenue') }}" 
+            {% if entry_type == 'Revenue' %}selected{% endif %}>
+            Revenue
+          </option>
+          <option value="{{ url_for('dataentry.view_entries', entry_type='FixedCost') }}" 
+            {% if entry_type == 'FixedCost' %}selected{% endif %}>
+            Fixed Costs
+          </option>
+          <option value="{{ url_for('dataentry.view_entries', entry_type='VariableCost') }}" 
+            {% if entry_type == 'VariableCost' %}selected{% endif %}>
+            Variable Costs
+          </option>
+        </select>
+      </div>
+    </div>
+
+    {% if entries %}
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>₹{{ entry.amount }}</td>
+            <td>{{ entry.remarks }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert">
+      No {{ entry_type.lower().replace('cost', ' cost') }} transactions found.
+    </div>
+    {% endif %}
+
+    <div class="pagination">
+      {% if pagination.has_prev %}
+        <a href="?page={{ pagination.prev_num }}">&laquo; Previous</a>
+      {% endif %}
+      
+      {% for page_num in pagination.iter_pages() %}
+        {% if page_num %}
+          <a href="?page={{ page_num }}" {% if page_num == pagination.page %}class="active"{% endif %}>
+            {{ page_num }}
+          </a>
+        {% else %}
+          <span>...</span>
+        {% endif %}
+      {% endfor %}
+      
+      {% if pagination.has_next %}
+        <a href="?page={{ pagination.next_num }}">Next &raquo;</a>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

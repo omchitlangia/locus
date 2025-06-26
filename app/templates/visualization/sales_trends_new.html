@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Trends | LOCUS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      padding: 2rem;
+    }
+    .chart-container {
+      background-color: #1e1e1e;
+      border: 1px solid #00e5ff;
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .btn-back {
+      background-color: #6c757d;
+      color: white;
+    }
+    .error-message {
+      color: #ff4444;
+      padding: 1rem;
+      border: 1px solid #ff4444;
+      border-radius: 4px;
+      background-color: #1e1e1e;
+    }
+    .timeframe-selector {
+      margin-bottom: 20px;
+    }
+    .timeframe-btn {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    .active {
+      background-color: #00e5ff !important;
+      color: #121212 !important;
+    }
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4">Sales Trends Analysis</h1>
+    
+    <div class="timeframe-selector">
+      <div class="btn-group">
+        <button class="btn btn-secondary timeframe-btn" data-timeframe="month">Last Month</button>
+        <button class="btn btn-secondary timeframe-btn" data-timeframe="quarter">Last Quarter</button>
+        <button class="btn btn-secondary timeframe-btn" data-timeframe="year">Last Year</button>
+        <button class="btn btn-secondary timeframe-btn" data-timeframe="all_time">All Time</button>
+      </div>
+    </div>
+    
+    <div id="loadingSpinner" class="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading data...</p>
+    </div>
+    
+    <div id="contentArea">
+      <!-- Content will be loaded here dynamically -->
+    </div>
+    
+    <a href="/dashboard/visualization" class="btn btn-back mt-3">
+      <i class="fas fa-arrow-left"></i> Back to Visualizations
+    </a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const timeframe = new URLSearchParams(window.location.search).get('timeframe') || 'month';
+      loadData(timeframe);
+      
+      // Set active timeframe button
+      document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        if (btn.dataset.timeframe === timeframe) {
+          btn.classList.add('active');
+        }
+        
+        btn.addEventListener('click', function() {
+          const newTimeframe = this.dataset.timeframe;
+          loadData(newTimeframe);
+          history.pushState(null, '', `?timeframe=${newTimeframe}`);
+          
+          // Update active button
+          document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+    
+    function loadData(timeframe) {
+      const contentArea = document.getElementById('contentArea');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      
+      contentArea.style.display = 'none';
+      loadingSpinner.style.display = 'block';
+      
+      fetch(`/dashboard/visualization/sales-trends/data?timeframe=${timeframe}`)
+        .then(data => {
+            if (data.error) {
+            contentArea.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i> 
+                Error: ${data.error}<br>
+                Timeframe: ${timeframe}
+            </div>
+        `;
+            } else {
+              contentArea.innerHTML = `
+              <div class="chart-container">
+                <img src="data:image/png;base64,${data.plot_url}" class="img-fluid" alt="Sales Trends Chart">
+              </div>
+              
+              <div class="table-responsive">
+                <table class="table table-dark">
+                  <thead>
+                    <tr>
+                      <th>Period</th>
+                      <th class="text-end">Revenue (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${data.periods.map((period, index) => `
+                      <tr>
+                        <td>${period}</td>
+                        <td class="text-end">${data.amounts[index].toFixed(2)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+        })
+        .catch(error => {
+          contentArea.innerHTML = `
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle"></i> Error: Could not load data
+            </div>
+          `;
+        })
+        .finally(() => {
+          loadingSpinner.style.display = 'none';
+          contentArea.style.display = 'block';
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LOCUS Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #121212;
+      color: white;
+    }
+
+    /* Sidebar - Keep existing styles */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      margin-right: 10px;
+      object-fit: contain;
+    }
+
+    .sidebar p {
+      color: #aaa;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #00e5ff;
+      color: #000;
+    }
+
+    .sidebar i {
+      margin-right: 12px;
+      font-size: 1rem;
+    }
+
+    /* Logout button styling */
+    .logout-btn {
+      margin-top: auto;
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .logout-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .logout-btn i {
+      margin-right: 12px;
+      font-size: 1rem;
+    }
+
+    /* Main dashboard content */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .main-content h1 {
+      color: #00e5ff;
+      margin-bottom: 1rem;
+    }
+
+    .main-content p {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+
+    /* User welcome message */
+    .user-welcome {
+      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      border-left: 4px solid #00e5ff;
+    }
+
+    .user-welcome h2 {
+      color: #00e5ff;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+    }
+
+    .user-welcome p {
+      color: #ccc;
+      margin: 0;
+    }
+
+    /* Dashboard header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Profit Goal Section */
+    .profit-goal-container {
+      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      border-left: 4px solid #00e5ff;
+    }
+
+    .profit-goal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .profit-goal-header h3 {
+      color: #00e5ff;
+      font-size: 1.2rem;
+    }
+
+    .set-goal-btn {
+      background-color: #00e5ff;
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .set-goal-btn:hover {
+      background-color: #00c0d2;
+      transform: translateY(-2px);
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #2a2a2a;
+      border-radius: 10px;
+      height: 20px;
+      margin-top: 1rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, 
+                                rgba(0,229,255,0.7) 0%, 
+                                rgba(0,229,255,1) 50%, 
+                                rgba(0,229,255,0.7) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite linear;
+      transition: width 0.5s ease-out;
+      position: relative;
+    }
+
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 3px rgba(0,0,0,0.8);
+      line-height: 20px;
+      font-size: 0.8rem;
+    }
+
+    .no-goal-text {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+
+    .progress-details {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* Goal Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid #00e5ff;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h3 {
+      color: #00e5ff;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .goal-form input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      background: #2a2a2a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .goal-form button {
+      background-color: #00e5ff;
+      color: #000;
+      border: none;
+      padding: 0.75rem;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .goal-form button:hover {
+      background-color: #00c0d2;
+    }
+
+    /* Animations */
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      
+      body {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="static/photos/logo.png" alt="LOCUS Logo" class="logo">
+    </div>
+
+<p>Analytics Dashboard</p>
+    <a href="{{ url_for('dashboard.dashboard') }}" class="active">
+      <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="{{ url_for('dashboard.dataentry') }}">
+      <i class="fas fa-database"></i> Data Entry
+    </a>
+    <a href="{{ url_for('visualization.index') }}">
+      <i class="fas fa-chart-line"></i> Visualizations
+    </a>
+    <a href="{{ url_for('optimization.optimization_menu') }}">
+      <i class="fas fa-calculator"></i> Optimization Tools
+    </a>
+    <a href="{{ url_for('forecasting.index')}}">
+      <i class="fas fa-dollar-sign"></i> Forecasting
+    </a>
+
+    <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
+    <a href="#"><i class="fas fa-user"></i> Profile</a>
+    
+    <!-- Logout Button -->
+    <div style="margin-top: auto;">
+    <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
+      <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?')">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </form>
+  </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Welcome Message -->
+    <div class="user-welcome">
+      <h2>Welcome back, {{ current_user.username }}!</h2>
+      <p>Here's your business analytics dashboard.</p>
+    </div>
+    
+    <div class="dashboard-header">
+      <div class="dashboard-title">
+        <h1>Your Business Analysis</h1>
+      </div>
+    </div>
+
+    <!-- Profit Goal Section -->
+    <div class="profit-goal-container">
+      <div class="profit-goal-header">
+        <h3>Profit Goal Tracker</h3>
+        <button class="set-goal-btn" id="setGoalBtn">
+          <i class="fas fa-bullseye"></i> Set Profit Goal
+        </button>
+      </div>
+      
+      <div id="goalProgress">
+        <!-- This will be dynamically populated by JavaScript -->
+        <div class="no-goal-text">Set a profit goal to track your progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal Setting Modal -->
+  <div class="modal" id="goalModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Set Profit Goal</h3>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+      <form class="goal-form" id="goalForm">
+        <input type="number" id="goalAmount" placeholder="Enter target amount (₹)" required>
+        <button type="submit">Save Goal</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const setGoalBtn = document.getElementById('setGoalBtn');
+    const goalModal = document.getElementById('goalModal');
+    const closeModal = document.getElementById('closeModal');
+    const goalForm = document.getElementById('goalForm');
+    const goalProgress = document.getElementById('goalProgress');
+    
+    // Check if goal exists in localStorage
+    let profitGoal = localStorage.getItem('profitGoal');
+    let currentProfit = {{ profit|default(0) }};// This should be replaced with actual profit from your backend
+    
+    // Open modal when Set Goal button is clicked
+    setGoalBtn.addEventListener('click', () => {
+      goalModal.style.display = 'flex';
+    });
+    
+    // Close modal when X is clicked
+    closeModal.addEventListener('click', () => {
+      goalModal.style.display = 'none';
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === goalModal) {
+        goalModal.style.display = 'none';
+      }
+    });
+    
+    // Handle form submission
+    goalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const goalAmount = document.getElementById('goalAmount').value;
+      
+      if (goalAmount > 0) {
+        localStorage.setItem('profitGoal', goalAmount);
+        profitGoal = goalAmount;
+        updateProgressBar();
+        goalModal.style.display = 'none';
+        goalForm.reset();
+      }
+    });
+    
+    // Update progress bar based on current profit and goal
+    function updateProgressBar() {
+  if (profitGoal) {
+    const goal = parseFloat(profitGoal);
+    const progressPercentage = (currentProfit / goal) * 100;
+
+    let progressColor = '';
+    let barWidth = '';
+    let cappedWidth = Math.min(Math.abs(progressPercentage), 100) + '%';
+
+    if (progressPercentage < 0) {
+      // Negative progress (Loss)
+      progressColor = 'linear-gradient(90deg, rgba(255, 0, 0, 0.6) 0%, rgba(255, 50, 50, 1) 50%, rgba(255, 0, 0, 0.6) 100%)';
+      barWidth = cappedWidth;
+    } else if (progressPercentage <= 100) {
+      // Normal progress (up to goal)
+      progressColor = 'linear-gradient(90deg, rgba(0,229,255,0.7) 0%, rgba(0,229,255,1) 50%, rgba(0,229,255,0.7) 100%)';
+      barWidth = cappedWidth;
+    } else {
+      // Exceeded goal
+      progressColor = 'linear-gradient(90deg, rgba(0,255,127,0.7) 0%, rgba(0,255,127,1) 50%, rgba(0,255,127,0.7) 100%)'; // Green
+      barWidth = '100%'; // Cap width at 100%
+    }
+
+    goalProgress.innerHTML = `
+      <div class="progress-container">
+        <div class="progress-bar" style="width: ${barWidth}; background: ${progressColor}">
+          <div class="progress-text">${Math.round(progressPercentage)}%</div>
+        </div>
+      </div>
+      <div class="progress-details">
+        <span>₹${currentProfit}</span>
+        <span>₹${profitGoal}</span>
+      </div>
+    `;
+  } else {
+    goalProgress.innerHTML = `
+      <div class="no-goal-text">Set a profit goal to track your progress</div>
+    `;
+  }
+}
+
+    updateProgressBar();
+    setInterval(() => {
+      updateProgressBar();
+    }, 5000);
+  </script>
+  <!-- Music Controls -->
+<div id="musicControls">
+  <audio id="bgMusic" loop>
+    <source src="static/audio/track1.mp3" type="audio/mpeg">
+  </audio>
+  <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
+  <div class="music-buttons">
+    <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
+    <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
+    <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
+  </div>
+</div>
+
+<style>
+  #musicControls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(30, 30, 30, 0.75);
+    backdrop-filter: blur(8px);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+    z-index: 9999;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+  }
+  
+  #currentTrack {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .music-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .music-btn {
+    background: #00e5ff;
+    border: none;
+    color: #121212;
+    font-size: 1.2rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .music-btn:hover {
+    background: #00bcd4;
+    transform: scale(1.1);
+  }
+</style>
+
+<script>
+  const bgMusic = document.getElementById("bgMusic");
+  const toggleBtn = document.getElementById("toggleMusic");
+  const prevBtn = document.getElementById("prevTrack");
+  const nextBtn = document.getElementById("nextTrack");
+  const trackNum = document.getElementById("trackNum");
+
+  const tracks = [
+    "static/audio/track1.mp3",
+    "static/audio/track2.mp3",
+    "static/audio/track3.mp3",
+    "static/audio/track4.mp3",
+    "static/audio/track5.mp3"
+  ];
+
+  let isPlaying = true;
+  let currentIndex = 0;
+
+  // Start with muted volume
+  bgMusic.volume = 0;
+
+  function fadeIn(audio, duration = 3000) {
+    let step = 0.01;
+    let interval = duration / (1 / step);
+    let vol = 0;
+    const fade = setInterval(() => {
+      vol += step;
+      if (vol >= 1) {
+        audio.volume = 1;
+        clearInterval(fade);
+      } else {
+        audio.volume = vol;
+      }
+    }, interval);
+  }
+
+  function loadTrack(index) {
+    bgMusic.src = tracks[index];
+    bgMusic.load();
+    if (isPlaying) {
+      bgMusic.play().then(() => {
+        bgMusic.volume = 0;
+        fadeIn(bgMusic, 2000);
+      }).catch(() => {});
+    }
+    trackNum.textContent = index + 1;
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    if (isPlaying) {
+      bgMusic.pause();
+      toggleBtn.textContent = "🔇";
+    } else {
+      bgMusic.play().then(() => {
+        bgMusic.volume = 0;
+        fadeIn(bgMusic);
+      }).catch(() => {});
+      toggleBtn.textContent = "🔊";
+    }
+    isPlaying = !isPlaying;
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % tracks.length;
+    loadTrack(currentIndex);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+    loadTrack(currentIndex);
+  });
+
+  // Start on user interaction (autoplay-safe)
+  let audioStarted = false;
+  window.addEventListener('click', () => {
+    if (!audioStarted) {
+      bgMusic.play().then(() => {
+        fadeIn(bgMusic, 2000);
+      }).catch(() => {});
+      audioStarted = true;
+    }
+  });
+
+  loadTrack(currentIndex);
+</script>
+</body>
+</html>
