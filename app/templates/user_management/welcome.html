@@ -7,7 +7,10 @@
   <title>Business Demo - LOCUS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -20,6 +23,7 @@
       background-color: #f4f4f4;
       line-height: 1.6;
       scroll-behavior: smooth;
+      perspective: 1000px;
     }
     .container {
       width: 90%;
@@ -28,29 +32,43 @@
     }
 
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      background-color: #1a1a1a;
-      padding: 1rem 0;
-      color: #fff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: rgba(26, 26, 26, 0.95);
+  padding: 1rem 0;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
     .logo-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease;
+    }
+    .logo-container:hover {
+      transform: rotateY(15deg);
+    }
     .logo-container img {
-      height: 60px;
+      height: 50px;
       transition: transform 0.3s ease;
     }
     .logo-container img:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) translateZ(20px);
     }
     .logo {
       font-size: 2rem;
-      margin-left: 10px;
+      margin: 0;
+      text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
     }
     .navbar ul {
       list-style: none;
@@ -64,12 +82,28 @@
       padding: 0.5rem 1rem;
       border-radius: 5px;
       transition: all 0.3s ease;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+    .navbar a::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #00bcd4;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    .navbar a:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
     }
     .navbar a:hover {
       color: #00bcd4;
-      background-color: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 188, 212, 0.2);
+      transform: translateY(-2px) translateZ(10px);
     }
 
     .hero {
@@ -98,7 +132,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,188,212,0.3) 100%);
       z-index: 1;
     }
     .hero-content {
@@ -106,13 +140,21 @@
       z-index: 2;
       max-width: 700px;
       padding: 0 1rem;
+      transform-style: preserve-3d;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateZ(20px); }
+      50% { transform: translateY(-20px) translateZ(30px); }
     }
     .hero h2 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
+      text-shadow: 0 0 20px rgba(0, 188, 212, 0.7);
     }
     .hero p {
       margin-bottom: 1rem;
+      font-size: 1.1rem;
     }
     .hero .btn {
       display: inline-block;
@@ -122,63 +164,146 @@
       text-decoration: none;
       border-radius: 5px;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+    .hero .btn:hover::before {
+      left: 100%;
     }
     .hero .btn:hover {
       background: #019bab;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 15px rgba(0, 188, 212, 0.3);
+      transform: translateY(-3px) scale(1.05) translateZ(20px);
+      box-shadow: 0 8px 25px rgba(0, 188, 212, 0.6);
     }
 
     .about, .services {
       padding: 4rem 1rem;
-      background: linear-gradient(to right, #6b6b6b, #000);
+      background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
       color: #fff;
       text-align: center;
-      background-size: 200% 200%;
-      animation: gradientBG 5s ease infinite;
+      position: relative;
+      overflow: hidden;
     }
-    @keyframes gradientBG {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+    .about::before, .services::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(0,188,212,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+      background-size: 100% 100%;
+      z-index: 0;
     }
     .services h2, .about h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .services h2::after, .about h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: #00bcd4;
+      border-radius: 3px;
     }
     .service-boxes {
       display: flex;
       flex-wrap: wrap;
       gap: 2rem;
       justify-content: center;
+      perspective: 1000px;
     }
     .service {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       color: #333;
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 15px;
       flex: 1 1 250px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: all 0.5s ease;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 188, 212, 0.2);
+    }
+    .service::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #00bcd4, #019bab);
     }
     .service:hover {
-      transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 15px 30px rgba(0,188,212,0.3);
+      transform: translateY(-15px) rotateX(5deg) rotateY(5deg) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0,188,212,0.4);
     }
     .service h3 {
       color: #00bcd4;
       margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    .service p {
+      margin-bottom: 1.5rem;
+    }
+    .service .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #00bcd4;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    .service:hover .icon {
+      transform: rotateY(180deg);
     }
 
     .footer {
-      background: #1a1a1a;
+      background: rgba(26, 26, 26, 0.95);
       color: white;
       text-align: center;
-      padding: 1.5rem 0;
+      padding: 2rem 0;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00bcd4, transparent);
     }
     .footer a {
       color: #00bcd4;
       margin: 0 0.5rem;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    .footer a:hover {
+      transform: translateY(-5px) scale(1.2);
+      color: #fff;
+      text-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
     }
 
     #contactModal {
@@ -187,20 +312,78 @@
       z-index: 1000;
       left: 0; top: 0;
       width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
     }
     .modal-content {
-      background: #fff;
+      background: linear-gradient(145deg, #1a1a1a 0%, #000 100%);
       margin: 10% auto;
       padding: 2rem;
-      border-radius: 10px;
+      border-radius: 15px;
       max-width: 500px;
       text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 188, 212, 0.3);
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      transform-style: preserve-3d;
+      transform: perspective(1000px) rotateX(5deg);
+      transition: transform 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent 0%,
+        rgba(0, 188, 212, 0.1) 50%,
+        transparent 100%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      100% { transform: translateX(100%) rotate(30deg); }
+    }
+    .modal-content:hover {
+      transform: perspective(1000px) rotateX(0deg) translateY(-10px);
+    }
+    .modal-content h2 {
+      color: #00bcd4;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .modal-content h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 2px;
+      background: #00bcd4;
+    }
+    .modal-content p {
+      margin: 1rem 0;
+      font-size: 1.1rem;
     }
     .close {
       float: right;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
+      color: #fff;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .close:hover {
+      color: #00bcd4;
+      transform: rotate(90deg) scale(1.2);
     }
 
     @media (max-width: 768px) {
@@ -212,81 +395,520 @@
       .service-boxes {
         flex-direction: column;
       }
+      .service:hover {
+        transform: translateY(-10px) scale(1.03);
+      }
     }
+
+    /* 3D Background Element */
+    #threejs-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+    }
+
+    /* Music Controls */
     #musicControls {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(30, 30, 30, 0.75);
-  backdrop-filter: blur(8px);
-  padding: 1rem;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(30, 30, 30, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 1rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3);
+      z-index: 9999;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      border: 1px solid rgba(0, 188, 212, 0.2);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    #musicControls:hover {
+      transform: translateY(-5px) rotateX(5deg);
+      box-shadow: 0 12px 30px rgba(0, 188, 212, 0.4);
+    }
+    #currentTrack {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #00bcd4;
+    }
+    .music-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .music-btn {
+  background: linear-gradient(145deg, #00bcd4, #019bab);
+  border: none;
+  color: white;
+  width: 45px;
+  height: 45px;
+  font-size: 1.2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
-  z-index: 9999;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 6px 12px rgba(0, 188, 212, 0.3),
+    inset 0 2px 3px rgba(255, 255, 255, 0.1);
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+.music-btn:hover {
+  transform: translateY(-4px) scale(1.1) rotateX(10deg);
+  box-shadow:
+    0 10px 20px rgba(0, 188, 212, 0.4),
+    inset 0 3px 4px rgba(255, 255, 255, 0.2);
+}
+
+.music-btn:active {
+  transform: translateY(1px) scale(0.95) rotateX(2deg);
+  box-shadow:
+    0 3px 6px rgba(0, 188, 212, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+    /* Floating 3D Elements */
+    .floating-element {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: rgba(0, 188, 212, 0.1);
+      border: 2px solid rgba(0, 188, 212, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      animation: float 8s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    /* Service Icons */
+    .service .icon-container {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1rem;
+      background: rgba(0, 188, 212, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s ease;
+      transform-style: preserve-3d;
+    }
+    .service:hover .icon-container {
+      transform: rotateY(180deg) scale(1.1);
+      background: rgba(0, 188, 212, 0.2);
+    }
+    /* Updated Button Styles */
+.btn {
+  display: inline-block;
+  padding: 0.9rem 2.4rem;
+  background: linear-gradient(145deg, #00bcd4, #019bab);
+  color: white;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  border: none;
+  position: relative;
+  transition: all 0.4s ease;
+  box-shadow:
+    0 8px 15px rgba(0, 188, 212, 0.4),
+    inset 0 2px 3px rgba(255, 255, 255, 0.2);
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn:hover {
+  transform: translateY(-5px) scale(1.05) rotateX(5deg);
+  box-shadow:
+    0 12px 25px rgba(0, 188, 212, 0.6),
+    inset 0 2px 5px rgba(255, 255, 255, 0.3);
+}
+
+.btn:hover::before {
+  transform: translateX(0);
+}
+
+.btn:active {
+  transform: translateY(2px) scale(0.98) rotateX(2deg);
+  box-shadow:
+    0 4px 10px rgba(0, 188, 212, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+.logo-container {
+  perspective: 800px;
+}
+.logo-container img.logo-3d {
+  position: relative;
+  width: 50px;
+  height: 50px;
+
+  transform-style: preserve-3d;
+  animation: floatRotate 8s ease-in-out infinite;
+  display: block;                  
+  cursor: pointer;
+  filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.7));
+}
+
+@keyframes floatRotate {
+  0%,100% { transform: translateY(0)   rotateY(  0deg) rotateX( 0deg); }
+  25%     { transform: translateY(-10px) rotateY( 90deg) rotateX( 5deg); }
+  50%     { transform: translateY(0)   rotateY(180deg) rotateX( 0deg); }
+  75%     { transform: translateY(-10px) rotateY(270deg) rotateX(-5deg); }
+}
+.service-icon-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.service:hover .service-icon-img {
+  transform: rotateY(180deg) scale(1.1);
+}
+/* === Grid Layout for Services === */
+.service-boxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+/* === Responsive Hero Section === */
+@media (max-width: 1024px) {
+  .hero h2 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  .hero .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-bar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .navbar ul {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+  }
+  .hero {
+    height: auto;
+    padding: 4rem 1rem;
+  }
+  .hero-content {
+    padding: 2rem 1rem;
+  }
+  .hero h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Extra small devices (phones) */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .service {
+    padding: 1.5rem;
+  }
+
+  .hero h2 {
+    font-size: 1.6rem;
+  }
+
+  .hero .btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+  }
+}
+/* === Reduced Motion Support === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-content,
+  .logo-container img.logo-3d,
+  .service:hover,
+  .service .icon-container,
+  .music-btn:hover,
+  .btn:hover {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+.logo-container img.logo-3d {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transform-style: preserve-3d;
+  animation: floatRotate 8s ease-in-out infinite;
+  display: block;
+  cursor: pointer;
+  filter: drop-shadow(0 0 10px rgba(0, 188, 212, 0.7));
+}
+
+@keyframes floatRotate {
+  0%,100% { transform: translateY(0) rotateY(0deg) rotateX(0deg); }
+  25%     { transform: translateY(-10px) rotateY(90deg) rotateX(5deg); }
+  50%     { transform: translateY(0) rotateY(180deg) rotateX(0deg); }
+  75%     { transform: translateY(-10px) rotateY(270deg) rotateX(-5deg); }
+}
+.glowing-motion {
+  animation: glowSpin 5s infinite linear, pulseScale 3s ease-in-out infinite;
+  transform-style: preserve-3d;
+  perspective: 1000px;
   text-align: center;
 }
 
-#currentTrack {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
+@keyframes glowSpin {
+  0% {
+    transform: rotateY(0deg) rotateX(0deg);
+    text-shadow: 
+      0 0 10px #00bcd4,
+      0 0 20px #00bcd4,
+      0 0 30px #00e5ff,
+      0 0 40px #00e5ff;
+  }
+  50% {
+    transform: rotateY(180deg) rotateX(5deg);
+    text-shadow: 
+      0 0 20px #00bcd4,
+      0 0 30px #00e5ff,
+      0 0 40px #1de9b6,
+      0 0 60px #1de9b6;
+  }
+  100% {
+    transform: rotateY(360deg) rotateX(0deg);
+    text-shadow: 
+      0 0 10px #00bcd4,
+      0 0 20px #00e5ff,
+      0 0 30px #00e5ff,
+      0 0 40px #00e5ff;
+  }
 }
 
-.music-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn, .music-btn {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform;
+  }
+
+  .btn:hover {
+    transform: translateY(-5px) scale(1.05) rotateX(5deg);
+  }
+
+  .btn:active {
+    transform: translateY(2px) scale(0.98) rotateX(2deg);
+  }
+
+  .music-btn:hover {
+    transform: translateY(-4px) scale(1.1) rotateX(10deg);
+  }
+
+  .music-btn:active {
+    transform: translateY(1px) scale(0.95) rotateX(2deg);
+  }
+
+  .glowing-motion {
+    animation: glowSpin 5s infinite linear, pulseScale 3s ease-in-out infinite;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .music-btn, .glowing-motion {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .music-btn, .glowing-motion {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+section:hover,
+.footer:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 20px rgba(0, 188, 212, 0.3), 0 10px 30px rgba(0, 188, 212, 0.15);
+  transition: all 0.4s ease-in-out;
+  z-index: 10;
+  position: relative;
+}
+section,
+.footer {
+  transition: all 0.4s ease-in-out;
+  transform-style: preserve-3d;
+}
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
-.music-btn {
-  background: #00bcd4;
-  border: none;
+body.dark-mode .header,
+body.dark-mode .footer {
+  background-color: rgba(10, 10, 10, 0.95);
+}
+
+body.dark-mode .about,
+body.dark-mode .services {
+  background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+}
+
+body.dark-mode .service {
+  background: rgba(255, 255, 255, 0.08);
+  color: #eee;
+  border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+body.dark-mode .btn {
+  background: linear-gradient(135deg, #333 0%, #000 100%);
+  color: #00bcd4;
+  box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+}
+
+body.dark-mode .btn:hover {
+  background: linear-gradient(135deg, #444, #111);
   color: white;
+}
+
+body.dark-mode .music-btn {
+  background: #1a1a1a;
+  color: #00bcd4;
+}
+
+body.dark-mode .service .icon-container {
+  background: rgba(0, 188, 212, 0.08);
+}
+
+body.dark-mode .navbar a:hover {
+  color: #00e5ff;
+}
+.dark-toggle-nav {
+  background: transparent;
+  border: none;
+  color: #fff;
   font-size: 1.2rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
   cursor: pointer;
+  padding: 0.5rem;
   transition: all 0.3s ease;
+  border-radius: 5px;
 }
 
-.music-btn:hover {
-  background: #019bab;
-  transform: scale(1.1);
+.dark-toggle-nav:hover {
+  color: #00bcd4;
+  transform: scale(1.2);
 }
 
+.dark-toggle-nav::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00bcd4;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.dark-toggle-nav:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
   </style>
 </head>
 <body>
-    <!-- Music Controls -->
-<div id="musicControls">
-  <audio id="bgMusic" autoplay loop>
-    <source src="static/audio/track1.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-  <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
-  <div class="music-buttons">
-    <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
-    <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
-    <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
+  <!-- 3D Background -->
+  <div id="threejs-container"></div>
+  <div class="floating-element" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+  <div class="floating-element" style="top: 70%; left: 80%; animation-delay: 1s; width: 150px; height: 150px;"></div>
+  <div class="floating-element" style="top: 40%; left: 60%; animation-delay: 2s; width: 80px; height: 80px;"></div>
+
+  <!-- Music Controls -->
+  <div id="musicControls">
+    <audio id="bgMusic" autoplay loop>
+      <source src="static/audio/track1.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
+    <div class="music-buttons">
+      <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
+      <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
+      <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
+    </div>
   </div>
-</div>
+
   <header class="header">
     <div class="container logo-bar">
-      <div class="logo-container" style="display: flex; align-items: center; gap: 10px;">
-  <img src="static/photos/logo.png" alt="LOCUS Logo" style="height: 50px;">
-  <h1 class="logo" style="font-size: 2rem; margin: 0;">Business Analysis</h1>
+      <div class="logo-container">
+  <div class="logo-3d">
+    <img src="static/photos/logo.png" alt="LOCUS Logo" class="logo-3d" loading="lazy">
+  </div>
+  <h1 class="logo">Business Analysis</h1>
 </div>
+
+
       <nav class="navbar">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#" id="contactLink">Contact</a></li>
-          <li><a href="http://localhost:5000/login">Login</a></li>
-        </ul>
-      </nav>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#" id="contactLink">Contact</a></li>
+    <li><a href="http://localhost:5000/login">Login</a></li>
+    <li>
+  <button id="darkModeToggle" aria-label="Toggle Dark Mode" class="dark-toggle-nav">🌞</button>
+</li>
+  </ul>
+</nav>
     </div>
   </header>
 
@@ -295,33 +917,49 @@
       <source src="static/videos/chart.mp4" type="video/mp4" />
     </video>
     <div class="overlay"></div>
-    <div class="container hero-content animate__animated animate__fadeInUp">
-      <h2>Unlock Your Business Potential with LOCUS</h2>
-      <p>Transform raw data into strategic decisions with our AI-powered analytics platform. LOCUS delivers real-time insights, accurate forecasts, and actionable recommendations tailored to your business needs.</p>
-      <a href="http://localhost:5000/register" class="btn">Get Started</a>
-    </div>
+    <div class="container hero-content glowing-motion" data-aos="zoom-in">
+  <h2>Unlock Your Business Potential with LOCUS</h2>
+  <p>Transform raw data into strategic decisions with our AI-powered analytics platform.</p>
+  <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+    <a href="http://localhost:5000/register" class="btn" aria-label="Get Started with Business Analysis Platform">
+  <i class="fas fa-rocket" style="margin-right: 8px;"></i> Get Started
+</a>
+<a href="#services" class="btn" aria-label="Explore Our Services" style="background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);">
+  <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Our Services
+</a>
+  </div>
+</div>
   </section>
 
-  <section class="about" id="about">
+  <section class="about" id="about" data-aos="fade-up">
     <div class="container">
       <h2>About Us</h2>
       <p>This app transforms business management into an engaging, game-like experience. It tracks key metrics, forecasts growth using linear regression, and visualizes data with interactive graphs.</p>
     </div>
   </section>
 
-  <section class="services" id="services">
+  <section class="services" id="services" data-aos="fade-up">
     <div class="container">
       <h2>Our Services</h2>
       <div class="service-boxes">
         <div class="service">
+          <div class="icon-container">
+            <img src="static/photos/basic_stats.png" alt="Service Icon" class="service-icon-img" loading="lazy">
+          </div>
           <h3>Basic Stats</h3>
           <p>Explore statistics within business context including populations, samples, and key terms.</p>
         </div>
         <div class="service">
+          <div class="icon-container">
+           <img src="static/photos/for.png" alt="Service Icon" class="service-icon-img" loading="lazy">
+          </div>
           <h3>Revenue Forecast</h3>
           <p>Predict future revenue using AI-driven insights based on past and present data.</p>
         </div>
         <div class="service">
+          <div class="icon-container">
+            <img src="static/photos/sku.png" alt="Service Icon" class="service-icon-img" loading="lazy">
+          </div>
           <h3>SKU Performance</h3>
           <p>Analyze SKU data for unit sales and performance metrics year-over-year.</p>
         </div>
@@ -329,7 +967,7 @@
     </div>
   </section>
 
-  <footer class="footer">
+  <footer class="footer" data-aos="fade-in">
     <div class="container">
       <p>&copy; 2025 Business Analysis. All rights reserved.</p>
       <div>
@@ -349,9 +987,63 @@
       <p>Email: support@locus.com</p>
     </div>
   </div>
-  
 
   <script>
+    // Three.js 3D Background
+    const threeContainer = document.getElementById('threejs-container');
+    if (threeContainer) {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0x000000, 0);
+      threeContainer.appendChild(renderer.domElement);
+
+      // Create floating geometry
+      const geometry = new THREE.IcosahedronGeometry(1, 0);
+      const material = new THREE.MeshBasicMaterial({ 
+        color: 0x00bcd4, 
+        wireframe: true,
+        transparent: true,
+        opacity: 0.3
+      });
+
+      const particles = [];
+      for (let i = 0; i < 20; i++) {
+        const particle = new THREE.Mesh(geometry, material);
+        particle.position.x = Math.random() * 20 - 10;
+        particle.position.y = Math.random() * 20 - 10;
+        particle.position.z = Math.random() * 20 - 10;
+        particle.scale.setScalar(Math.random() * 0.5 + 0.5);
+        scene.add(particle);
+        particles.push(particle);
+      }
+
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        
+        particles.forEach(particle => {
+          particle.rotation.x += 0.001;
+          particle.rotation.y += 0.002;
+          particle.position.x += Math.sin(Date.now() * 0.001 + particle.position.y) * 0.001;
+          particle.position.y += Math.cos(Date.now() * 0.001 + particle.position.x) * 0.001;
+        });
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    // Contact Modal
     document.getElementById('contactLink').addEventListener('click', function(e) {
       e.preventDefault();
       document.getElementById('contactModal').style.display = 'block';
@@ -364,93 +1056,163 @@
         document.getElementById('contactModal').style.display = 'none';
       }
     };
-  </script>
-<script>
-  const bgMusic = document.getElementById("bgMusic");
-  const toggleBtn = document.getElementById("toggleMusic");
-  const prevBtn = document.getElementById("prevTrack");
-  const nextBtn = document.getElementById("nextTrack");
-  const trackNum = document.getElementById("trackNum");
 
-  const tracks = [
-    "static/audio/track1.mp3",
-    "static/audio/track2.mp3",
-    "static/audio/track3.mp3",
-    "static/audio/track4.mp3",
-    "static/audio/track5.mp3"
-  ];
+    // Music Player
+    const bgMusic = document.getElementById("bgMusic");
+    const toggleBtn = document.getElementById("toggleMusic");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
+    const trackNum = document.getElementById("trackNum");
 
-  let isPlaying = true;
-  let currentIndex = 0;
+    const tracks = [
+      "static/audio/track1.mp3",
+      "static/audio/track2.mp3",
+      "static/audio/track3.mp3",
+      "static/audio/track4.mp3",
+      "static/audio/track5.mp3"
+    ];
 
-  // Start with muted volume
-  bgMusic.volume = 0;
+    let isPlaying = true;
+    let currentIndex = 0;
 
-  function fadeIn(audio, duration = 3000) {
-    let step = 0.01;
-    let interval = duration / (1 / step);
-    let vol = 0;
-    const fade = setInterval(() => {
-      vol += step;
-      if (vol >= 1) {
-        audio.volume = 1;
-        clearInterval(fade);
-      } else {
-        audio.volume = vol;
-      }
-    }, interval);
-  }
+    // Start with muted volume
+    bgMusic.volume = 0;
 
-  function loadTrack(index) {
-    bgMusic.src = tracks[index];
-    bgMusic.load();
-    if (isPlaying) {
-      bgMusic.play().then(() => {
-        bgMusic.volume = 0;
-        fadeIn(bgMusic, 2000);
-      }).catch(() => {});
+    function fadeIn(audio, duration = 3000) {
+      let step = 0.01;
+      let interval = duration / (1 / step);
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += step;
+        if (vol >= 1) {
+          audio.volume = 1;
+          clearInterval(fade);
+        } else {
+          audio.volume = vol;
+        }
+      }, interval);
     }
-    trackNum.textContent = index + 1;
+
+    function loadTrack(index) {
+      bgMusic.src = tracks[index];
+      bgMusic.load();
+      if (isPlaying) {
+        bgMusic.play().then(() => {
+          bgMusic.volume = 0;
+          fadeIn(bgMusic, 2000);
+        }).catch(() => {});
+      }
+      trackNum.textContent = index + 1;
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        bgMusic.pause();
+        toggleBtn.textContent = "🔇";
+      } else {
+        bgMusic.play().then(() => {
+          bgMusic.volume = 0;
+          fadeIn(bgMusic);
+        }).catch(() => {});
+        toggleBtn.textContent = "🔊";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % tracks.length;
+      loadTrack(currentIndex);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentIndex);
+    });
+
+    // Start on user interaction (autoplay-safe)
+    let audioStarted = false;
+    window.addEventListener('click', () => {
+      if (!audioStarted) {
+        bgMusic.play().then(() => {
+          fadeIn(bgMusic, 2000);
+        }).catch(() => {});
+        audioStarted = true;
+      }
+    });
+
+    loadTrack(currentIndex);
+  </script>
+  <script>
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.header');
+    if (window.scrollY > 10) {
+      header.style.backgroundColor = 'rgba(26, 26, 26, 0.98)';
+      header.style.boxShadow = '0 2px 15px rgba(0,0,0,0.3)';
+    } else {
+      header.style.backgroundColor = 'rgba(26, 26, 26, 0.95)';
+      header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+    }
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000, // animation duration
+    once: true,     // only animate once per element
+    easing: 'ease-in-out',
+  });
+</script>
+<script>
+  const toggleBtn = document.getElementById("darkModeToggle");
+
+  // Save preference in local storage
+  const enableDark = () => {
+    document.body.classList.add("dark-mode");
+    localStorage.setItem("theme", "dark");
+    toggleBtn.textContent = "☀️ Light Mode";
+  };
+
+  const disableDark = () => {
+    document.body.classList.remove("dark-mode");
+    localStorage.setItem("theme", "light");
+    toggleBtn.textContent = "🌙 Dark Mode";
+  };
+
+  // Load preference
+  if (localStorage.getItem("theme") === "dark") {
+    enableDark();
   }
 
   toggleBtn.addEventListener("click", () => {
-    if (isPlaying) {
-      bgMusic.pause();
-      toggleBtn.textContent = "🔇";
-    } else {
-      bgMusic.play().then(() => {
-        bgMusic.volume = 0;
-        fadeIn(bgMusic);
-      }).catch(() => {});
-      toggleBtn.textContent = "🔊";
-    }
-    isPlaying = !isPlaying;
+    document.body.classList.contains("dark-mode") ? disableDark() : enableDark();
   });
-
-  nextBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % tracks.length;
-    loadTrack(currentIndex);
-  });
-
-  prevBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(currentIndex);
-  });
-
-  // Start on user interaction (autoplay-safe)
-  let audioStarted = false;
-  window.addEventListener('click', () => {
-    if (!audioStarted) {
-      bgMusic.play().then(() => {
-        fadeIn(bgMusic, 2000);
-      }).catch(() => {});
-      audioStarted = true;
-    }
-  });
-
-  loadTrack(currentIndex);
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById("darkModeToggle");
+
+    function enableDark() {
+  document.body.classList.add("dark-mode");
+  localStorage.setItem("theme", "dark");
+  toggleBtn.textContent = "☀️";
+}
+
+function disableDark() {
+  document.body.classList.remove("dark-mode");
+  localStorage.setItem("theme", "light");
+  toggleBtn.textContent = "🌙";
+}
 
 
+    // Load saved preference
+    if (localStorage.getItem("theme") === "dark") {
+      enableDark();
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.contains("dark-mode") ? disableDark() : enableDark();
+    });
+  });
+</script>
 </body>
 </html>

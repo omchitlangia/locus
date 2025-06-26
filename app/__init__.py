@@ -1,7 +1,7 @@
 from flask import Flask
 from app.extensions import db, bcrypt, mail, login_manager
 from flask_migrate import Migrate
-from config import Config
+from config import Config 
 
 def create_app():
     app = Flask(__name__)
@@ -29,7 +29,7 @@ def create_app():
     from app.forecasting.routes import forecast_bp
     app.register_blueprint(forecast_bp)
 
-    from app.visualization.routes import visualization_bp
-    app.register_blueprint(visualization_bp)
+    from app.ep.routes import event_bp
+    app.register_blueprint(event_bp)
 
     return app
