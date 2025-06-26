@@ -596,9 +596,12 @@ button:active,
     </div>
     <p>Analytics Dashboard</p>
     <a href="{{ url_for('dashboard.dashboard') }}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-    <a href="{{ url_for('dashboard.dataentry') }}"><i class="fas fa-database"></i> Data Entry</a>
-    <a href="#"><i class="fas fa-dollar-sign"></i> Revenue Forecast</a>
-    <a href="#"><i class="fas fa-barcode"></i> SKU Performance</a>
+    <a href="{{ url_for('dataentry.index') }}"><i class="fas fa-database"></i>Data Entry</a>
+    <a href="{{ url_for('forecasting.index') }}"><i class="fas fa-dollar-sign"></i>Forecasting</a>
+    <a href="{{ url_for('sku.index') }}"><i class="fas fa-barcode"></i>SKU Performance</a>
+    <a href="{{ url_for('optimization.optimization_menu') }}"><i class="fas fa-barcode"></i>Optimisation</a>
+    <a href="{{ url_for('visualization.index') }}"><i class="fas fa-barcode"></i>Visualization</a>
+    <a href="{{ url_for('event.index') }}"><i class="fas fa-barcode"></i>Event Planner</a>
     <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
     <a href="#"><i class="fas fa-medal"></i> Leaderboard</a>
     <a href="#"><i class="fas fa-user"></i> Profile</a>

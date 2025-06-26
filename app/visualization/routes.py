@@ -11,7 +11,7 @@ from flask import request, jsonify
 from io import BytesIO
 import base64
 from sqlalchemy import func, text
-from datetime import datetime, timedelta
+from datetime import datetime
 try:
     from dateutil.relativedelta import relativedelta
 except ImportError:

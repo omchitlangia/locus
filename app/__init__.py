@@ -26,10 +26,16 @@ def create_app():
     from app.optimization.routes import opt_bp
     app.register_blueprint(opt_bp)
 
+    from app.visualization.routes import visualization_bp
+    app.register_blueprint(visualization_bp)
+
     from app.forecasting.routes import forecast_bp
     app.register_blueprint(forecast_bp)
 
     from app.ep.routes import event_bp
     app.register_blueprint(event_bp)
+
+    from app.sku.routes import sku_bp
+    app.register_blueprint(sku_bp)
 
     return app
