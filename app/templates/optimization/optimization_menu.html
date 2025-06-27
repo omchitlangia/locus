@@ -13,38 +13,7 @@
       font-family: Arial, sans-serif;
     }
 
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: #121212;
-      color: white;
-    }
-
-    .sidebar {
-      width: 240px;
-      background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .logo {
-      width: 120px;
-      margin-bottom: 1rem;
-    }
-
-    .sidebar p {
-      color: #00e5ff;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-    }
+    
 
     .tools-container {
       display: grid;
@@ -85,30 +54,27 @@
       font-size: 0.9rem;
     }
 
-    .return-btn {
-      display: inline-block;
-      margin-bottom: 1.5rem;
-      background-color: #00e5ff;
-      color: #000;
-      padding: 10px 18px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s ease;
-    }
+    .return-button {
+  background: none;
+  border: none;
+  color: #00ffff; /* or cyan */
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0;
+}
 
-    .return-btn:hover {
-      background-color: #00cfe0;
-    }
+.return-button:hover {
+  text-decoration: underline;
+}
+
 
     @media (max-width: 768px) {
       body {
         flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
       }
       .main-content {
         padding: 1rem;
@@ -159,21 +125,109 @@
   background: #00cfe0;
   transform: scale(1.05);
 }
+body {
+  background-color: #121212;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+
+.main-content {
+  max-width: 1100px;
+  margin: auto;
+  padding: 2rem;
+  background: linear-gradient(to bottom right, #1a1a1a, #101010);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+}
+
+.return-button {
+  background: none;
+  border: none;
+  color: #00e5ff;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.return-button:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #00e5ff;
+}
+
+.text-muted {
+  color: #aaa;
+  margin-bottom: 2rem;
+}
+
+.tools-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.tool-card {
+  background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 4px solid #00e5ff;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}
+
+.tool-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 229, 255, 0.2);
+}
+
+.tool-icon {
+  font-size: 2.2rem;
+  color: #00e5ff;
+  margin-bottom: 1rem;
+}
+
+.tool-title {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.tool-description {
+  color: #bbb;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .tools-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo-container">
-      <img src="static/photos/logo.png" alt="LOCUS Logo" class="logo" />
-    </div>
-    <p>Optimization Tools</p>
-  </aside>
-
   <!-- Main Content -->
   <div class="main-content">
-    <a href="{{ url_for('dashboard.dashboard') }}" class="return-btn">← Return to Dashboard</a>
+    <a href="{{ url_for('dashboard.dashboard') }}" class="return-button">← Return to Dashboard</a>
 
     <h2>Optimization Tools</h2>
     <p class="text-muted">Select a tool to analyze your business performance</p>
