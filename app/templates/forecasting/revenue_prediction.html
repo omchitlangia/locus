@@ -7,36 +7,224 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #f0f0f0;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300bcd4' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+        }
+        
+        .card {
+            background-color: #1e1e1e;
+            border: 1px solid #00e5ff;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            color: white;
+        }
+        
         .prediction-card {
-            border-left: 4px solid #4e73df;
+            border-left: 4px solid #00bcd4;
             transition: all 0.3s;
+            background-color: #2d2d2d;
         }
+        
         .prediction-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3) !important;
         }
+        
         .ci-range {
             font-size: 0.9rem;
-            color: #6c757d;
+            color: #8a8a8a;
         }
+        
         .trend-up {
-            color: #1cc88a;
+            color: #00e676;
         }
+        
         .trend-down {
-            color: #e74a3b;
+            color: #ff5252;
         }
+        
         .model-good {
-            background-color: #d4edda;
+            background-color: rgba(0, 200, 83, 0.1);
+            border-left: 4px solid #00e676;
+            color: #b0b0b0;
         }
+        
         .model-warning {
-            background-color: #fff3cd;
+            background-color: rgba(255, 171, 0, 0.1);
+            border-left: 4px solid #ffab00;
+            color: #b0b0b0;
         }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            border: none;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00e5ff, #00bcd4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5);
+        }
+        
+        .btn-outline-secondary {
+            border-color: #00bcd4;
+            color: #00bcd4;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            color: #00e5ff;
+            border-color: #00e5ff;
+        }
+        
+        .table {
+            color: #f0f0f0;
+        }
+        
+        .table-bordered {
+            border-color: #3d3d3d;
+        }
+        
+        .table thead th {
+            border-bottom-color: #3d3d3d;
+            background-color: #2d2d2d;
+        }
+        
+        .table tbody tr {
+            border-color: #3d3d3d;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(0, 188, 212, 0.05);
+        }
+        
+        .alert-danger {
+            background-color: rgba(255, 82, 82, 0.1);
+            border-left: 4px solid #ff5252;
+            color: #ff5252;
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 171, 0, 0.1);
+            border-left: 4px solid #ffab00;
+            color: #ffab00;
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #00e676, #00c853);
+        }
+        
+        .badge-danger {
+            background: linear-gradient(135deg, #ff5252, #d50000);
+        }
+        
+        .form-select, .form-control {
+            background-color: #2d2d2d;
+            border-color: #3d3d3d;
+            color: #f0f0f0;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            background-color: #3d3d3d;
+            border-color: #00bcd4;
+            color: #f0f0f0;
+            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+        }
+        
+        .text-muted {
+            color: #8a8a8a !important;
+        }
+        
+        .text-primary {
+            color: #00bcd4 !important;
+        }
+     /* === Time-Range label (matches button accent) === */
+.time-range-label {
+    color: #00e5ff; /* change to any color you want */
+    font-weight: 500;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+.time-range-group {
+    display: flex;
+    align-items: center;
+}
+
+/* === Modern table === */
+.table-modern{
+    /* structure */
+    border-collapse:separate;
+    border-spacing:0;
+    overflow:hidden;          /* keeps rounded corners */
+    width:100%;
+
+    /* look & feel */
+    background:#1e1e1e;
+    border:1px solid #00bcd4;
+    border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,188,212,.12);
+}
+.table-modern thead th{
+    position:sticky; top:0;         /* header stays visible on scroll */
+    background:linear-gradient(135deg,#00bcd4,#0097a7);
+    color:#fff;
+    font-weight:600;
+    border-bottom:none;
+}
+.table-modern tbody tr:not(:last-child){
+    border-bottom:1px solid #2d2d2d;
+}
+.table-modern tbody tr:hover{
+    background:rgba(0,188,212,.06);
+    transition:.25s;
+    cursor:pointer;
+}
+.table-modern td,.table-modern th{
+    padding:.75rem 1rem;
+}
+.table-modern tbody td{
+    color:#e0e0e0;
+}
+.table-modern .text-end{
+    text-align:right;
+}
+
+
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(26, 26, 26, 0.95);">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>LOCUS Forecasting
+            </a>
+        </div>
+    </nav>
+
     <div class="container py-4">
         <div class="card shadow mb-4">
-            <div class="card-header py-3 bg-primary text-white">
+            <div class="card-header py-3">
                 <h4><i class="fas fa-chart-line me-2"></i>Revenue Forecast</h4>
             </div>
             <div class="card-body">
@@ -44,6 +232,7 @@
                     {% if messages %}
                         {% for category, message in messages %}
                             <div class="alert alert-{{ 'danger' if category == 'error' else 'warning' }}">
+                                <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'exclamation-circle' }} me-2"></i>
                                 {{ message }}
                             </div>
                         {% endfor %}
@@ -68,7 +257,7 @@
                                 </div>
                                 {% if loop.first %}
                                 <div class="mt-2">
-                                    <span class="badge bg-{{ 'success' if pred.amount > last_actual else 'danger' }}">
+                                    <span class="badge {{ 'badge-success' if pred.amount > last_actual else 'badge-danger' }}">
                                         {{ ((pred.amount - last_actual)/last_actual*100)|round(1) }}% vs current
                                     </span>
                                 </div>
@@ -97,19 +286,22 @@
                 </div>
                 {% endif %}
 
-                <div class="card border-left-info shadow mb-4">
+                <div class="card mb-4">
                     <div class="card-body">
                         <form method="POST">
                             <div class="row align-items-center">
                                 <div class="col-md-4 mb-2">
-                                    <label class="form-label">Time Range:</label>
-                                    <select name="time_range" class="form-select">
-                                        <option value="month" {{ 'selected' if time_range == 'month' }}>Last Month</option>
-                                        <option value="quarter" {{ 'selected' if time_range == 'quarter' }}>Last Quarter</option>
-                                        <option value="year" {{ 'selected' if time_range == 'year' }}>Last Year</option>
-                                        <option value="all" {{ 'selected' if time_range == 'all' }}>All Time</option>
-                                    </select>
-                                </div>
+    <div class="time-range-group">
+        <label class="form-label time-range-label">Time Range:</label>
+        <select name="time_range" class="form-select w-100">
+            <option value="month" {{ 'selected' if time_range == 'month' }}>Last Month</option>
+            <option value="quarter" {{ 'selected' if time_range == 'quarter' }}>Last Quarter</option>
+            <option value="year" {{ 'selected' if time_range == 'year' }}>Last Year</option>
+            <option value="all" {{ 'selected' if time_range == 'all' }}>All Time</option>
+        </select>
+    </div>
+</div>
+
                                 <div class="col-md-4 mb-2">
                                     <button type="submit" class="btn btn-primary w-100">
                                         <i class="fas fa-calculator me-2"></i> Generate Forecast
@@ -128,28 +320,29 @@
                 {% if historical_data %}
                 <div class="card shadow">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">
+                        <h6 class="m-0 font-weight-bold">
                             <i class="fas fa-history me-2"></i>Historical Data
                         </h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for date, amount in historical_data %}
-                                    <tr>
-                                        <td>{{ date }}</td>
-                                        <td class="text-end">${{ "{:,.2f}".format(amount) }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                            <table class="table table-modern">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th class="text-end">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for date, amount in historical_data %}
+        <tr>
+            <td>{{ date }}</td>
+            <td class="text-end">${{ "{:,.2f}".format(amount) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
                         </div>
                     </div>
                 </div>
