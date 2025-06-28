@@ -3,6 +3,7 @@ from app.extensions import db
 from app.models import Revenue, FixedCost, VariableCost
 from . import dataentry_bp
 from flask_login import login_required, current_user
+from datetime import datetime
 
 @dataentry_bp.route('/dashboard/dataentry')
 @login_required
@@ -24,7 +25,7 @@ def revenue():
     if request.method == 'POST':
         amount = float(request.form['amount'])
         remarks = request.form['remarks']
-        entry = Revenue(user_id=current_user.id, amount=amount, remarks=remarks)  # Use current_user.id
+        entry = Revenue(user_id=current_user.id, amount=amount, remarks=remarks, timestamp=datetime.utcnow())  # Use current_user.id
         db.session.add(entry)
         db.session.commit()
         flash('Revenue added successfully!', 'success')
@@ -38,7 +39,7 @@ def fixedcost():
         amount = float(request.form['amount'])
         remarks = request.form['remarks']
         # user_id = session['user_id']
-        entry = FixedCost(user_id=current_user.id, amount=amount, remarks=remarks)
+        entry = FixedCost(user_id=current_user.id, amount=amount, remarks=remarks, timestamp=datetime.utcnow())
         db.session.add(entry)
         db.session.commit()
         flash('Fixed cost added successfully!', 'success')
@@ -52,7 +53,7 @@ def variablecost():
         amount = float(request.form['amount'])
         remarks = request.form['remarks']
         # user_id = session['user_id']
-        entry = VariableCost(user_id=current_user.id, amount=amount, remarks=remarks)
+        entry = VariableCost(user_id=current_user.id, amount=amount, remarks=remarks, timestamp=datetime.utcnow())
         db.session.add(entry)
         db.session.commit()
         flash('Variable cost added successfully!', 'success')
