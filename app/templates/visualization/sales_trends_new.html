@@ -14,10 +14,21 @@
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 
   <style>
+    :root {
+      --primary: #00e5ff;
+      --primary-dark: #00bcd4;
+      --secondary: #4e79a7;
+      --accent: #f28e2b;
+      --background: #121212;
+      --card-bg: #1e1e1e;
+      --text-light: #f0f0f0;
+      --text-muted: #aaaaaa;
+    }
+    
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
+      background-color: var(--background);
+      color: var(--text-light);
       margin: 0;
       padding: 0;
       line-height: 1.6;
@@ -110,7 +121,7 @@
     h1 {
       text-align: center;
       font-size: 2.5rem;
-      color: #00bcd4;
+      color: var(--primary);
       position: relative;
     }
 
@@ -122,13 +133,13 @@
       transform: translateX(-50%);
       width: 80px;
       height: 3px;
-      background: #00bcd4;
+      background: var(--primary);
       border-radius: 3px;
     }
 
     .chart-container {
-      background-color: #1e1e1e;
-      border: 1px solid #00e5ff;
+      background-color: var(--card-bg);
+      border: 1px solid var(--primary);
       border-radius: 12px;
       padding: 2rem;
       box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
@@ -136,25 +147,24 @@
     }
 
     .btn-back {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  padding: 0.8rem 1.6rem;
-  background: linear-gradient(135deg, #00bcd4, #0097a7);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
-.btn-back:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(0, 188, 212, 0.5);
-}
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 0.8rem 1.6rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
 
+    .btn-back:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 188, 212, 0.5);
     }
 
     .timeframe-btn {
@@ -162,66 +172,54 @@
       border-radius: 30px !important;
       padding: 0.5rem 1rem;
       font-weight: 600;
+      background-color: #333;
+      color: white;
+      border: none;
     }
 
-    .active {
-      background-color: #00e5ff !important;
+    .timeframe-btn.active {
+      background-color: var(--primary) !important;
       color: #121212 !important;
       box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
     }
 
-    .error-message {
-      color: #ff4444;
-      background-color: #1e1e1e;
-      border: 1px solid #ff4444;
-      border-radius: 6px;
+    .alert {
+      border-radius: 12px;
+    }
+
+    .debug-info {
+      background-color: rgba(0, 0, 0, 0.3);
       padding: 1rem;
+      border-radius: 8px;
       margin-top: 1rem;
-      font-weight: 600;
+      font-family: monospace;
+      font-size: 0.9rem;
     }
 
     .loading-spinner {
       text-align: center;
       margin: 20px 0;
     }
- .logo-text {
-  font-size: 3rem;
-  font-weight: 900;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #00e5ff;
-  background: linear-gradient(145deg, #00e5ff, #00bcd4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 
-  text-shadow:
-    0 1px 0 #0ff,
-    0 2px 3px rgba(0, 229, 255, 0.5),
-    0 5px 8px rgba(0, 229, 255, 0.3),
-    0 8px 20px rgba(0, 229, 255, 0.2);
+    .logo-text {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+      position: relative;
+    }
 
-  perspective: 100px;
-  transform: rotateX(5deg);
-  position: relative;
-}
-
-.logo-text::after {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90px;
-  height: 4px;
-  background: #00e5ff;
-  border-radius: 4px;
-  box-shadow:
-    0 0 8px #00e5ff,
-    0 0 12px #00e5ff,
-    0 0 20px #00e5ff;
-}
-
+    .logo-text::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
   </style>
 </head>
 
@@ -248,10 +246,10 @@
 
     <div class="timeframe-selector mb-4">
       <div class="btn-group">
-        <button class="btn btn-secondary timeframe-btn" data-timeframe="month">Last Month</button>
-        <button class="btn btn-secondary timeframe-btn" data-timeframe="quarter">Last Quarter</button>
-        <button class="btn btn-secondary timeframe-btn" data-timeframe="year">Last Year</button>
-        <button class="btn btn-secondary timeframe-btn" data-timeframe="all_time">All Time</button>
+        <button class="btn timeframe-btn" data-timeframe="month">Last Month</button>
+        <button class="btn timeframe-btn" data-timeframe="quarter">Last Quarter</button>
+        <button class="btn timeframe-btn" data-timeframe="year">Last Year</button>
+        <button class="btn timeframe-btn" data-timeframe="all_time">All Time</button>
       </div>
     </div>
 
@@ -265,8 +263,8 @@
     <div id="contentArea"></div>
 
     <a href="/dashboard/visualization" class="btn-back">
-  <i class="fas fa-arrow-left"></i> Back
-</a>
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
   </div>
 
   <!-- Scripts -->
@@ -278,56 +276,58 @@
 
     // Mouse movement background animation
     const container = document.getElementById('threejs-container');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
-
-    const geometry = new THREE.IcosahedronGeometry(1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00bcd4, wireframe: true, transparent: true, opacity: 0.3 });
-
-    const particles = [];
-    for (let i = 0; i < 50; i++) {
-      const p = new THREE.Mesh(geometry, material.clone());
-      p.position.set(Math.random()*30-15, Math.random()*30-15, Math.random()*30-15);
-      p.rotationSpeed = { x: Math.random()*0.01, y: Math.random()*0.02 };
-      p.moveAmplitude = Math.random()*0.003 + 0.001;
-      scene.add(p);
-      particles.push(p);
-    }
-
-    camera.position.z = 10;
-    let t = 0, mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
-
-    document.addEventListener('mousemove', e => {
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-    });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      t += 0.01;
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-      camera.position.x = targetX * 5;
-      camera.position.y = targetY * 2;
-      camera.lookAt(scene.position);
-      particles.forEach(p => {
-        p.rotation.x += p.rotationSpeed.x;
-        p.rotation.y += p.rotationSpeed.y;
-        p.position.x += Math.sin(t + p.position.y) * p.moveAmplitude;
-        p.position.y += Math.cos(t + p.position.x) * p.moveAmplitude;
-      });
-      renderer.render(scene, camera);
-    }
-
-    animate();
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+    if (container) {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+      container.appendChild(renderer.domElement);
+
+      const geometry = new THREE.IcosahedronGeometry(1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00bcd4, wireframe: true, transparent: true, opacity: 0.3 });
+
+      const particles = [];
+      for (let i = 0; i < 50; i++) {
+        const p = new THREE.Mesh(geometry, material.clone());
+        p.position.set(Math.random()*30-15, Math.random()*30-15, Math.random()*30-15);
+        p.rotationSpeed = { x: Math.random()*0.01, y: Math.random()*0.02 };
+        p.moveAmplitude = Math.random()*0.003 + 0.001;
+        scene.add(p);
+        particles.push(p);
+      }
+
+      camera.position.z = 10;
+      let t = 0, mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+
+      document.addEventListener('mousemove', e => {
+        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        t += 0.01;
+        targetX += (mouseX - targetX) * 0.05;
+        targetY += (mouseY - targetY) * 0.05;
+        camera.position.x = targetX * 5;
+        camera.position.y = targetY * 2;
+        camera.lookAt(scene.position);
+        particles.forEach(p => {
+          p.rotation.x += p.rotationSpeed.x;
+          p.rotation.y += p.rotationSpeed.y;
+          p.position.x += Math.sin(t + p.position.y) * p.moveAmplitude;
+          p.position.y += Math.cos(t + p.position.x) * p.moveAmplitude;
+        });
+        renderer.render(scene, camera);
+      }
+
+      animate();
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
 
     // Timeframe logic
     document.addEventListener('DOMContentLoaded', function() {
@@ -336,7 +336,7 @@
 
       document.querySelectorAll('.timeframe-btn').forEach(btn => {
         if (btn.dataset.timeframe === timeframe) btn.classList.add('active');
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
           const newTimeframe = this.dataset.timeframe;
           loadData(newTimeframe);
           history.pushState(null, '', `?timeframe=${newTimeframe}`);
@@ -349,36 +349,69 @@
     function loadData(timeframe) {
       const contentArea = document.getElementById('contentArea');
       const loadingSpinner = document.getElementById('loadingSpinner');
+      contentArea.innerHTML = '';
       contentArea.style.display = 'none';
       loadingSpinner.style.display = 'block';
 
       fetch(`/dashboard/visualization/sales-trends/data?timeframe=${timeframe}`)
-        .then(res => res.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then(data => {
           if (data.error) {
-            contentArea.innerHTML = `
-              <div class="error-message">
-                <i class="fas fa-exclamation-triangle"></i> Error: ${data.error}<br>Timeframe: ${timeframe}
-              </div>`;
+            let errorHTML = `
+              <div class="alert alert-danger">
+                <h4><i class="fas fa-exclamation-triangle"></i> ${data.error}</h4>
+                <p>Timeframe: ${timeframe}</p>`;
+            
+            if (data.debug) {
+              errorHTML += `
+                <div class="debug-info mt-3">
+                  <h5>Debug Information:</h5>
+                  <pre>${JSON.stringify(data.debug, null, 2)}</pre>
+                </div>`;
+            }
+            
+            errorHTML += `</div>`;
+            contentArea.innerHTML = errorHTML;
           } else {
             contentArea.innerHTML = `
               <div class="chart-container">
-                <img src="data:image/png;base64,${data.plot_url}" class="img-fluid" alt="Sales Trends Chart">
+                <img src="data:image/png;base64,${data.plot_url}" 
+                     class="img-fluid" 
+                     alt="Sales Trends Chart"
+                     style="width: 100%; height: auto;">
               </div>
               <div class="table-responsive">
                 <table class="table table-dark table-hover">
                   <thead>
-                    <tr><th>Period</th><th class="text-end">Revenue (₹)</th></tr>
+                    <tr>
+                      <th>Period</th>
+                      <th class="text-end">Revenue (₹)</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    ${data.periods.map((p, i) => `<tr><td>${p}</td><td class="text-end">${data.amounts[i].toFixed(2)}</td></tr>`).join('')}
+                    ${data.periods.map((period, i) => `
+                      <tr>
+                        <td>${period}</td>
+                        <td class="text-end">${data.amounts[i].toFixed(2)}</td>
+                      </tr>
+                    `).join('')}
                   </tbody>
                 </table>
               </div>`;
           }
         })
-        .catch(() => {
-          contentArea.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Error loading data</div>`;
+        .catch(error => {
+          console.error('Error:', error);
+          contentArea.innerHTML = `
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-triangle"></i> 
+              Failed to load data: ${error.message}
+            </div>`;
         })
         .finally(() => {
           loadingSpinner.style.display = 'none';

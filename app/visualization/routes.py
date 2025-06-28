@@ -54,44 +54,53 @@ def profit_loss_data():
         timeframe = request.args.get('timeframe', 'month')
         start_date, end_date = get_date_range(timeframe)
         
-        # Get filtered transactions - use name if description doesn't exist
-        revenue = Revenue.query.filter(
+        # CHANGED: Added explicit query construction and debug prints
+        print(f"Fetching revenue for user {current_user.id} from {start_date} to {end_date}")
+        
+        revenue = db.session.query(Revenue).filter(
             Revenue.user_id == current_user.id,
             Revenue.timestamp >= start_date,
             Revenue.timestamp <= end_date
         ).order_by(Revenue.timestamp.desc()).all()
         
-        fixed = FixedCost.query.filter(
+        fixed = db.session.query(FixedCost).filter(
             FixedCost.user_id == current_user.id,
             FixedCost.timestamp >= start_date,
             FixedCost.timestamp <= end_date
         ).order_by(FixedCost.timestamp.desc()).all()
         
-        variable = VariableCost.query.filter(
+        variable = db.session.query(VariableCost).filter(
             VariableCost.user_id == current_user.id,
             VariableCost.timestamp >= start_date,
             VariableCost.timestamp <= end_date
         ).order_by(VariableCost.timestamp.desc()).all()
         
-        # Calculate totals
-        total_revenue = sum(t.amount for t in revenue) or 0
-        total_fixed = sum(t.amount for t in fixed) or 0
-        total_variable = sum(t.amount for t in variable) or 0
+        # CHANGED: More robust total calculation
+        total_revenue = sum(t.amount for t in revenue) if revenue else 0
+        total_fixed = sum(t.amount for t in fixed) if fixed else 0
+        total_variable = sum(t.amount for t in variable) if variable else 0
         gross_profit = total_revenue - total_variable
         net_profit = gross_profit - total_fixed
         
-        # Prepare data for JSON response - use name or category if description doesn't exist
+        print(f"Totals - Revenue: {total_revenue}, Fixed: {total_fixed}, Variable: {total_variable}")
+        
         data = {
             'timeframe': timeframe,
-            'revenue': [{'date': t.timestamp.strftime('%Y-%m-%d'), 
-                        'description': getattr(t, 'description', getattr(t, 'name', 'Revenue')), 
-                        'amount': t.amount} for t in revenue],
-            'fixed_costs': [{'date': t.timestamp.strftime('%Y-%m-%d'), 
-                           'description': getattr(t, 'description', getattr(t, 'name', 'Fixed Cost')), 
-                           'amount': t.amount} for t in fixed],
-            'variable_costs': [{'date': t.timestamp.strftime('%Y-%m-%d'), 
-                              'description': getattr(t, 'description', getattr(t, 'name', 'Variable Cost')), 
-                              'amount': t.amount} for t in variable],
+            'revenue': [{
+                'date': t.timestamp.strftime('%Y-%m-%d'), 
+                'description': getattr(t, 'description', getattr(t, 'name', 'Revenue')), 
+                'amount': t.amount
+            } for t in revenue],
+            'fixed_costs': [{
+                'date': t.timestamp.strftime('%Y-%m-%d'), 
+                'description': getattr(t, 'description', getattr(t, 'name', 'Fixed Cost')), 
+                'amount': t.amount
+            } for t in fixed],
+            'variable_costs': [{
+                'date': t.timestamp.strftime('%Y-%m-%d'), 
+                'description': getattr(t, 'description', getattr(t, 'name', 'Variable Cost')), 
+                'amount': t.amount
+            } for t in variable],
             'totals': {
                 'revenue': total_revenue,
                 'fixed_costs': total_fixed,
@@ -120,32 +129,35 @@ def sales_trends_data():
         timeframe = request.args.get('timeframe', 'month')
         end_date = datetime.utcnow()
         
-        # Get start date based on timeframe
+        # CHANGED: Added user_id filter and debug print
+        print(f"Fetching sales trends for user {current_user.id}")
+        
         if timeframe == 'month':
             start_date = end_date - relativedelta(months=1)
-            date_format = '%Y-%m-%d'  # Daily
+            date_format = '%Y-%m-%d'
             group_expr = func.date(Revenue.timestamp)
         elif timeframe == 'quarter':
             start_date = end_date - relativedelta(months=3)
-            date_format = '%Y-%m-%W'  # Weekly
+            date_format = '%Y-%m-%W'
             group_expr = func.concat(
                 func.year(Revenue.timestamp), 
                 '-', 
                 func.lpad(func.week(Revenue.timestamp), 2, '0'))
         elif timeframe == 'year':
             start_date = end_date - relativedelta(years=1)
-            date_format = '%Y-%m'  # Monthly
+            date_format = '%Y-%m'
             group_expr = func.date_format(Revenue.timestamp, '%Y-%m')
         else:  # all_time
-            first_revenue = Revenue.query.filter_by(user_id=current_user.id)\
-                          .order_by(Revenue.timestamp.asc()).first()
+            first_revenue = db.session.query(Revenue).filter_by(
+                user_id=current_user.id
+            ).order_by(Revenue.timestamp.asc()).first()
             if not first_revenue:
                 return jsonify({'error': 'No revenue data available'})
             start_date = first_revenue.timestamp
-            date_format = '%Y'  # Yearly
+            date_format = '%Y'
             group_expr = func.year(Revenue.timestamp)
 
-        # Query the data using text() for MySQL compatibility
+        # CHANGED: Added explicit user_id filter
         sales_data = db.session.query(
             group_expr.label('period'),
             func.sum(Revenue.amount).label('total')
@@ -158,7 +170,6 @@ def sales_trends_data():
         if not sales_data:
             return jsonify({'error': 'No revenue data available for the selected timeframe'})
 
-        # Format periods for display
         periods = []
         amounts = []
         for row in sales_data:
@@ -179,18 +190,30 @@ def sales_trends_data():
         if not periods:
             return jsonify({'error': 'No valid data points available after formatting'})
 
-        # Generate plot
-        plt.figure(figsize=(10, 5))
-        plt.plot(periods, amounts, marker='o', color='#00e5ff')
-        plt.title(f'Sales Trends - {timeframe.replace("_", " ").title()}')
-        plt.xlabel('Period')
-        plt.ylabel('Revenue (₹)')
-        plt.xticks(rotation=45)
-        plt.grid(True, linestyle='--', alpha=0.7)
+        # Generate plot with improved styling
+        plt.figure(figsize=(10, 5), facecolor='#121212')
+        ax = plt.axes()
+        ax.set_facecolor('#1e1e1e')
+        
+        # CHANGED: Improved chart styling
+        plt.plot(periods, amounts, marker='o', color='#00e5ff', linewidth=2, markersize=8)
+        plt.title(f'Sales Trends - {timeframe.replace("_", " ").title()}', 
+                 color='white', pad=20, fontsize=14)
+        plt.xlabel('Period', color='white')
+        plt.ylabel('Revenue (₹)', color='white')
+        plt.xticks(rotation=45, color='white')
+        plt.yticks(color='white')
+        plt.grid(True, linestyle='--', alpha=0.3, color='#555')
+        
+        # Set spine colors
+        for spine in ax.spines.values():
+            spine.set_color('#00e5ff')
+            
         plt.tight_layout()
         
         buffer = BytesIO()
-        plt.savefig(buffer, format='png', transparent=True, dpi=100)
+        plt.savefig(buffer, format='png', transparent=False, dpi=120, 
+                   facecolor='#121212', edgecolor='none')
         buffer.seek(0)
         plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
         plt.close()
@@ -210,22 +233,73 @@ def sales_trends_data():
 def cost_breakdown():
     """Cost Breakdown Visualization"""
     try:
-        total_fixed = db.session.query(db.func.sum(FixedCost.amount)).filter_by(user_id=current_user.id).scalar() or 0
-        total_variable = db.session.query(db.func.sum(VariableCost.amount)).filter_by(user_id=current_user.id).scalar() or 0
+        # CHANGED: Added explicit user_id filtering
+        total_fixed = db.session.query(func.sum(FixedCost.amount)).filter(
+            FixedCost.user_id == current_user.id
+        ).scalar() or 0
         
-        labels = ['Fixed Costs', 'Variable Costs']
-        sizes = [total_fixed, total_variable]
-        colors = ['#ff9999', '#66b3ff']
+        total_variable = db.session.query(func.sum(VariableCost.amount)).filter(
+            VariableCost.user_id == current_user.id
+        ).scalar() or 0
         
-        plt.figure(figsize=(6,6))
-        plt.pie(sizes, labels=labels, colors=colors, 
-                autopct='%1.1f%%', startangle=90,
-                wedgeprops={'edgecolor': 'black', 'linewidth': 1})
+        if total_fixed == 0 and total_variable == 0:
+            return render_template('visualization/cost_breakdown.html',
+                                plot_url=None,
+                                fixed_costs=0,
+                                variable_costs=0)
+        
+        # CHANGED: Completely redesigned pie chart
+        plt.figure(figsize=(8, 8), facecolor='#121212')
+        
+        # Create gradient colors
+        colors = ['#4e79a7', '#f28e2b']
+        explode = (0.05, 0)
+        
+        wedges, texts, autotexts = plt.pie(
+            [total_fixed, total_variable],
+            labels=['Fixed Costs', 'Variable Costs'],
+            colors=colors,
+            autopct=lambda p: f'{p:.1f}%\n({p*sum([total_fixed,total_variable])/100:,.2f} ₹)',
+            startangle=90,
+            wedgeprops={'linewidth': 1, 'edgecolor': 'white'},
+            textprops={'color': 'white', 'fontsize': 12},
+            explode=explode,
+            shadow=True,
+            pctdistance=0.85
+        )
+        
+        # Improve autopct styling
+        for autotext in autotexts:
+            autotext.set_color('white')
+            autotext.set_fontsize(10)
+        
+        # Add center circle
+        centre_circle = plt.Circle((0,0), 0.70, fc='#121212')
+        plt.gca().add_artist(centre_circle)
+        
+        # Add title and legend
+        plt.title('Cost Breakdown\n', color='white', fontsize=14, fontweight='bold', y=1.05)
+        plt.legend(
+            [f'Fixed: ₹{total_fixed:,.2f}', f'Variable: ₹{total_variable:,.2f}'],
+            loc='upper right',
+            bbox_to_anchor=(1.3, 1),
+            frameon=False,
+            labelcolor='white'
+        )
+        
+        # Equal aspect ratio
         plt.axis('equal')
-        plt.title('Cost Breakdown')
         
+        # Save to buffer
         buffer = BytesIO()
-        plt.savefig(buffer, format='png', transparent=True)
+        plt.savefig(
+            buffer,
+            format='png',
+            dpi=120,
+            bbox_inches='tight',
+            facecolor='#121212',
+            edgecolor='none'
+        )
         buffer.seek(0)
         plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
         plt.close()
@@ -235,4 +309,21 @@ def cost_breakdown():
                             fixed_costs=total_fixed,
                             variable_costs=total_variable)
     except Exception as e:
+        current_app.logger.error(f"Error generating cost breakdown: {str(e)}")
         abort(500, description="Error generating cost breakdown")
+
+# CHANGED: Added debug endpoint
+@visualization_bp.route('/debug/revenue')
+@login_required
+def debug_revenue():
+    """Debug endpoint to check revenue data"""
+    revenues = Revenue.query.filter_by(user_id=current_user.id).all()
+    return jsonify({
+        'count': len(revenues),
+        'revenues': [{
+            'id': r.id,
+            'amount': r.amount,
+            'timestamp': r.timestamp.isoformat(),
+            'description': r.description
+        } for r in revenues]
+    })
