@@ -8,6 +8,7 @@ class User(db.Model, UserMixin):  # Add UserMixin
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     email_verified = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def is_authenticated(self):
         return True

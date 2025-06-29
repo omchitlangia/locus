@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, sessio
 from app.extensions import db, bcrypt
 from flask_login import current_user, login_user, login_required, logout_user, login_fresh  # Add this import
 from app.models import User
-from datetime import timedelta
+from datetime import datetime
 from .email_utils import send_email, generate_token, confirm_token
 
 auth_bp = Blueprint('auth', __name__)
@@ -35,10 +35,15 @@ def register():
             flash('Email already registered.', 'error')
             return render_template('user_management/register.html')
 
-        # Create user first
+        # Create user with timestamp
         try:
             hashed = bcrypt.generate_password_hash(password).decode('utf-8')
-            user = User(username=username, email=email, password=hashed)
+            user = User(
+                username=username, 
+                email=email, 
+                password=hashed,
+                created_at=datetime.utcnow()  # Explicit timestamp
+            )
             db.session.add(user)
             db.session.commit()
         except Exception as e:
@@ -46,6 +51,7 @@ def register():
             flash(f'Error creating user: {str(e)}', 'error')
             return render_template('user_management/register.html')
 
+        # Rest of the registration code remains the same...
         # Now handle email separately
         try:
             token = generate_token(email)
