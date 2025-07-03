@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app.extensions import db
-from .models import Event
+from app.models import Event
 from datetime import datetime
 from . import event_bp
 
