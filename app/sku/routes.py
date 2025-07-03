@@ -1,12 +1,12 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app import db
-from app.sku.models import SKU
+from app.models import SKU
 from app.sku.forms import SKUForm
 from . import sku_bp
 from sqlalchemy import func
 
-@sku_bp.route('/management', methods=['GET', 'POST'])
+@sku_bp.route('/dashboard/management', methods=['GET', 'POST'])
 @login_required
 def index():
     form = SKUForm()
