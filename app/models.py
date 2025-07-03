@@ -17,6 +17,7 @@ class SKU(db.Model):
 
     def __repr__(self):
         return f"SKU('{self.code}', '{self.name}')"
+        
 class User(db.Model, UserMixin):  # Add UserMixin
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
