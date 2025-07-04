@@ -1,16 +1,17 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app import db
-from app.models import SKU
 from app.sku.forms import SKUForm
 from . import sku_bp
 from sqlalchemy import func
+from datetime import datetime
+from app.models import SKU
 
-@sku_bp.route('/dashboard/management', methods=['GET', 'POST'])
+@sku_bp.route('/management', methods=['GET', 'POST'])
 @login_required
 def index():
     form = SKUForm()
-    
+
     if form.validate_on_submit():
         try:
             sku = SKU(
@@ -21,6 +22,7 @@ def index():
                 selling_price=form.selling_price.data,
                 quantity=form.quantity.data,
                 category=form.category.data,
+                expiry_date=form.expiry_date.data,
                 user_id=current_user.id
             )
             db.session.add(sku)
@@ -30,9 +32,9 @@ def index():
         except Exception as e:
             db.session.rollback()
             flash(f'Error creating SKU: {str(e)}', 'danger')
-    
+
     skus = SKU.query.filter_by(user_id=current_user.id).all()
-    
+
     # Enhanced analytics calculations
     analytics = {
         'total_skus': len(skus),
@@ -53,6 +55,24 @@ def index():
         sku.revenue_potential = sku.selling_price * sku.quantity
 
     return render_template('sku/sku_management.html',
-                         form=form,
-                         skus=skus,
-                         analytics=analytics)
+        form=form,
+        skus=skus,
+        analytics=analytics)
+
+@sku_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    sku = SKU.query.get_or_404(id)
+    form = SKUForm(obj=sku)
+
+    if form.validate_on_submit():
+        try:
+            form.populate_obj(sku)
+            db.session.commit()
+            flash('SKU updated successfully!', 'success')
+            return redirect(url_for('sku.index'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating SKU: {str(e)}', 'danger')
+
+    return render_template('sku/edit.html', form=form)

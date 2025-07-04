@@ -19,6 +19,12 @@ class SKU(db.Model):
     def __repr__(self):
         return f"SKU('{self.code}', '{self.name}')"
 
+    def is_expired(self):
+        return self.expiry_date and self.expiry_date < datetime.now().date()
+
+    def is_available(self):
+        return self.quantity > 0 and not self.is_expired()
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
