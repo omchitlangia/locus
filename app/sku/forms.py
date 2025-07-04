@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, IntegerField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, NumberRange
+from wtforms.fields import DateField
 
 class SKUForm(FlaskForm):
     code = StringField('SKU Code', validators=[DataRequired()])
@@ -10,3 +11,4 @@ class SKUForm(FlaskForm):
     selling_price = FloatField('Selling Price', validators=[DataRequired(), NumberRange(min=0)])
     quantity = IntegerField('Initial Quantity', validators=[NumberRange(min=0)])
     category = StringField('Category')
+    expiry_date = DateField('Expiry Date', format='%Y-%m-%d')

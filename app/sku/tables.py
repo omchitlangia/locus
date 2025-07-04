@@ -1,7 +1,6 @@
 from app import create_app, db
-from .. import create_app, db
-from .models import SKU
-from app.sku.models import SKU
+from . import create_app, db
+from app.models import SKU
 
 def initialize_sku_tables():
     """Initialize SKU-related database tables"""
