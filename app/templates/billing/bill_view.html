@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ bill.bill_number }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .invoice-header { text-align: center; margin-bottom: 20px; }
+        .invoice-details { margin-bottom: 20px; }
+        .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; }
+        .invoice-totals { float: right; width: 300px; }
+        .print-button { text-align: center; margin-top: 20px; }
+        @media print {
+            .print-button { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-header">
+        <h1>LOCUS Retail Store</h1>
+        <p>Street - 007, GitHub Nagar, Panama City</p>
+        <p>GSTIN: GITHUB123 | omchitlangia.github.io</p>
+    </div>
+
+    <div class="invoice-details">
+        <h2>Invoice #{{ bill.bill_number }}</h2>
+        <p>Date: {{ bill.date.strftime('%d-%m-%Y %H:%M') }}</p>
+        <p>Customer: {{ bill.customer_name }}</p>
+        {% if bill.customer_phone %}<p>Phone: {{ bill.customer_phone }}</p>{% endif %}
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bill.items %}
+            <tr>
+                <td>{{ item.sku_name }} ({{ item.sku_code }})</td>
+                <td>₹{{ "%.2f"|format(item.unit_price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ "%.2f"|format(item.total_price) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="invoice-totals">
+        <p>Subtotal: ₹{{ "%.2f"|format(bill.subtotal) }}</p>
+        <p>Tax (18%): ₹{{ "%.2f"|format(bill.tax_amount) }}</p>
+        <p>Discount: ₹{{ "%.2f"|format(bill.discount) }}</p>
+        <p><strong>Grand Total: ₹{{ "%.2f"|format(bill.grand_total) }}</strong></p>
+    </div>
+
+    <div class="print-button">
+        <button onclick="window.print()">Print Invoice</button>
+        <a href="{{ url_for('billing.download_bill', bill_id=bill.id) }}">
+            <button>Download PDF</button>
+        </a>
+    </div>
+
+    <script>
+        // Auto-print if coming from process page
+        if(window.location.search.includes('autoprint')) {
+            window.print();
+        }
+    </script>
+</body>
+</html>

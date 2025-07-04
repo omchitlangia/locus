@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .card { margin-bottom: 20px; box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15); }
+        .card-header { font-weight: bold; background-color: #f8f9fa; }
+        #itemsTable th { background-color: #f8f9fa; }
+        .totals-row { font-weight: bold; background-color: #f8f9fa; }
+        .discount-input { max-width: 150px; }
+        .loading-spinner { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="mt-4 mb-4">Billing System</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-cash-register mr-1"></i>
+                Create New Bill
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" class="form-control" id="customerName" placeholder="Walk-in Customer">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="customerPhone">Customer Phone (Optional)</label>
+                        <input type="text" class="form-control" id="customerPhone" placeholder="Phone Number">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <h5>Add Items</h5>
+                        <div class="input-group mb-3">
+                            <select class="form-control" id="skuSelect">
+                                <option value="">Select SKU</option>
+                                {% for sku in skus %}
+                                <option value="{{ sku.id }}" 
+                                        data-price="{{ sku.selling_price }}" 
+                                        data-stock="{{ sku.quantity }}"
+                                        data-code="{{ sku.code }}"
+                                        data-name="{{ sku.name }}"
+                                        data-expiry="{{ sku.expiry_date.strftime('%d-%m-%Y') if sku.expiry_date else '' }}">
+                                    {{ sku.code }} - {{ sku.name }} (₹{{ sku.selling_price }}, Stock: {{ sku.quantity }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <input type="number" class="form-control" id="quantity" placeholder="Qty" min="1" value="1" style="max-width: 100px;">
+                            <button class="btn btn-primary" id="addItem">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="discount">Discount (₹)</label>
+                        <input type="number" class="form-control discount-input" id="discount" min="0" value="0" step="0.01">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select class="form-control" id="paymentMethod">
+                            <option value="Cash">Cash</option>
+                            <option value="Card">Card</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Net Banking">Net Banking</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>SKU Code</th>
+                                <th>Item Name</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Items will be added here dynamically -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="totals-row">
+                                <td colspan="4" class="text-right"><strong>Subtotal:</strong></td>
+                                <td id="subtotal">₹0.00</td>
+                                <td></td>
+                            </tr>
+                            <tr class="totals-row">
+                                <td colspan="4" class="text-right"><strong>Tax (18%):</strong></td>
+                                <td id="tax">₹0.00</td>
+                                <td></td>
+                            </tr>
+                            <tr class="totals-row">
+                                <td colspan="4" class="text-right"><strong>Discount:</strong></td>
+                                <td id="discountDisplay">-₹0.00</td>
+                                <td></td>
+                            </tr>
+                            <tr class="totals-row">
+                                <td colspan="4" class="text-right"><strong>Grand Total:</strong></td>
+                                <td id="grandTotal">₹0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="text-right">
+                    <button class="btn btn-success" id="processBill">
+                        <span class="button-text">Process Bill</span>
+                        <span class="loading-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Success Modal -->
+    <div class="modal fade" id="billModal" tabindex="-1" aria-labelledby="billModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="billModalLabel">Bill Generated</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="mb-3">Bill #<span id="generatedBillNumber"></span></h4>
+                    <p class="mb-4">Your bill has been generated successfully!</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a id="downloadBill" href="#" class="btn btn-primary">
+                            <i class="fas fa-download"></i> Download Bill
+                        </a>
+                        <a id="viewBill" href="#" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-print"></i> View/Print Bill
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        let items = [];
+        let discount = 0;
+        
+        // Add item to bill
+        $('#addItem').click(function() {
+            const skuSelect = $('#skuSelect');
+            const skuId = skuSelect.val();
+            
+            if (!skuId) {
+                showAlert('Please select an SKU', 'warning');
+                return;
+            }
+            
+            const skuCode = skuSelect.find('option:selected').data('code');
+            const skuName = skuSelect.find('option:selected').data('name');
+            const price = parseFloat(skuSelect.find('option:selected').data('price'));
+            const stock = parseInt(skuSelect.find('option:selected').data('stock'));
+            const expiry = skuSelect.find('option:selected').data('expiry');
+            const quantity = parseInt($('#quantity').val());
+            
+            if (quantity < 1) {
+                showAlert('Quantity must be at least 1', 'warning');
+                return;
+            }
+            
+            if (quantity > stock) {
+                showAlert(`Insufficient stock! Only ${stock} available.`, 'warning');
+                return;
+            }
+            
+            // Check if item already exists
+            const existingItem = items.find(item => item.sku_id == skuId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                items.push({
+                    sku_id: parseInt(skuId),
+                    sku_code: skuCode,
+                    sku_name: skuName,
+                    unit_price: price,
+                    quantity: quantity,
+                    expiry_date: expiry
+                });
+            }
+            
+            renderItems();
+            calculateTotals();
+            $('#quantity').val(1);
+            skuSelect.focus();
+        });
+        
+        // Remove item from bill
+        $(document).on('click', '.remove-item', function() {
+            const skuId = parseInt($(this).data('sku-id'));
+            items = items.filter(item => item.sku_id !== skuId);
+            renderItems();
+            calculateTotals();
+        });
+        
+        // Update discount
+        $('#discount').on('change', function() {
+            discount = parseFloat($(this).val()) || 0;
+            calculateTotals();
+        });
+        
+        // Process bill
+        $('#processBill').click(function() {
+            if (items.length === 0) {
+                showAlert('Please add at least one item to the bill', 'warning');
+                return;
+            }
+            
+            const btn = $(this);
+            btn.prop('disabled', true);
+            btn.find('.button-text').text('Processing...');
+            btn.find('.loading-spinner').show();
+            
+            const customerName = $('#customerName').val() || 'Walk-in Customer';
+            const customerPhone = $('#customerPhone').val() || '';
+            const paymentMethod = $('#paymentMethod').val();
+            const subtotal = parseFloat($('#subtotal').text().replace('₹', ''));
+            const tax = parseFloat($('#tax').text().replace('₹', ''));
+            const grandTotal = parseFloat($('#grandTotal').text().replace('₹', ''));
+            
+            $.ajax({
+                url: '/billing/process_bill',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    items: items.map(item => ({
+                        sku_id: item.sku_id,
+                        sku_code: item.sku_code,
+                        sku_name: item.sku_name,
+                        quantity: item.quantity,
+                        unit_price: item.unit_price,
+                        expiry_date: item.expiry_date
+                    })),
+                    customer_name: customerName,
+                    customer_phone: customerPhone,
+                    payment_method: paymentMethod,
+                    subtotal: subtotal,
+                    tax: tax,
+                    discount: discount,
+                    grand_total: grandTotal
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        // Open the bill in a new tab immediately
+                        window.open(response.view_url + '?autoprint=true', '_blank');
+                        
+                        // Update modal links
+                        $('#downloadBill').attr('href', response.pdf_url);
+                        $('#viewBill').attr('href', response.view_url);
+                        $('#generatedBillNumber').text(response.bill_number);
+                        
+                        // Show success modal
+                        $('#billModal').modal('show');
+                        
+                        // Reset form
+                        items = [];
+                        renderItems();
+                        calculateTotals();
+                        $('#customerName').val('');
+                        $('#customerPhone').val('');
+                        $('#discount').val(0);
+                    } else {
+                        showAlert(response.message || 'Error processing bill', 'danger');
+                    }
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON && xhr.responseJSON.message 
+                        ? xhr.responseJSON.message 
+                        : 'Server error, please try again';
+                    showAlert('Error: ' + errorMsg, 'danger');
+                },
+                complete: function() {
+                    btn.prop('disabled', false);
+                    btn.find('.button-text').text('Process Bill');
+                    btn.find('.loading-spinner').hide();
+                }
+            });
+        });
+        
+        // Helper functions
+        function renderItems() {
+            const tbody = $('#itemsTable tbody');
+            tbody.empty();
+            
+            items.forEach(item => {
+                const total = item.unit_price * item.quantity;
+                tbody.append(`
+                    <tr>
+                        <td>${item.sku_code}</td>
+                        <td>
+                            ${item.sku_name}
+                            ${item.expiry_date ? '<br><small class="text-muted">Exp: ' + item.expiry_date + '</small>' : ''}
+                        </td>
+                        <td>₹${item.unit_price.toFixed(2)}</td>
+                        <td>${item.quantity}</td>
+                        <td>₹${total.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger remove-item" data-sku-id="${item.sku_id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+        
+        function calculateTotals() {
+            const subtotal = items.reduce((sum, item) => sum + (item.unit_price * item.quantity), 0);
+            const tax = subtotal * 0.18;
+            const grandTotal = subtotal + tax - discount;
+            
+            $('#subtotal').text('₹' + subtotal.toFixed(2));
+            $('#tax').text('₹' + tax.toFixed(2));
+            $('#discountDisplay').text('-₹' + discount.toFixed(2));
+            $('#grandTotal').text('₹' + grandTotal.toFixed(2));
+        }
+        
+        function showAlert(message, type) {
+            const alert = $(`
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `);
+            $('.container-fluid').prepend(alert);
+            setTimeout(() => alert.alert('close'), 5000);
+        }
+        
+        // Keyboard shortcuts
+        $(document).keydown(function(e) {
+            if (e.key === '/' && !$(e.target).is('input,select,textarea')) {
+                e.preventDefault();
+                $('#skuSelect').focus();
+            }
+        });
+    });
+    </script>
+</body>
+</html>

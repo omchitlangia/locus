@@ -38,4 +38,7 @@ def create_app():
     from app.sku.routes import sku_bp
     app.register_blueprint(sku_bp)
 
+    from app.billing.routes import billing_bp
+    app.register_blueprint(billing_bp)
+
     return app
