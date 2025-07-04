@@ -1,4 +1,6 @@
 # config.py
+import os
+from pathlib import Path
 
 class Config:
     # Secret settings
@@ -16,3 +18,4 @@ class Config:
     MAIL_USERNAME = 'locusnoreply19@gmail.com'           # <-- change to your actual Gmail
     MAIL_PASSWORD = 'iqcwjhipozwbwatn'        # <-- Gmail app password
     MAIL_DEFAULT_SENDER = 'locusnoreply19@gmail.com'
+

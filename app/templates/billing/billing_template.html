@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{ bill.bill_number }} - LOCUS Retail</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: white;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2c3e50;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .company-details {
+            color: #555;
+        }
+        .invoice-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0066cc;
+            margin: 15px 0;
+            text-transform: uppercase;
+        }
+        .bill-info {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .bill-info-column {
+            width: 48%;
+        }
+        .bill-info p {
+            color: #444;
+            margin: 5px 0;
+        }
+        .bill-details {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+        .bill-details th {
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-weight: 600;
+        }
+        .bill-details td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+        .totals {
+            float: right;
+            width: 300px;
+            margin-top: 20px;
+        }
+        .totals table {
+            width: 100%;
+            border-top: 2px solid #2c3e50;
+        }
+        .totals td {
+            padding: 8px;
+            color: #333;
+        }
+        .totals tr:last-child td {
+            font-weight: 600;
+            font-size: 15px;
+            color: #0066cc;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            page-break-inside: avoid;
+        }
+        .watermark {
+            position: fixed;
+            opacity: 0.1;
+            font-size: 100px;
+            width: 100%;
+            text-align: center;
+            top: 40%;
+            transform: rotate(-30deg);
+            z-index: -1;
+            color: #000;
+        }
+        .item-name {
+            color: #222;
+            font-weight: 500;
+        }
+        .item-code {
+            color: #0066cc;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    {% if bill.status == 'draft' %}
+    <div class="watermark">DRAFT</div>
+    {% endif %}
+
+    <div class="header">
+        <div class="company-name">LOCUS Retail Store</div>
+        <div class="company-details">Street - 007, GitHub Nagar, Panama City</div>
+        <div class="company-details">GSTIN: GITHUB123 | omchitlangia.github.io</div>
+    </div>
+    
+    <div class="invoice-title">TAX INVOICE</div>
+    
+    <div class="bill-info">
+        <div class="bill-info-column">
+            <p><strong>Invoice #:</strong> {{ bill.bill_number }}</p>
+            <p><strong>Date:</strong> {{ bill.date.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <p><strong>Customer:</strong> {{ bill.customer_name }}</p>
+            {% if bill.customer_phone %}
+            <p><strong>Phone:</strong> {{ bill.customer_phone }}</p>
+            {% endif %}
+        </div>
+        <div class="bill-info-column">
+            <p><strong>Payment Due:</strong> {{ (bill.date + timedelta(days=7)).strftime('%d-%m-%Y') }}</p>
+            <p><strong>Payment Method:</strong> {{ bill.payment_method }}</p>
+            <p><strong>Salesperson:</strong> {{ current_user.name if current_user else 'System' }}</p>
+        </div>
+    </div>
+    
+    <table class="bill-details">
+        <thead>
+            <tr>
+                <th width="5%">#</th>
+                <th width="15%">SKU Code</th>
+                <th width="30%">Item Description</th>
+                <th width="15%">Unit Price</th>
+                <th width="10%">Qty</th>
+                <th width="15%">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bill.items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td class="item-code">{{ item.sku_code }}</td>
+                <td>
+                    <span class="item-name">{{ item.sku_name }}</span>
+                    {% if item.expiry_date %}
+                    <br><small>Exp: {{ item.expiry_date.strftime('%d-%m-%Y') if item.expiry_date is string else item.expiry_date.strftime('%d-%m-%Y') }}</small>
+                    {% endif %}
+                </td>
+                <td>₹{{ "%.2f"|format(item.unit_price) }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ "%.2f"|format(item.total_price) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="totals">
+        <table>
+            <tr>
+                <td><strong>Subtotal:</strong></td>
+                <td>₹{{ "%.2f"|format(bill.subtotal) }}</td>
+            </tr>
+            <tr>
+                <td><strong>Tax (18%):</strong></td>
+                <td>₹{{ "%.2f"|format(bill.tax_amount) }}</td>
+            </tr>
+            {% if bill.discount > 0 %}
+            <tr>
+                <td><strong>Discount:</strong></td>
+                <td>-₹{{ "%.2f"|format(bill.discount) }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td><strong>Grand Total:</strong></td>
+                <td>₹{{ "%.2f"|format(bill.grand_total) }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <p>Thank you for your business! Terms: Net 7 days</p>
+        <p>This is a computer generated invoice. No signature required.</p>
+        <p>Questions? Email billing@retail.example</p>
+    </div>
+</body>
+</html>
