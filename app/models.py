@@ -15,13 +15,14 @@ class SKU(db.Model):
     category = db.Column(db.String(50))
     expiry_date = db.Column(db.Date)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"SKU('{self.code}', '{self.name}')"
-
+  
     def is_expired(self):
         return self.expiry_date and self.expiry_date < datetime.now().date()
-
+    
     def is_available(self):
         return self.quantity > 0 and not self.is_expired()
 
@@ -70,7 +71,6 @@ class FixedCost(db.Model):
     amount = db.Column(db.Float, nullable=False)
     remarks = db.Column(db.String(200))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    bill_id = db.Column(db.Integer, db.ForeignKey('bill.id'))
     
     user = db.relationship('User', backref='fixed_costs')
 
