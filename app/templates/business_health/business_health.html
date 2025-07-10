@@ -1,0 +1,535 @@
+<!-- app/templates/business_health/business_health.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Business Health Score | Locus</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #1E88E5;
+      --primary-hover: #1565C0;
+      --text: #ffffff;
+      --text-light: #aaa;
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4);
+      --good: #28a745;
+      --fair: #ffc107;
+      --poor: #dc3545;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .health-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .health-header h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .health-header p {
+      color: var(--text-light);
+    }
+
+    .score-container {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .wrap {
+      width: 340px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .score {
+      position: absolute;
+      top: 54%;
+      width: 100%;
+      text-align: center;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text);
+      transform: translateY(-50%);
+    }
+
+    .health-status {
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .good { color: var(--good); }
+    .fair { color: var(--fair); }
+    .poor { color: var(--poor); }
+
+    .kpi-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .kpi-card {
+      background: #2a2a2a;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .kpi-name {
+      font-weight: 600;
+    }
+
+    .kpi-score {
+      background: #1e1e1e;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .kpi-progress {
+      height: 8px;
+      background: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ff3b30, #ff9500, #ffd700, #a8e05f, #28cd41);
+      animation: gradient 3s ease infinite;
+    }
+
+    .kpi-formula {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      background: #1e1e1e;
+      padding: 0.5rem;
+      border-radius: 6px;
+    }
+
+    .kpi-formula i {
+      margin-right: 0.4rem;
+      color: var(--primary);
+    }
+
+    .input-form {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-top: 3rem;
+    }
+
+    .input-form h3 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 2rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      display: block;
+      color: white;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    .form-actions {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 768px) {
+      .wrap { width: 280px; height: 160px; }
+      .form-grid, .kpi-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>Locus | Business Health Score</header>
+  <div class="container">
+    <div class="health-header">
+      <h1>Business Health Dashboard</h1>
+      <p>Comprehensive overview of your business performance across key metrics</p>
+    </div>
+    
+    <div class="score-container">
+      <div class="wrap">
+        <svg viewBox="0 0 100 60">
+          <defs>
+            <linearGradient id="bhsGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff3b30" />
+              <stop offset="25%" stop-color="#ff9500" />
+              <stop offset="50%" stop-color="#ffd700" />
+              <stop offset="75%" stop-color="#a8e05f" />
+              <stop offset="100%" stop-color="#28cd41" />
+            </linearGradient>
+          </defs>
+
+          <path d="M10,50 A40,40 0 0 1 90,50"
+                stroke="#e0e0e0"
+                stroke-width="10"
+                fill="none"
+                stroke-linecap="round" />
+
+          <path id="arc"
+                d="M10,50 A40,40 0 0 1 90,50"
+                stroke="url(#bhsGrad)"
+                stroke-width="10"
+                fill="none"
+                stroke-linecap="round"
+                stroke-dasharray="0 0" />
+        </svg>
+        <div id="score" class="score">{{ health_score }}%</div>
+      </div>
+      
+      <div class="health-status">
+        {% if health_score >= 75 %}
+          <span class="good"><i class="fas fa-check-circle"></i> Excellent Health</span>
+        {% elif health_score >= 50 %}
+          <span class="fair"><i class="fas fa-info-circle"></i> Moderate Health</span>
+        {% else %}
+          <span class="poor"><i class="fas fa-exclamation-triangle"></i> Needs Improvement</span>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="kpi-section">
+      <h2><i class="fas fa-chart-line"></i> Key Performance Indicators</h2>
+      <div class="kpi-grid">
+        <!-- Revenue Growth -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Revenue Growth</span>
+            <span class="kpi-score">
+              {% if kpis.revenue_growth is none %}
+                <span style="color: var(--poor)">No Data</span>
+              {% else %}
+                {{ "%.1f"|format(kpis.revenue_growth) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.revenue_growth is none %}0{% else %}{{ kpis.revenue_growth }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-chart-line"></i> (Current - Previous) / Previous × 100
+          </div>
+        </div>
+
+        <!-- Gross Profit Margin -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Gross Profit Margin</span>
+            <span class="kpi-score">
+              {% if kpis.gross_profit_margin is none %}
+                <span style="color: var(--poor)">No Data</span>
+              {% else %}
+                {{ "%.1f"|format(kpis.gross_profit_margin) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.gross_profit_margin is none %}0{% else %}{{ kpis.gross_profit_margin }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-percentage"></i> (Revenue - Variable Costs) / Revenue × 100
+          </div>
+        </div>
+
+        
+
+        
+
+        <!-- Forecast Accuracy -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Forecast Accuracy</span>
+            <span class="kpi-score">
+              {% if kpis.forecast_accuracy is none %}
+                <span style="color: var(--poor)">No Data</span>
+              {% else %}
+                {{ "%.1f"|format(kpis.forecast_accuracy) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.forecast_accuracy is none %}0{% else %}{{ kpis.forecast_accuracy }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-chart-bar"></i> 100 - Mean Absolute Percentage Error
+          </div>
+        </div>
+
+        <!-- Customer Retention -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Customer Retention</span>
+            <span class="kpi-score">
+              {% if kpis.customer_retention is none %}
+                N/A
+              {% else %}
+                {{ "%.1f"|format(kpis.customer_retention) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.customer_retention is none %}0{% else %}{{ kpis.customer_retention }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-users"></i> (Ending Users / Starting Users) × 100
+          </div>
+        </div>
+
+        <!-- Marketing ROI -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Marketing ROI</span>
+            <span class="kpi-score">
+              {% if kpis.marketing_roi is none %}
+                N/A
+              {% else %}
+                {{ "%.1f"|format(kpis.marketing_roi) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.marketing_roi is none %}0{% else %}{{ kpis.marketing_roi }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-ad"></i> ((Revenue - Cost) / Cost) × 100
+          </div>
+        </div>
+
+        <!-- CAC -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Inventory Turnover Ratio</span>
+            <span class="kpi-score">
+              {% if kpis.cac is not none %}
+                ${{ "%.2f"|format(kpis.cac) }}
+              {% else %}
+                <span style="color: var(--poor)">No Data</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.cac is not none %}{{ kpis.cac  }}{% else %}0{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-user-plus"></i> Marketing Spend / New Customers
+          </div>
+        </div>
+
+        <!-- Team Efficiency -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">Team Efficiency</span>
+            <span class="kpi-score">
+              {% if kpis.team_efficiency is none %}
+                N/A
+              {% else %}
+                {{ "%.1f"|format(kpis.team_efficiency) }}%
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.team_efficiency is none %}0{% else %}{{ kpis.team_efficiency }}{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-users-cog"></i> (Output / Input Resources) × 100
+          </div>
+        </div>
+
+        <!-- User Growth -->
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-name">User Growth</span>
+            <span class="kpi-score">
+              {% if kpis.user_growth is not none %}
+                {{ "%.1f"|format(kpis.user_growth) }}%
+              {% else %}
+                <span style="color: var(--poor)">No Data</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="kpi-progress">
+            <div class="progress-bar" style="width: {% if kpis.user_growth is not none %}{{ (kpis.user_growth + 100)/2 }}{% else %}0{% endif %}%"></div>
+          </div>
+          <div class="kpi-formula">
+            <i class="fas fa-user-grow"></i> ((Current - Previous) / Previous) × 100
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="input-form">
+      <h3><i class="fas fa-edit"></i> Provide Additional Metrics</h3>
+      <form method="POST" action="{{ url_for('business_health.business_health') }}">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="customer_retention">Customer Retention Rate (%)</label>
+            <input type="number" id="customer_retention" name="customer_retention" min="0" max="100" step="0.1" placeholder="0-100" value="{{ kpis.customer_retention or '' }}">
+          </div>
+          
+          <div class="form-group">
+            <label for="marketing_roi">Marketing ROI (%)</label>
+            <input type="number" id="marketing_roi" name="marketing_roi" min="0" step="0.1" placeholder="0-1000" value="{{ kpis.marketing_roi or '' }}">
+          </div>
+          
+          <div class="form-group">
+            <label for="cac">Inventory Turnover Ratio</label>
+            <input type="number" id="cac" name="cac" min="0" step="0.01" placeholder="0-1000" value="{{ kpis.cac or '' }}">
+          </div>
+          
+          
+          <div class="form-group">
+            <label for="team_efficiency">Team Efficiency Score (%)</label>
+            <input type="number" id="team_efficiency" name="team_efficiency" min="0" max="100" step="0.1" placeholder="0-100" value="{{ kpis.team_efficiency or '' }}">
+          </div>
+          
+          <div class="form-group">
+            <label for="user_growth">Active User Growth (%)</label>
+            <input type="number" id="user_growth" name="user_growth" min="-100" max="1000" step="0.1" placeholder="-1000 to 1000" value="{{ kpis.user_growth or '' }}">
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn">
+            <i class="fas fa-sync-alt"></i> Update Health Score
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    // Animate the score meter
+    const target = {{ health_score }};
+    const arc = document.getElementById('arc');
+    const txt = document.getElementById('score');
+    const totalLen = arc.getTotalLength();
+    
+    // Reset initially
+    arc.setAttribute('stroke-dasharray', `0 ${totalLen}`);
+    
+    let current = 0;
+    const animationDuration = 2000; // 2 seconds
+    const steps = 100;
+    const stepTime = animationDuration / steps;
+
+    (function animate() {
+      if (current <= target) {
+        const drawn = (current / 100) * totalLen;
+        arc.setAttribute('stroke-dasharray', `${drawn} ${totalLen - drawn}`);
+        txt.textContent = current.toFixed(0) + '%';
+        current++;
+        setTimeout(animate, stepTime);
+      } else {
+        txt.textContent = target.toFixed(1) + '%'; // Show precise final value
+      }
+    })();
+  </script>
+</body>
+</html>

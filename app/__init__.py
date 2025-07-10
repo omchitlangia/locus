@@ -41,4 +41,7 @@ def create_app():
     from app.billing.routes import billing_bp
     app.register_blueprint(billing_bp)
 
+    from app.business_health.routes import health_bp
+    app.register_blueprint(health_bp)
+
     return app

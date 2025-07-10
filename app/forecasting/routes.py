@@ -6,7 +6,7 @@ import numpy as np
 from statsmodels.tsa.api import ExponentialSmoothing
 from sklearn.metrics import r2_score
 from . import forecast_bp
-from app.models import Revenue, FixedCost, VariableCost
+from app.models import Revenue, FixedCost, VariableCost,RevenuePrediction
 from sklearn.linear_model import LinearRegression
 from sqlalchemy import func
 
@@ -143,13 +143,16 @@ def revenue_prediction():
             forecast = model_fit.forecast(3)
             forecast_dates = [now + timedelta(days=30*(i+1)) for i in range(3)]
             
-            # Calculate confidence intervals (simplified example)
-            std_dev = np.std(y[-6:]) if len(y) >= 6 else np.std(y)  # Use last 6 months if available
-            confidence_multiplier = 1.96  # 95% confidence
+            # Calculate confidence intervals
+            std_dev = np.std(y[-6:]) if len(y) >= 6 else np.std(y)
+            confidence_multiplier = 1.96
+            
+            # Calculate model quality
+            r_squared = r2_score(y, model_fit.fittedvalues)
             
             predictions = []
             for i, (date, amount) in enumerate(zip(forecast_dates, forecast)):
-                ci = std_dev * confidence_multiplier * (i+1)  # Wider CI for further-out predictions
+                ci = std_dev * confidence_multiplier * (i+1)
                 predictions.append({
                     'period': f"Period {i+1}",
                     'date': date.strftime('%Y-%m-%d'),
@@ -159,8 +162,19 @@ def revenue_prediction():
                     'trend': '↑' if amount > y[-1] else '↓'
                 })
             
-            # Calculate model quality
-            r_squared = r2_score(y, model_fit.fittedvalues)
+            # Store predictions in database with R-squared value
+            for pred in predictions:
+                new_pred = RevenuePrediction(
+                    user_id=current_user.id,
+                    prediction_date=datetime.utcnow(),
+                    period_start=datetime.strptime(pred['date'], '%Y-%m-%d'),
+                    period_end=datetime.strptime(pred['date'], '%Y-%m-%d') + timedelta(days=30),
+                    predicted_amount=pred['amount'],
+                    actual_amount=None,
+                    r_squared=r_squared  # Store the R-squared value
+                )
+                db.session.add(new_pred)
+            db.session.commit()
             
             return render_template(
                 '/forecasting/revenue_prediction.html',
@@ -173,6 +187,7 @@ def revenue_prediction():
             )
             
         except Exception as e:
+            db.session.rollback()
             flash(f'⚠️ Prediction error: {str(e)}', 'error')
             return redirect(url_for('.revenue_prediction'))
     

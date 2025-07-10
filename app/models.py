@@ -50,6 +50,18 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+class RevenuePrediction(db.Model):
+    __tablename__ = 'revenue_predictions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    prediction_date = db.Column(db.DateTime, nullable=False)
+    period_start = db.Column(db.DateTime, nullable=False)
+    period_end = db.Column(db.DateTime, nullable=False)
+    predicted_amount = db.Column(db.Float, nullable=False)
+    actual_amount = db.Column(db.Float)
+    r_squared = db.Column(db.Float)  # New field for model accuracy
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
 class Revenue(db.Model):
     __tablename__ = 'revenue'
     
