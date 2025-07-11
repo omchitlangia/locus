@@ -33,6 +33,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128), nullable=False)
     email_verified = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    health_score = db.Column(db.Float, default=0.0)
 
     def is_authenticated(self):
         return True

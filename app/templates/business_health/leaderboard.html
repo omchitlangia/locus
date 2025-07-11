@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Health Leaderboard</title>
+    <style>
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #66fcf1;
+            font-size: 2.8rem;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .podium-card {
+            background: linear-gradient(to top, #1f2833, #2c3e50);
+            padding: 20px;
+            border-radius: 20px;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .podium-card.gold { border: 3px solid gold; }
+        .podium-card.silver { border: 3px solid silver; }
+        .podium-card.bronze { border: 3px solid #cd7f32; }
+
+        .podium-card .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .podium-card .name {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .podium-card .score {
+            font-size: 1rem;
+            color: #66fcf1;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #1f2833;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #45a29e;
+        }
+
+        th {
+            background-color: #45a29e;
+            color: #0b0c10;
+        }
+
+        tr:hover {
+            background-color: #2b303b;
+        }
+
+        .fallback {
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Business Health Leaderboard 🚀</h1>
+
+    {% if top_users|length >= 1 %}
+    <div class="podium">
+        {% if top_users|length > 1 %}
+        <div class="podium-card silver">
+            <div class="rank">🥈 #2</div>
+            <div class="name">{{ top_users[1].user.username or top_users[1].user.name }}</div>
+            <div class="score">{{ top_users[1].score }}</div>
+        </div>
+        {% endif %}
+        <div class="podium-card gold">
+            <div class="rank">🥇 #1</div>
+            <div class="name">{{ top_users[0].user.username or top_users[0].user.name }}</div>
+            <div class="score">{{ top_users[0].score }}</div>
+        </div>
+        {% if top_users|length > 2 %}
+        <div class="podium-card bronze">
+            <div class="rank">🥉 #3</div>
+            <div class="name">{{ top_users[2].user.username or top_users[2].user.name }}</div>
+            <div class="score">{{ top_users[2].score }}</div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if top_users|length > 3 %}
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in top_users[3:] %}
+            <tr>
+                <td>{{ entry.rank }}</td>
+                <td>{{ entry.user.username or entry.user.name }}</td>
+                <td>{{ entry.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif top_users|length <= 3 %}
+    <p class="fallback">Waiting for more worthy competitors to enter the arena...</p>
+    {% endif %}
+
+</body>
+</html>
