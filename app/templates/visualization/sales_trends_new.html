@@ -3,72 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sales Trends | LOCUS</title>
-
+  <title>CORPORATE RPG TERMINAL | SALES MISSION</title>
+  
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- Bootstrap & AOS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 
   <style>
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00bcd4;
-      --secondary: #4e79a7;
-      --accent: #f28e2b;
-      --background: #121212;
-      --card-bg: #1e1e1e;
-      --text-light: #f0f0f0;
-      --text-muted: #aaaaaa;
+      --neon-pink: #ff2a6d;
+      --neon-purple: #d300c5;
+      --neon-cyan: #05d9e8;
+      --neon-yellow: #f7f700;
+      --deep-blue: #0d0221;
+      --dark-bg: #0a0118;
+      --panel-bg: rgba(13, 2, 33, 0.8);
+      --text: #ffffff;
+      --text-light: #b3b3ff;
+      --good: #00ff41;
+      --fair: #ffe700;
+      --poor: #ff2a6d;
+      --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
     }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--background);
-      color: var(--text-light);
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      line-height: 1.6;
+      font-family: 'VT323', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
-    #threejs-container {
+    body {
+      background: var(--dark-bg);
+      color: var(--text);
+      background-image: 
+        linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      image-rendering: pixelated;
+    }
+
+    /* CRT Scanlines Effect */
+    body::after {
+      content: "";
       position: fixed;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      opacity: 0.3;
-    }
-
-    .floating-element {
-      position: absolute;
-      width: 100px;
-      height: 100px;
-      background: rgba(0, 188, 212, 0.1);
-      border: 2px solid rgba(0, 188, 212, 0.3);
-      border-radius: 50%;
+      background: linear-gradient(
+        rgba(5, 217, 232, 0.03) 1px, 
+        transparent 1px
+      );
+      background-size: 100% 2px;
       pointer-events: none;
+      animation: scan 8s linear infinite;
       z-index: -1;
-      animation: float 8s ease-in-out infinite;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(5deg); }
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100%; }
     }
 
-    header.header {
+    /* Header Styles */
+    .header {
       position: sticky;
       top: 0;
       z-index: 999;
-      background-color: rgba(26, 26, 26, 0.95);
+      background-color: var(--deep-blue);
       padding: 1rem 0;
-      color: #fff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
+      color: var(--neon-cyan);
+      box-shadow: 0 4px 0px 0px rgba(0,0,0,0.75);
+      border-bottom: 4px solid var(--neon-pink);
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 10px var(--neon-cyan);
     }
 
     .logo-bar {
@@ -84,25 +96,24 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      perspective: 800px;
     }
 
     .logo-animated-container {
       width: 50px;
       height: 50px;
-      border-radius: 50%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 3px solid var(--neon-pink);
+      box-shadow: 
+        inset 0 0 10px var(--neon-pink),
+        0 0 10px var(--neon-pink),
+        var(--pixel-shadow);
+      image-rendering: pixelated;
     }
 
     .logo-spin {
       width: 100%;
+      height: auto;
       animation: rotateLogo 6s linear infinite;
-      filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.6));
-      transform-style: preserve-3d;
-      border-radius: 50%;
+      filter: drop-shadow(0 0 12px var(--neon-cyan));
     }
 
     @keyframes rotateLogo {
@@ -111,17 +122,44 @@
       100% { transform: rotateY(360deg); }
     }
 
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: normal;
+      font-family: 'Press Start 2P', cursive;
+      color: var(--neon-cyan);
+      text-shadow: 
+        0 0 5px var(--neon-cyan),
+        0 0 10px var(--neon-cyan);
+      position: relative;
+    }
+
+    .logo-text::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--neon-pink);
+      box-shadow: 0 0 10px var(--neon-pink);
+    }
+
+    /* Main Container */
     .container {
       width: 90%;
       max-width: 1200px;
-      margin: auto;
-      padding: 3rem 0;
+      margin: 2rem auto;
+      padding: 1rem;
+      position: relative;
     }
 
     h1 {
       text-align: center;
-      font-size: 2.5rem;
-      color: var(--primary);
+      font-size: 2rem;
+      color: var(--neon-yellow);
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 10px var(--neon-yellow);
+      margin-bottom: 2rem;
       position: relative;
     }
 
@@ -131,204 +169,281 @@
       bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
-      width: 80px;
-      height: 3px;
-      background: var(--primary);
-      border-radius: 3px;
+      width: 200px;
+      height: 4px;
+      background: var(--neon-purple);
+      box-shadow: var(--pixel-shadow);
     }
 
-    .chart-container {
-      background-color: var(--card-bg);
-      border: 1px solid var(--primary);
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+    /* Timeframe Selector */
+    .timeframe-selector {
       margin-bottom: 2rem;
-    }
-
-    .btn-back {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      padding: 0.8rem 1.6rem;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-
-    .btn-back:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(0, 188, 212, 0.5);
+      text-align: center;
     }
 
     .timeframe-btn {
-      margin: 0.3rem;
-      border-radius: 30px !important;
+      background: var(--panel-bg);
+      border: 3px solid var(--neon-purple);
+      color: var(--text);
       padding: 0.5rem 1rem;
-      font-weight: 600;
-      background-color: #333;
+      margin: 0 0.5rem 0.5rem 0;
+      font-size: 1rem;
+      box-shadow: var(--pixel-shadow);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-family: 'VT323', monospace;
+    }
+
+    .timeframe-btn:hover {
+      background: var(--neon-purple);
       color: white;
-      border: none;
     }
 
     .timeframe-btn.active {
-      background-color: var(--primary) !important;
-      color: #121212 !important;
-      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+      background: var(--neon-pink);
+      color: white;
+      border-color: var(--neon-yellow);
     }
 
-    .alert {
-      border-radius: 12px;
+    /* Chart Container */
+    .chart-container {
+      background: var(--panel-bg);
+      padding: 2rem;
+      border: 4px solid var(--neon-cyan);
+      box-shadow: 
+        inset 0 0 15px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
+        var(--pixel-shadow);
+      margin-bottom: 2rem;
+      position: relative;
+      image-rendering: pixelated;
     }
 
-    .debug-info {
-      background-color: rgba(0, 0, 0, 0.3);
-      padding: 1rem;
-      border-radius: 8px;
+    .chart-container::before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border: 2px solid var(--neon-purple);
+      pointer-events: none;
+    }
+
+    /* Pixel corners */
+    .pixel-corner {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+    }
+
+    .corner-tl { top: -8px; left: -8px; }
+    .corner-tr { top: -8px; right: -8px; }
+    .corner-bl { bottom: -8px; left: -8px; }
+    .corner-br { bottom: -8px; right: -8px; }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 1rem;
-      font-family: monospace;
-      font-size: 0.9rem;
+      border: 3px solid var(--neon-purple);
+      box-shadow: var(--pixel-shadow);
     }
 
+    th {
+      background: var(--deep-blue);
+      color: var(--neon-cyan);
+      padding: 1rem;
+      text-align: left;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.8rem;
+      border-bottom: 3px solid var(--neon-pink);
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 2px solid var(--neon-purple);
+      color: var(--text);
+      font-size: 1.2rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .text-end {
+      text-align: right;
+    }
+
+    /* Image Styles */
+    img {
+      max-width: 100%;
+      border: 4px solid var(--neon-yellow);
+      box-shadow: 
+        inset 0 0 10px var(--neon-yellow),
+        0 0 15px var(--neon-yellow),
+        var(--pixel-shadow);
+      image-rendering: pixelated;
+    }
+
+    /* Button Styles */
+    .btn-back {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.9rem 2rem;
+      background-color: var(--neon-purple);
+      color: white;
+      border: none;
+      border-radius: 0;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.3rem;
+      box-shadow: var(--pixel-shadow);
+      transition: all 0.3s ease;
+      font-family: 'Press Start 2P', cursive;
+      border: 3px solid var(--neon-pink);
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 0 5px white;
+    }
+
+    .btn-back:hover {
+      background-color: var(--neon-pink);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    .btn-back:active {
+      transform: translate(0, 0);
+      box-shadow: var(--pixel-shadow);
+    }
+
+    .btn-back::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+      transform: rotate(30deg);
+    }
+
+    .btn-back:hover::after {
+      animation: shine 1.5s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -50%; }
+      100% { left: 150%; }
+    }
+
+    /* Loading Spinner */
     .loading-spinner {
       text-align: center;
-      margin: 20px 0;
+      margin: 2rem 0;
+      display: none;
     }
 
-    .logo-text {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--primary);
-      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--neon-cyan);
+      border-top: 4px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Alert Styles */
+    .alert {
+      background: var(--panel-bg);
+      border: 3px solid var(--neon-pink);
+      color: var(--text);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--pixel-shadow);
       position: relative;
     }
 
-    .logo-text::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--primary);
-      border-radius: 2px;
+    .alert-danger {
+      border-color: var(--poor);
+      color: var(--poor);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .logo-text {
+        font-size: 1.2rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .timeframe-btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      td, th {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
-
-<body class="dark-mode">
-  <div id="threejs-container"></div>
-  <div class="floating-element" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
-  <div class="floating-element" style="top: 70%; left: 80%; animation-delay: 1s;"></div>
-  <div class="floating-element" style="top: 40%; left: 60%; animation-delay: 2s;"></div>
-
+<body>
   <!-- Header with 3D Logo -->
   <header class="header">
     <div class="logo-bar">
       <div class="logo-container">
         <div class="logo-animated-container">
-          <img src="static/photos/logo.png" alt="LOCUS Logo" class="logo-spin" />
+          <img src="static/photos/logo.png" alt="CORPORATE RPG LOGO" class="logo-spin" />
         </div>
         <h1 class="logo-text">LOCUS</h1>
       </div>
     </div>
   </header>
 
-  <div class="container" data-aos="fade-up">
-    <h1 class="mb-4">Sales Trends Analysis</h1>
+  <div class="container">
+    <h1>SALES TRENDS MISSION BRIEF</h1>
 
-    <div class="timeframe-selector mb-4">
-      <div class="btn-group">
-        <button class="btn timeframe-btn" data-timeframe="month">Last Month</button>
-        <button class="btn timeframe-btn" data-timeframe="quarter">Last Quarter</button>
-        <button class="btn timeframe-btn" data-timeframe="year">Last Year</button>
-        <button class="btn timeframe-btn" data-timeframe="all_time">All Time</button>
+    <div class="timeframe-selector">
+      <div>
+        <button class="timeframe-btn" data-timeframe="month">LAST MONTH</button>
+        <button class="timeframe-btn" data-timeframe="quarter">LAST QUARTER</button>
+        <button class="timeframe-btn" data-timeframe="year">LAST YEAR</button>
+        <button class="timeframe-btn" data-timeframe="all_time">ALL TIME</button>
       </div>
     </div>
 
     <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p>Loading data...</p>
+      <div class="spinner"></div>
+      <p>LOADING MISSION DATA...</p>
     </div>
 
     <div id="contentArea"></div>
 
     <a href="/dashboard/visualization" class="btn-back">
-      <i class="fas fa-arrow-left"></i> Back
+      <i class="fas fa-arrow-left"></i> RETURN TO HQ
     </a>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    AOS.init();
-
-    // Mouse movement background animation
-    const container = document.getElementById('threejs-container');
-    if (container) {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      container.appendChild(renderer.domElement);
-
-      const geometry = new THREE.IcosahedronGeometry(1, 1);
-      const material = new THREE.MeshBasicMaterial({ color: 0x00bcd4, wireframe: true, transparent: true, opacity: 0.3 });
-
-      const particles = [];
-      for (let i = 0; i < 50; i++) {
-        const p = new THREE.Mesh(geometry, material.clone());
-        p.position.set(Math.random()*30-15, Math.random()*30-15, Math.random()*30-15);
-        p.rotationSpeed = { x: Math.random()*0.01, y: Math.random()*0.02 };
-        p.moveAmplitude = Math.random()*0.003 + 0.001;
-        scene.add(p);
-        particles.push(p);
-      }
-
-      camera.position.z = 10;
-      let t = 0, mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
-
-      document.addEventListener('mousemove', e => {
-        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-      });
-
-      function animate() {
-        requestAnimationFrame(animate);
-        t += 0.01;
-        targetX += (mouseX - targetX) * 0.05;
-        targetY += (mouseY - targetY) * 0.05;
-        camera.position.x = targetX * 5;
-        camera.position.y = targetY * 2;
-        camera.lookAt(scene.position);
-        particles.forEach(p => {
-          p.rotation.x += p.rotationSpeed.x;
-          p.rotation.y += p.rotationSpeed.y;
-          p.position.x += Math.sin(t + p.position.y) * p.moveAmplitude;
-          p.position.y += Math.cos(t + p.position.x) * p.moveAmplitude;
-        });
-        renderer.render(scene, camera);
-      }
-
-      animate();
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-    }
-
     // Timeframe logic
     document.addEventListener('DOMContentLoaded', function() {
       const timeframe = new URLSearchParams(window.location.search).get('timeframe') || 'month';
@@ -362,35 +477,30 @@
         })
         .then(data => {
           if (data.error) {
-            let errorHTML = `
+            contentArea.innerHTML = `
               <div class="alert alert-danger">
                 <h4><i class="fas fa-exclamation-triangle"></i> ${data.error}</h4>
-                <p>Timeframe: ${timeframe}</p>`;
-            
-            if (data.debug) {
-              errorHTML += `
-                <div class="debug-info mt-3">
-                  <h5>Debug Information:</h5>
-                  <pre>${JSON.stringify(data.debug, null, 2)}</pre>
-                </div>`;
-            }
-            
-            errorHTML += `</div>`;
-            contentArea.innerHTML = errorHTML;
+                <p>TIMEFRAME: ${timeframe}</p>
+              </div>`;
           } else {
             contentArea.innerHTML = `
               <div class="chart-container">
+                <div class="pixel-corner corner-tl"></div>
+                <div class="pixel-corner corner-tr"></div>
+                <div class="pixel-corner corner-bl"></div>
+                <div class="pixel-corner corner-br"></div>
+                
                 <img src="data:image/png;base64,${data.plot_url}" 
                      class="img-fluid" 
-                     alt="Sales Trends Chart"
+                     alt="SALES TRENDS VISUALIZATION"
                      style="width: 100%; height: auto;">
               </div>
               <div class="table-responsive">
-                <table class="table table-dark table-hover">
+                <table>
                   <thead>
                     <tr>
-                      <th>Period</th>
-                      <th class="text-end">Revenue (₹)</th>
+                      <th>PERIOD</th>
+                      <th class="text-end">REVENUE (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -410,7 +520,7 @@
           contentArea.innerHTML = `
             <div class="alert alert-danger">
               <i class="fas fa-exclamation-triangle"></i> 
-              Failed to load data: ${error.message}
+              MISSION FAILURE: ${error.message}
             </div>`;
         })
         .finally(() => {

@@ -1,113 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LOCUS - Add {{ entry_type }}</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+    :root {
+      --primary-color: #00ffd0;
+      --accent-color: #ffd500;
+      --bg-color: #090c1a;
+      --card-bg: #14172b;
+      --text-color: #e4f1fe;
+      --shadow: #000;
     }
-    
+    * { box-sizing: border-box; font-family: 'Press Start 2P', cursive; margin:0; padding:0; }
     body {
-      background-color: #121212;
-      color: white;
+      background: url('static/photos/back.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-color);
+      min-height: 100vh;
       padding: 2rem;
     }
-
+    body::before {
+      content:''; position: fixed; inset:0;
+      background: rgba(9,12,26,0.85); z-index:0;
+    }
     .container {
-      max-width: 800px;
-      margin: 0 auto;
+      position: relative; z-index:1;
+      max-width:600px; margin:0 auto;
     }
-
     .back-btn {
-      display: inline-flex;
-      align-items: center;
-      color: #00e5ff;
-      text-decoration: none;
-      margin-bottom: 1.5rem;
+      display:inline-flex; align-items:center;
+      color: var(--primary-color);
+      text-decoration:none;
+      margin-bottom:1.5rem;
+      font-size:0.65rem;
     }
-
-    .back-btn i {
-      margin-right: 0.5rem;
+    .back-btn i { margin-right:0.5rem; }
+    .card {
+      background: var(--card-bg);
+      border:2px solid var(--primary-color);
+      border-radius:8px;
+      padding:1.5rem;
+      box-shadow:4px 4px 0 var(--shadow), 0 0 12px rgba(0,255,208,0.3);
+      margin-bottom:2rem;
     }
-
-    .header-section {
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      border-left: 4px solid #00e5ff;
+    .card h2 {
+      font-size:0.75rem;
+      color: var(--accent-color);
+      margin-bottom:1rem;
     }
-
-    .header-section h2 {
-      color: #00e5ff;
-      margin-bottom: 0.5rem;
-      font-size: 1.5rem;
-    }
-
-    form {
-      background: #1e1e1e;
-      padding: 2rem;
-      border-radius: 12px;
-    }
-
-    input[type="number"], 
-    textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
+    form input, form textarea {
+      width:100%;
       background: #2a2a2a;
-      border: 1px solid #333;
-      border-radius: 6px;
-      color: white;
-      font-size: 1rem;
+      border:2px solid #333;
+      border-radius:6px;
+      padding:0.8rem;
+      font-size:0.65rem;
+      color:var(--text-color);
+      margin-bottom:1rem;
     }
-
-    input[type="number"]:focus, 
-    textarea:focus {
-      outline: none;
-      border-color: #00e5ff;
-      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
+    form input:focus, form textarea:focus {
+      outline:none;
+      border-color: var(--primary-color);
     }
-
     button[type="submit"] {
-      background-color: #00e5ff;
+      width:100%;
+      background: var(--primary-color);
       color: #000;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s;
-      width: 100%;
-      font-weight: bold;
+      font-size:0.75rem;
+      padding:0.8rem;
+      border:none;
+      border-radius:6px;
+      font-weight:bold;
+      box-shadow:4px 4px 0 var(--shadow);
+      cursor:pointer;
+      transition: background 0.2s ease;
     }
-
     button[type="submit"]:hover {
-      background-color: #00c0d2;
+      background: #00c0d2;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <a href="{{ url_for('dataentry.index') }}" class="back-btn">
-      <i class="fas fa-arrow-left"></i> Back to Data Entry
+      <i class="fas fa-arrow-left"></i> Back
     </a>
-    
-    <div class="header-section">
+    <div class="card">
       <h2>Add {{ entry_type }}</h2>
+      <form method="POST">
+        <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+        <textarea name="remarks" placeholder="Remarks" rows="4"></textarea>
+        <button type="submit">Submit</button>
+      </form>
     </div>
-
-    <form method="POST">
-      <input type="number" step="0.01" name="amount" placeholder="Amount" required>
-      <textarea name="remarks" placeholder="Remarks" rows="4"></textarea>
-      <button type="submit">Submit</button>
-    </form>
   </div>
 </body>
 </html>

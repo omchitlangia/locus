@@ -3,33 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LOCUS - ROI Calculator</title>
+  <title>ROI Calculator | LOCUS RPG Tools</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
+    :root {
+      --neon-pink: #ff2a6d;
+      --neon-purple: #d300c5;
+      --neon-cyan: #05d9e8;
+      --neon-yellow: #f7f700;
+      --deep-blue: #0d0221;
+      --dark-bg: #0a0118;
+      --panel-bg: rgba(13, 2, 33, 0.8);
+      --text: #ffffff;
+      --text-light: #b3b3ff;
+      --pixel-shadow: 4px 4px 0px rgba(0, 0, 0, 0.75);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'VT323', monospace;
     }
 
     body {
-      background-color: #121212;
-      color: white;
+      background: var(--dark-bg);
+      color: var(--text);
       padding: 2rem;
+      image-rendering: pixelated;
+      background-image: 
+        linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
+      background: var(--panel-bg);
+      padding: 2rem;
+      border: 4px solid var(--neon-cyan);
+      box-shadow: inset 0 0 15px var(--neon-cyan), var(--pixel-shadow);
     }
 
     .back-btn {
       display: inline-flex;
       align-items: center;
-      color: #00e5ff;
+      color: var(--neon-yellow);
+      font-family: 'Press Start 2P', cursive;
       text-decoration: none;
+      font-size: 1rem;
       margin-bottom: 1.5rem;
+      text-shadow: 0 0 5px var(--neon-yellow);
     }
 
     .back-btn i {
@@ -37,29 +67,30 @@
     }
 
     .header-section {
-      background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
       padding: 1rem 1.5rem;
-      border-radius: 12px;
       margin-bottom: 2rem;
-      border-left: 4px solid #00e5ff;
+      border: 3px solid var(--neon-pink);
+      background: var(--deep-blue);
+      box-shadow: var(--pixel-shadow);
     }
 
     .header-section h1 {
-      color: #00e5ff;
+      color: var(--neon-pink);
       margin-bottom: 0.5rem;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 8px var(--neon-pink);
     }
 
     .header-section p {
-      color: #aaa;
+      color: var(--text-light);
     }
 
     .calculator-container {
-      background: #1e1e1e;
-      border-radius: 12px;
+      background: var(--panel-bg);
+      border: 3px solid var(--neon-purple);
       padding: 2rem;
-      margin-bottom: 2rem;
-      border-left: 4px solid #2ecc71;
+      box-shadow: var(--pixel-shadow);
     }
 
     .form-row {
@@ -69,94 +100,88 @@
       margin-bottom: 1.5rem;
     }
 
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    label {
+    .form-group label {
       display: block;
       margin-bottom: 0.5rem;
-      color: #aaa;
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
       font-weight: bold;
     }
 
-    input {
+    .form-control {
       width: 100%;
       padding: 0.75rem;
-      background: #2a2a2a;
-      border: 1px solid #333;
-      border-radius: 6px;
+      background: var(--deep-blue);
+      border: 2px solid var(--neon-pink);
       color: white;
       font-size: 1rem;
+      box-shadow: var(--pixel-shadow);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--neon-yellow);
+      box-shadow: 0 0 10px var(--neon-yellow);
     }
 
     .btn-primary {
-      background-color: #00e5ff;
-      color: #000;
-      border: none;
+      background-color: var(--neon-purple);
+      color: white;
+      border: 3px solid var(--neon-pink);
       padding: 0.75rem 1.5rem;
-      border-radius: 6px;
+      font-family: 'Press Start 2P', cursive;
       cursor: pointer;
-      font-weight: bold;
       font-size: 1rem;
       margin-top: 1rem;
+      text-shadow: 0 0 5px white;
+      box-shadow: var(--pixel-shadow);
       display: inline-flex;
       align-items: center;
       transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--neon-pink);
+      transform: translate(-2px, -2px);
     }
 
     .btn-primary i {
       margin-right: 0.5rem;
     }
 
-    .btn-primary:hover {
-      background-color: #00bcd4;
-      transform: translateY(-2px);
-    }
-
     .results-container {
       margin-top: 2rem;
-      background: #1e1e1e;
-      border-radius: 12px;
+      background: var(--panel-bg);
+      border: 3px solid var(--neon-cyan);
       padding: 1.5rem;
-      border-left: 4px solid #00e5ff;
+      box-shadow: var(--pixel-shadow);
     }
 
     .results-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
     }
 
     .result-card {
-      background: #2a2a2a;
-      border-radius: 8px;
-      padding: 1.5rem;
+      background: var(--deep-blue);
+      border: 2px solid var(--neon-yellow);
+      padding: 1rem;
       text-align: center;
-      border-left: 4px solid;
+      box-shadow: var(--pixel-shadow);
     }
 
-    .result-card:nth-child(1) {
-      border-left-color: #00e5ff;
-    }
-
-    .result-card:nth-child(2) {
-      border-left-color: #2ecc71;
-    }
-
-    .result-card:nth-child(3) {
-      border-left-color: #9b59b6;
+    .result-label {
+      font-size: 1rem;
+      color: var(--neon-cyan);
     }
 
     .result-value {
       font-size: 1.8rem;
       font-weight: bold;
       margin: 0.5rem 0;
-    }
-
-    .result-label {
-      color: #aaa;
-      font-size: 0.9rem;
+      color: white;
+      text-shadow: 0 0 6px white;
     }
 
     .error-message {
@@ -166,14 +191,14 @@
       background: #2a2a2a;
       border-radius: 6px;
       border-left: 4px solid #e74c3c;
+      font-family: monospace;
     }
 
     @media (max-width: 768px) {
-      .results-grid {
+      .form-row {
         grid-template-columns: 1fr;
       }
-      
-      .form-row {
+      .results-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -184,16 +209,16 @@
     <a href="{{ url_for('optimization.optimization_menu') }}" class="back-btn">
       <i class="fas fa-arrow-left"></i> Back to Tools
     </a>
-    
+
     <div class="header-section">
-      <h1>ROI Calculator</h1>
-      <p>Calculate the return on investment for your marketing campaign</p>
+      <h1>ROI CALCULATOR</h1>
+      <p>Optimize your earnings like a dungeon merchant.</p>
     </div>
-    
+
     <div class="calculator-container">
       <form method="POST" novalidate>
         {{ form.hidden_tag() }}
-        
+
         <div class="form-row">
           <div class="form-group">
             {{ form.selling_price.label }}
@@ -202,7 +227,7 @@
             <span style="color: #ff6b6b; font-size: 0.8rem;">{{ error }}</span>
             {% endfor %}
           </div>
-          
+
           <div class="form-group">
             {{ form.units_sold.label }}
             {{ form.units_sold(class="form-control") }}
@@ -210,7 +235,7 @@
             <span style="color: #ff6b6b; font-size: 0.8rem;">{{ error }}</span>
             {% endfor %}
           </div>
-          
+
           <div class="form-group">
             {{ form.cost.label }}
             {{ form.cost(class="form-control") }}
@@ -219,7 +244,7 @@
             {% endfor %}
           </div>
         </div>
-        
+
         <button type="submit" class="btn-primary">
           <i class="fas fa-calculator"></i> Calculate ROI
         </button>
@@ -234,11 +259,11 @@
         {% else %}
         <div class="results-grid">
           <div class="result-card">
-            <div class="result-label">Revenue</div>
+            <div class="result-label">REVENUE</div>
             <div class="result-value">${{ result.revenue }}</div>
           </div>
           <div class="result-card">
-            <div class="result-label">Net Profit</div>
+            <div class="result-label">NET PROFIT</div>
             <div class="result-value">${{ result.net_profit }}</div>
           </div>
           <div class="result-card">

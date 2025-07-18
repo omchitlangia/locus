@@ -3,41 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice {{ bill.bill_number }}</title>
+    <title>INVOICE {{ bill.bill_number }} | LOCUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .invoice-header { text-align: center; margin-bottom: 20px; }
-        .invoice-details { margin-bottom: 20px; }
-        .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .invoice-table th, .invoice-table td { border: 1px solid #ddd; padding: 8px; }
-        .invoice-totals { float: right; width: 300px; }
-        .print-button { text-align: center; margin-top: 20px; }
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.9);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            margin: 0;
+            padding: 20px;
+            color: var(--text);
+            background-color: var(--dark-bg);
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-size: 18px;
+            line-height: 1.4;
+            image-rendering: pixelated;
+        }
+
         @media print {
-            .print-button { display: none; }
+            body {
+                background-color: transparent;
+                background-image: none;
+                padding: 0;
+            }
+            .print-button {
+                display: none;
+            }
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--neon-pink);
+            position: relative;
+        }
+
+        .invoice-header::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--neon-purple);
+        }
+
+        .invoice-header h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .invoice-header p {
+            color: var(--text-light);
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        .invoice-details {
+            margin-bottom: 30px;
+            background: var(--panel-bg);
+            border: 3px solid var(--neon-purple);
+            padding: 20px;
+            box-shadow: var(--pixel-shadow);
+            position: relative;
+        }
+
+        .invoice-details h2 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+            font-size: 22px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .invoice-details h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--neon-purple);
+            box-shadow: var(--pixel-shadow);
+        }
+
+        .invoice-details p {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: var(--pixel-shadow);
+        }
+
+        .invoice-table th {
+            background-color: var(--deep-blue);
+            color: var(--neon-pink);
+            text-align: left;
+            padding: 12px;
+            border: 3px solid var(--neon-purple);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .invoice-table td {
+            padding: 10px;
+            border: 3px solid var(--neon-purple);
+            background-color: var(--panel-bg);
+            color: var(--text);
+        }
+
+        .invoice-table tr:nth-child(even) td {
+            background-color: rgba(5, 217, 232, 0.1);
+        }
+
+        .invoice-totals {
+            float: right;
+            width: 300px;
+            background: var(--panel-bg);
+            border: 3px solid var(--neon-purple);
+            padding: 20px;
+            box-shadow: var(--pixel-shadow);
+            margin-top: 20px;
+        }
+
+        .invoice-totals p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .invoice-totals strong {
+            color: var(--neon-cyan);
+        }
+
+        .grand-total {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 5px var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+        }
+
+        .print-button {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .print-button button, .print-button a {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .print-button button {
+            background-color: var(--neon-purple);
+            color: white;
+            border: 3px solid var(--neon-pink);
+        }
+
+        .print-button a button {
+            background-color: var(--neon-cyan);
+            color: var(--deep-blue);
+            border: 3px solid var(--neon-yellow);
+        }
+
+        .print-button button:hover, .print-button a button:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        .print-button button:hover {
+            background-color: var(--neon-pink);
+        }
+
+        .print-button a button:hover {
+            background-color: var(--neon-yellow);
+        }
+
+        /* Pixel corners */
+        .pixel-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { top: -8px; left: -8px; }
+        .corner-tr { top: -8px; right: -8px; }
+        .corner-bl { bottom: -8px; left: -8px; }
+        .corner-br { bottom: -8px; right: -8px; }
+
+        @media (max-width: 768px) {
+            .invoice-header h1 {
+                font-size: 22px;
+            }
+            
+            .invoice-details h2 {
+                font-size: 18px;
+            }
+            
+            .invoice-totals {
+                width: 100%;
+                float: none;
+            }
+            
+            .print-button {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .print-button button, .print-button a button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="invoice-header">
-        <h1>LOCUS Retail Store</h1>
-        <p>Street - 007, GitHub Nagar, Panama City</p>
+        <h1>LOCUS RETAIL STORE</h1>
+        <p>STREET - 007, GITHUB NAGAR, PANAMA CITY</p>
         <p>GSTIN: GITHUB123 | omchitlangia.github.io</p>
     </div>
 
     <div class="invoice-details">
-        <h2>Invoice #{{ bill.bill_number }}</h2>
-        <p>Date: {{ bill.date.strftime('%d-%m-%Y %H:%M') }}</p>
-        <p>Customer: {{ bill.customer_name }}</p>
-        {% if bill.customer_phone %}<p>Phone: {{ bill.customer_phone }}</p>{% endif %}
+        <div class="pixel-corner corner-tl"></div>
+        <div class="pixel-corner corner-tr"></div>
+        <div class="pixel-corner corner-bl"></div>
+        <div class="pixel-corner corner-br"></div>
+        
+        <h2>INVOICE #{{ bill.bill_number }}</h2>
+        <p><strong>DATE:</strong> {{ bill.date.strftime('%d-%m-%Y %H:%M') }}</p>
+        <p><strong>CUSTOMER:</strong> {{ bill.customer_name }}</p>
+        {% if bill.customer_phone %}<p><strong>PHONE:</strong> {{ bill.customer_phone }}</p>{% endif %}
     </div>
 
     <table class="invoice-table">
         <thead>
             <tr>
-                <th>Item</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Total</th>
+                <th>ITEM</th>
+                <th>PRICE</th>
+                <th>QTY</th>
+                <th>TOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -53,16 +297,25 @@
     </table>
 
     <div class="invoice-totals">
-        <p>Subtotal: ₹{{ "%.2f"|format(bill.subtotal) }}</p>
-        <p>Tax (18%): ₹{{ "%.2f"|format(bill.tax_amount) }}</p>
-        <p>Discount: ₹{{ "%.2f"|format(bill.discount) }}</p>
-        <p><strong>Grand Total: ₹{{ "%.2f"|format(bill.grand_total) }}</strong></p>
+        <div class="pixel-corner corner-tl"></div>
+        <div class="pixel-corner corner-tr"></div>
+        <div class="pixel-corner corner-bl"></div>
+        <div class="pixel-corner corner-br"></div>
+        
+        <p><strong>SUBTOTAL:</strong> ₹{{ "%.2f"|format(bill.subtotal) }}</p>
+        <p><strong>TAX (18%):</strong> ₹{{ "%.2f"|format(bill.tax_amount) }}</p>
+        <p><strong>DISCOUNT:</strong> ₹{{ "%.2f"|format(bill.discount) }}</p>
+        <p class="grand-total">GRAND TOTAL: ₹{{ "%.2f"|format(bill.grand_total) }}</p>
     </div>
 
     <div class="print-button">
-        <button onclick="window.print()">Print Invoice</button>
+        <button onclick="window.print()">
+            <i class="fas fa-print"></i> PRINT INVOICE
+        </button>
         <a href="{{ url_for('billing.download_bill', bill_id=bill.id) }}">
-            <button>Download PDF</button>
+            <button>
+                <i class="fas fa-download"></i> DOWNLOAD PDF
+            </button>
         </a>
     </div>
 
