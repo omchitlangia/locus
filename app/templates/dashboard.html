@@ -3,10 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LOCUS Dashboard</title>
+  <title>Retro Dashboard v2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    :root {
+      --primary-color: #00ffd0;
+      --secondary-color: #ffd500;
+      --bg-color: #090c1a;
+      --card-bg: #14172b;
+      --text-color: #e4f1fe;
+      --shadow-color: #000;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,271 +25,515 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      height: 100vh;
-      background-color: #121212;
-      color: white;
+      font-family: 'Press Start 2P', cursive;
+      background: url('static/photos/back.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-color);
+      min-height: 100vh;
     }
 
-    /* Sidebar - Keep existing styles */
-    .sidebar {
-      width: 240px;
-      background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 12, 26, 0.85);
+      z-index: 0;
     }
 
-    .logo-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .logo {
-      width: 70px;
-      height: 70px;
-      margin-right: 10px;
-      object-fit: contain;
-    }
-
-    .sidebar p {
-      color: #aaa;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-    }
-
-    .sidebar a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  margin-bottom: 0.75rem;
-  background: linear-gradient(145deg, #1e1e1e, #111);
-  box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.05),
-    0 4px 10px rgba(0, 229, 255, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
-  font-weight: 500;
-  transform-style: preserve-3d;
-}
-
-   .sidebar a:hover,
-.sidebar a.active {
-  background: linear-gradient(145deg, #00e5ff, #00bcd4);
-  color: #000;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 6px 12px rgba(0, 229, 255, 0.4),
-    inset 0 0 5px rgba(255, 255, 255, 0.3);
-}
-.sidebar a:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow:
-    0 2px 4px rgba(0, 229, 255, 0.2),
-    inset 0 1px 2px rgba(255, 255, 255, 0.2);
-}
-
-    .sidebar a i {
-  margin-right: 12px;
-  font-size: 1rem;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.sidebar a:hover i {
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
-}
-
-
-    /* Logout button styling */
-    .logout-btn {
-      margin-top: auto;
-      background-color: #ff4444;
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      transition: background 0.2s;
-      width: 100%;
-    }
-
-    .logout-btn:hover {
-      background-color: #cc0000;
-    }
-
-    .logout-btn i {
-      margin-right: 12px;
-      font-size: 1rem;
-    }
-
-    /* Main dashboard content */
-    .main-content {
-      flex: 1;
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1300px;
+      margin: auto;
       padding: 2rem;
     }
 
-    .main-content h1 {
-      color: #00e5ff;
+    .glow-box {
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--primary-color);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .glow-box h2 {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .glow-box p {
+      font-size: 0.7rem;
+      color: #aad9ff;
+    }
+
+    .dashboard-title h1 {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      text-shadow: 0 0 10px var(--secondary-color);
       margin-bottom: 1rem;
     }
 
-    .main-content p {
-      font-size: 1.1rem;
-      color: #ccc;
-    }
-
-    /* User welcome message */
-    .user-welcome {
-  background: linear-gradient(135deg, #1b1b1b, #262626);
-  padding: 1.5rem;
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  border-left: 5px solid #00e5ff;
-  box-shadow:
-    0 6px 20px rgba(0, 229, 255, 0.1),
-    inset 0 0 15px rgba(0, 229, 255, 0.05);
-  backdrop-filter: blur(4px);
-  transition: all 0.4s ease;
-  transform-style: preserve-3d;
-}
-
-
-    .user-welcome h2 {
-  color: #00e5ff;
-  margin-bottom: 0.5rem;
-  font-size: 1.6rem;
-  text-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
-}
-
-.user-welcome p {
-  color: #ccc;
-  font-size: 1.05rem;
-  text-shadow: 0 0 2px rgba(0, 229, 255, 0.2);
-}
-.user-welcome:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow:
-    0 10px 30px rgba(0, 229, 255, 0.2),
-    inset 0 0 20px rgba(0, 229, 255, 0.1);
-}
-
-
-    /* Dashboard header */
-    .dashboard-header {
+    .goal-tracker {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
-
-    .dashboard-title {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    /* Profit Goal Section */
-    .profit-goal-container {
-  background: linear-gradient(135deg, #1b1b1b, #262626);
-  padding: 1.5rem;
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  border-left: 5px solid #00e5ff;
-  box-shadow:
-    0 6px 20px rgba(0, 229, 255, 0.1),
-    inset 0 0 15px rgba(0, 229, 255, 0.05);
-  backdrop-filter: blur(4px);
-  transition: all 0.4s ease;
-  transform-style: preserve-3d;
-}
-
-
-    .profit-goal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.profit-goal-header h3 {
-  color: #00e5ff;
-  font-size: 1.3rem;
-  text-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
-}
-
 
     .set-goal-btn {
-      background-color: #00e5ff;
+      background-color: var(--secondary-color);
       color: #000;
-      border: none;
       padding: 0.5rem 1rem;
+      font-size: 0.6rem;
+      font-family: 'Press Start 2P', cursive;
+      border: 2px solid #000;
       border-radius: 6px;
+      box-shadow: 4px 4px 0 #000;
       cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s;
+      transition: all 0.2s ease;
     }
 
     .set-goal-btn:hover {
-      background-color: #00c0d2;
+      background-color: #e6b800;
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .goal-tracker .no-goal-text {
+      font-size: 0.6rem;
+      color: #00ffd0;
+      font-style: italic;
+    }
+
+    .dashboard {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .features {
+      flex: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 3px 3px var(--shadow-color), 0 0 8px rgba(0,255,208,0.3);
+      cursor: pointer;
+      transition: 0.2s ease;
+      width: 100%;
+      text-align: left;
+    }
+
+    .feature-card {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(145deg, #0f132d, #090c1f);
+      color: #ffd500;
+      border: 3px solid #00ffd0;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 5px 5px 0 #000, 0 0 8px rgba(0, 255, 208, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 8px 8px 0 #000, 0 0 12px #00ffd0;
+      background: linear-gradient(145deg, #11173b, #0d1128);
+    }
+
+    .feature-card:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #ffd500, 0 0 15px #00ffd0;
+    }
+
+    .feature-info h3 {
+      font-size: 0.65rem;
+      margin-bottom: 0.5rem;
+      color: #ffd500;
+      text-shadow: 1px 1px #000;
+    }
+
+    .feature-info p {
+      font-size: 0.5rem;
+      color: #aad9ff;
+      line-height: 1.5;
+      text-shadow: 0 0 2px #000;
+    }
+
+    .profile {
+      flex: 1;
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 4px 4px var(--shadow-color), 0 0 10px rgba(0,255,208,0.2);
+    }
+
+    .profile img {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      image-rendering: pixelated;
+    }
+
+    .profile h2 {
+      font-size: 0.9rem;
+      color: var(--secondary-color);
+    }
+
+    .profile .level {
+      font-size: 0.6rem;
+      color: #8ecfff;
+      margin-bottom: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr));
+      gap: 1rem;
+      font-size: 0.6rem;
+      color: #aad9ff;
+      margin-bottom: 1.2rem;
+    }
+
+    .stats span {
+      display: block;
+      font-size: 0.8rem;
+    }
+
+    .profile button {
+      background: transparent;
+      border: 2px solid var(--secondary-color);
+      color: var(--secondary-color);
+      font-size: 0.6rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 2px 2px var(--shadow-color);
+      transition: 0.2s ease;
+    }
+
+    .profile button:hover {
+      background: var(--secondary-color);
+      color: var(--card-bg);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+    }
+    .message-bubble {
+      display: flex;
+      align-items: center;
+      background-color: #222c3c;
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 10px rgba(0,255,208,0.2);
+    }
+
+    .bubble-icon {
+      width: 64px;
+      height: 64px;
+      margin-right: 1rem;
+      image-rendering: pixelated;
+    }
+
+    .bubble-text {
+      font-size: 0.65rem;
+      color: #aad9ff;
+    }
+
+    .intro-panel {
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    .intro-avatars {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .intro-icon {
+      width: 72px;
+      height: 72px;
+      image-rendering: pixelated;
+    }
+
+    .intro-title {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.8rem;
+      text-shadow: 1px 1px #000;
+    }
+
+    .intro-subtext {
+      font-size: 0.65rem;
+      color: #aad9ff;
+      margin-bottom: 1.5rem;
+    }
+
+    .get-started-btn {
+      background: linear-gradient(to bottom, #00bfff, #0080ff);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.65rem;
+      font-family: 'Press Start 2P', cursive;
+      border-radius: 6px;
+      box-shadow: 3px 3px 0 #000, 0 0 10px #00bfff;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .get-started-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 16px #00bfff;
+    }
+    .intro-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .intro-panel {
+      flex: 2;
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    .side-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .events {
+      background: var(--card-bg);
+      border: 2px solid var(--primary-color);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,208,0.2);
+    }
+
+    .events h3 {
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+    }
+
+    .event {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .event-date {
+      width: 40px;
+      text-align: center;
+      padding: 0.3rem;
+      border-radius: 4px;
+      font-size: 0.55rem;
+      font-weight: bold;
+      color: #000;
+      font-family: monospace;
+    }
+
+    .event-date span {
+      display: block;
+      font-size: 0.6rem;
+    }
+
+    .event-date.yellow { background: #ffd500; }
+    .event-date.green { background: #76ff88; }
+    .event-date.red { background: #ff6363; }
+
+    .event-details p {
+      margin: 0;
+      font-size: 0.65rem;
+      color: #fff;
+    }
+
+    .event-details small {
+      color: #aad9ff;
+      font-size: 0.55rem;
+    }
+    .topbar {
+      background: #0f132a;
+      border-bottom: 3px solid #00ffd0;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      color: #ffd500;
+      box-shadow: 0 3px 10px rgba(0,255,208,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-left {
+      text-shadow: 1px 1px #000;
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .topbar-btn {
+      background: linear-gradient(145deg, #14172b, #0a0c1f);
+      color: #00ffd0;
+      border: 2px solid #00ffd0;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      box-shadow: 3px 3px #000;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .topbar-btn:hover {
+      background-color: #00ffd0;
+      color: #000;
+      transform: translateY(-1px);
+      box-shadow: 4px 4px #000;
+    }
+    .topbar {
+      background: #090c1f;
+      border-bottom: 3px dashed #00ffd0;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      color: #ffd500;
+      box-shadow: 0 4px 0 #000, 0 0 15px #00ffd0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left {
+      text-shadow: 1px 1px #000;
+      font-size: 0.7rem;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .topbar-btn {
+      background: #0f132a;
+      color: #00ffd0;
+      border: 2px solid #00ffd0;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      box-shadow: 3px 3px #000;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .topbar-btn:hover {
+      background-color: #00ffd0;
+      color: #000;
+      box-shadow: 5px 5px #000;
       transform: translateY(-2px);
     }
 
+    .topbar-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-circle {
+      width: 34px;
+      height: 34px;
+      background-color: #0094e0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.65rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffd500;
+      box-shadow: 0 0 6px #00ffd0, 2px 2px #000;
+      text-shadow: 1px 1px #000;
+      cursor: pointer;
+    }
+
+    /* Progress Bar Styles */
     .progress-container {
-  width: 100%;
-  background: #1a1a1a;
-  border-radius: 12px;
-  height: 24px;
-  margin-top: 1rem;
-  overflow: hidden;
-  position: relative;
-  box-shadow:
-    inset 0 0 10px rgba(0, 229, 255, 0.1),
-    0 2px 6px rgba(0, 229, 255, 0.15);
-}
+      width: 100%;
+      background: #1a1a1a;
+      border-radius: 12px;
+      height: 24px;
+      margin-top: 1rem;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.1), 0 2px 6px rgba(0, 229, 255, 0.15);
+    }
 
-.progress-bar {
-  height: 100%;
-  border-radius: 12px;
-  background: linear-gradient(
-    270deg,
-    rgba(0, 229, 255, 0.4),
-    rgba(0, 229, 255, 1),
-    rgba(0, 229, 255, 0.4)
-  );
-  background-size: 400% 100%;
-  animation: shimmer 2s infinite linear;
-  transition: width 0.5s ease-out;
-  position: relative;
-}
+    .progress-bar {
+      height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(270deg, rgba(0,229,255,0.4), rgba(0,229,255,1), rgba(0,229,255,0.4));
+      background-size: 400% 100%;
+      animation: shimmer 2s infinite linear;
+      transition: width 0.5s ease-out;
+      position: relative;
+    }
 
-.progress-text {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
-  line-height: 24px;
-  font-size: 0.85rem;
-}
-
-    .no-goal-text {
-      color: #aaa;
-      font-style: italic;
+    .progress-text {
+      position: absolute;
+      width: 100%;
       text-align: center;
-      padding: 0.5rem 0;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+      line-height: 24px;
+      font-size: 0.85rem;
     }
 
     .progress-details {
@@ -289,7 +544,7 @@
       color: #ccc;
     }
 
-    /* Goal Modal */
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -360,291 +615,284 @@
 
     /* Animations */
     @keyframes shimmer {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-      }
-      
-      body {
-        flex-direction: column;
-        height: auto;
-      }
-      
-      .main-content {
-        padding: 1rem;
-      }
-      
-      .dashboard-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-      }
+    /* Music Controls */
+    #musicControls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(30, 30, 30, 0.75);
+      backdrop-filter: blur(8px);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
+      z-index: 9999;
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      font-size: 0.6rem;
     }
+    
+    #currentTrack {
+      margin-bottom: 0.5rem;
+      font-size: 0.6rem;
+    }
+    
+    .music-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .music-btn {
+      background: #00e5ff;
+      border: none;
+      color: #121212;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 2px 2px #000;
+    }
+    
+    .music-btn:hover {
+      background: #00bcd4;
+      transform: scale(1.1);
+    }
+
+    /* Dark Mode Toggle */
     .dark-mode-toggle {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.3rem;
-  padding: 0.6rem 1rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  align-self: flex-start;
-}
+      background: none;
+      border: none;
+      color: white;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
 
-.dark-mode-toggle:hover {
-  background-color: #00e5ff;
-  color: #000;
-  transform: scale(1.1);
-}
-body.light-mode {
-  background-color: #f5f5f5;
-  color: #121212;
-}
+    .dark-mode-toggle:hover {
+      background-color: #00e5ff;
+      color: #000;
+    }
 
-body.light-mode .sidebar {
-  background: linear-gradient(to bottom, #ffffff, #f0f0f0);
-}
+    body.light-mode {
+      background-color: #f5f5f5;
+      color: #121212;
+    }
 
-body.light-mode .sidebar a {
-  color: #333;
-}
+    body.light-mode::before {
+      background: rgba(245, 245, 245, 0.85);
+    }
 
-body.light-mode .sidebar a:hover,
-body.light-mode .sidebar a.active {
-  background-color: #00e5ff;
-  color: #000;
-}
+    body.light-mode .glow-box,
+    body.light-mode .profile,
+    body.light-mode .events,
+    body.light-mode .intro-panel,
+    body.light-mode .message-bubble {
+      background: #ffffff;
+      color: #121212;
+      border-color: #00bcd4;
+    }
 
-body.light-mode .logout-btn {
-  background-color: #ff4d4d;
-  color: white;
-}
+    body.light-mode .feature-card {
+      background: linear-gradient(145deg, #e0e0e0, #f0f0f0);
+      color: #121212;
+      border-color: #00bcd4;
+    }
 
-body.light-mode .logout-btn:hover {
-  background-color: #cc0000;
-}
+    body.light-mode .feature-card:hover {
+      background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    }
 
-body.light-mode .main-content {
-  background-color: #fff;
-}
+    body.light-mode .feature-info h3 {
+      color: #121212;
+    }
 
-body.light-mode .user-welcome,
-body.light-mode .profit-goal-container {
-  background: #f0f0f0;
-  border-left: 4px solid #00bcd4;
-  color: #121212;
-}
+    body.light-mode .feature-info p {
+      color: #333;
+    }
 
-body.light-mode .user-welcome h2,
-body.light-mode .main-content h1,
-body.light-mode .profit-goal-header h3 {
-  color: #00bcd4;
-}
+    body.light-mode .topbar {
+      background: #f0f0f0;
+      color: #121212;
+      border-bottom-color: #00bcd4;
+    }
 
-body.light-mode .goal-form input {
-  background: #eaeaea;
-  color: #121212;
-  border: 1px solid #ccc;
-}
+    body.light-mode .topbar-btn {
+      background: #ffffff;
+      color: #00bcd4;
+      border-color: #00bcd4;
+    }
 
-body.light-mode .modal-content {
-  background: #ffffff;
-  color: #121212;
-}
+    body.light-mode .topbar-btn:hover {
+      background-color: #00bcd4;
+      color: #ffffff;
+    }
 
-body.light-mode .progress-container {
-  background-color: #ccc;
-}
-
-body.light-mode .progress-text {
-  color: #000;
-}
-
-body.light-mode .dark-mode-toggle {
-  color: #333;
-}
-
-body.light-mode .dark-mode-toggle:hover {
-  background-color: #00bcd4;
-  color: white;
-}
-.logo-3d {
-  animation: rotateLogo 8s linear infinite;
-  transform-style: preserve-3d;
-  display: block;
-  cursor: pointer;
-  filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.6));
-}
-
-@keyframes rotateLogo {
-  0% {
-    transform: rotateY(0deg) rotateX(0deg);
-  }
-  50% {
-    transform: rotateY(180deg) rotateX(10deg);
-  }
-  100% {
-    transform: rotateY(360deg) rotateX(0deg);
-  }
-}
-.logo {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
-}
-
-.logo-3d {
-  animation: rotateLogo 8s linear infinite;
-  transform-style: preserve-3d;
-  filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.4));
-}
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
-  margin-bottom: 1rem;
-}
-/* === 3D Logo Animation === */
-.logo {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  margin: 0 auto;
-  display: block;
-}
-
-.logo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70px;
-  margin-bottom: 1.5rem;
-}
-
-.logo-3d {
-  animation: rotateLogo 8s linear infinite;
-  transform-style: preserve-3d;
-  filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.4));
-}
-
-@keyframes rotateLogo {
-  0% {
-    transform: rotateY(0deg) rotateX(0deg);
-  }
-  50% {
-    transform: rotateY(180deg) rotateX(10deg);
-  }
-  100% {
-    transform: rotateY(360deg) rotateX(0deg);
-  }
-}
-
-/* === 3D Buttons Styling === */
-button,
-.music-btn,
-.set-goal-btn,
-.logout-btn,
-.goal-form button {
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 12px rgba(0, 229, 255, 0.15);
-}
-
-button:hover,
-.music-btn:hover,
-.set-goal-btn:hover,
-.logout-btn:hover,
-.goal-form button:hover {
-  transform: translateY(-2px) scale(1.03) rotateX(4deg);
-  box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3);
-}
-
-button:active,
-.music-btn:active,
-.set-goal-btn:active,
-.logout-btn:active,
-.goal-form button:active {
-  transform: translateY(1px) scale(0.98) rotateX(2deg);
-  box-shadow: 0 3px 6px rgba(0, 229, 255, 0.2);
-}
-
-
-
+    body.light-mode .profile-circle {
+      background-color: #00bcd4;
+      color: #ffffff;
+      border-color: #ffd500;
+    }
   </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="logo-container">
-      <img src="static/photos/logo.gif" alt="LOCUS Logo" class="logo logo-3d">
-    </div>
-    <p>Analytics Dashboard</p>
-    <a href="{{ url_for('dashboard.dashboard') }}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-    <a href="{{ url_for('dataentry.index') }}"><i class="fas fa-database"></i>Data Entry</a>
-    <a href="{{ url_for('business_health.business_health') }}"><i class="fas fa-heartbeat"></i> Business Health</a>
-    <a href="{{ url_for('billing.billing_page') }}"><i class="fas fa-database"></i>Billing</a>
-    <a href="{{ url_for('forecasting.index') }}"><i class="fas fa-dollar-sign"></i>Forecasting</a>
-    <a href="{{ url_for('sku.index') }}"><i class="fas fa-barcode"></i>SKU Performance</a>
-    <a href="{{ url_for('optimization.optimization_menu') }}"><i class="fas fa-barcode"></i>Optimisation</a>
-    <a href="{{ url_for('visualization.index') }}"><i class="fas fa-barcode"></i>Visualization</a>
-    <a href="{{ url_for('event.index') }}"><i class="fas fa-barcode"></i>Event Planner</a>
-    <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
-    <a href="{{ url_for('business_health.leaderboard') }}"><i class="fas fa-medal"></i> Leaderboard</a>
-    <a href="#"><i class="fas fa-user"></i> Profile</a>
-    
-    <!-- Logout Button -->
-     <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
-    <div style="margin-top: auto;">
+ <div class="topbar">
+  <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
+  <div class="topbar-right">
+    <button class="topbar-btn">⚙ Settings</button>
     <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
-      <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?')">
-        <i class="fas fa-sign-out-alt"></i> Logout
+      <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
+        🔓 Logout
       </button>
     </form>
+    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
+    <div class="topbar-profile">
+      <div class="profile-circle">A</div>
+    </div>
   </div>
-  </aside>
+</div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Welcome Message -->
-    <div class="user-welcome">
-      <h2>Welcome back, {{ current_user.username }}!</h2>
-      <p>Here's your business analytics dashboard.</p>
-    </div>
-    
-    <div class="dashboard-header">
-      <div class="dashboard-title">
-        <h1>Your Business Analysis</h1>
-      </div>
+  <div class="container">
+    <!-- Dashboard Title -->
+    <div class="dashboard-title">
+      <h1>Your Business Analysis</h1>
     </div>
 
-    <!-- Profit Goal Section -->
-    <div class="profit-goal-container">
-      <div class="profit-goal-header">
-        <h3>Profit Goal Tracker</h3>
-        <button class="set-goal-btn" id="setGoalBtn">
-          <i class="fas fa-bullseye"></i> Set Profit Goal
-        </button>
-      </div>
-      
+    <!-- Profit Goal Tracker -->
+    <div class="glow-box goal-tracker">
+      <h2>Profit Goal Tracker</h2>
+      <button class="set-goal-btn" id="setGoalBtn">◎ Set Profit Goal</button>
       <div id="goalProgress">
-        <!-- This will be dynamically populated by JavaScript -->
-        <div class="no-goal-text">Set a profit goal to track your progress</div>
+        <p class="no-goal-text" style="width: 100%; text-align: center; margin-top: 1rem;">Set a profit goal to track your progress</p>
+      </div>
+    </div>
+
+    <!-- Welcome Message -->
+    <div class="message-bubble">
+      <img src="static/icons/retro-pc.png" class="bubble-icon" />
+      <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="intro-grid">
+      <!-- Left Column (Intro, Profile, Events) -->
+      <div class="side-column">
+        <!-- Welcome Panel -->
+        <div class="intro-panel">
+          <div class="intro-avatars">
+            <img src="static/icons/desk.png" alt="Desk" class="intro-icon">
+            <img src="static/icons/char.png" alt="Avatar" class="intro-icon">
+          </div>
+          <h2 class="intro-title">Welcome to LOCUS!</h2>
+          <p class="intro-subtext">Your journey to smarter business awaits—let's find something to learn.</p>
+          <button class="get-started-btn">Get Started</button>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile">
+          <img src="static/sprites/arch.dance.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+          <h2>{{ current_user.username }}</h2>
+          <p class="level">Level 1</p>
+          <div class="stats">
+            <div><span>✨ 0</span>Total XP</div>
+            <div><span>🧿 0</span>Badges</div>
+            <div><span>🥉 Bronze</span>Rank</div>
+            <div><span>🔥 1</span>Day Streak</div>
+          </div>
+          <button>View Profile</button>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="events">
+          <h3>Upcoming Events</h3>
+          <div class="event">
+            <div class="event-date yellow"><span>JUL</span><strong>16</strong></div>
+            <div class="event-details">
+              <p>Resume Review Workshop</p>
+              <small>Wed Jul 16th @ 3:00pm ET</small>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-date green"><span>JUL</span><strong>23</strong></div>
+            <div class="event-details">
+              <p>Intro to p5.js workshop</p>
+              <small>Wed Jul 23rd @ 1:00pm ET</small>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-date red"><span>AUG</span><strong>13</strong></div>
+            <div class="event-details">
+              <p>Club LinkedIn Profile Reviews</p>
+              <small>Wed Aug 13th @ 2:00pm ET</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column (Feature Cards) -->
+      <div class="features">
+        <a href="{{ url_for('dataentry.index') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>💾 Data Entry</h3>
+            <p>Input, edit, and organize key business data efficiently.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('forecasting.index') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>💲 Forecasting</h3>
+            <p>Predict future trends using advanced models and inputs.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('sku.index') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>📊 SKU Performance</h3>
+            <p>Track how each SKU is performing across markets.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('optimization.optimization_menu') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>⚙️ Optimisation</h3>
+            <p>Enhance performance using smart optimization techniques.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('visualization.index') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>📈 Visualization</h3>
+            <p>Visualize trends, metrics, and data patterns clearly.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('event.index') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🗓️ Event Planner</h3>
+            <p>Manage upcoming business events and team plans.</p>
+          </div>
+        </a>
+
+        <a href="#" class="feature-card">
+          <div class="feature-info">
+            <h3>🏆 Achievements</h3>
+            <p>Track your unlocked business milestones and goals.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('business_health.leaderboard') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🥇 Leaderboard</h3>
+            <p>See how you rank compared to others in performance.</p>
+          </div>
+        </a>
       </div>
     </div>
   </div>
@@ -663,6 +911,25 @@ button:active,
     </div>
   </div>
 
+  <!-- Music Controls -->
+  <div id="musicControls">
+    <audio id="bgMusic" loop>
+      <source src="static/audio/track1.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
+    <div class="music-buttons">
+      <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
+      <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
+      <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
+    </div>
+  </div>
+
+  <!-- Click Sound -->
+  <audio id="clickSound" preload="auto">
+    <source src="static/audio/click.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
     // DOM Elements
     const setGoalBtn = document.getElementById('setGoalBtn');
@@ -673,7 +940,7 @@ button:active,
     
     // Check if goal exists in localStorage
     let profitGoal = localStorage.getItem('profitGoal');
-    let currentProfit = {{ profit|default(0) }};// This should be replaced with actual profit from your backend
+    let currentProfit = {{ profit|default(0) }}; // This should be replaced with actual profit from your backend
     
     // Open modal when Set Goal button is clicked
     setGoalBtn.addEventListener('click', () => {
@@ -708,252 +975,205 @@ button:active,
     
     // Update progress bar based on current profit and goal
     function updateProgressBar() {
-  if (profitGoal) {
-    const goal = parseFloat(profitGoal);
-    const progressPercentage = (currentProfit / goal) * 100;
+      if (profitGoal) {
+        const goal = parseFloat(profitGoal);
+        const progressPercentage = (currentProfit / goal) * 100;
 
-    let progressColor = '';
-    let barWidth = '';
-    let cappedWidth = Math.min(Math.abs(progressPercentage), 100) + '%';
+        let progressColor = '';
+        let barWidth = '';
+        let cappedWidth = Math.min(Math.abs(progressPercentage), 100) + '%';
 
-    if (progressPercentage < 0) {
-      // Negative progress (Loss)
-      progressColor = 'linear-gradient(90deg, rgba(255, 0, 0, 0.6) 0%, rgba(255, 50, 50, 1) 50%, rgba(255, 0, 0, 0.6) 100%)';
-      barWidth = cappedWidth;
-    } else if (progressPercentage <= 100) {
-      // Normal progress (up to goal)
-      progressColor = 'linear-gradient(90deg, rgba(0,229,255,0.7) 0%, rgba(0,229,255,1) 50%, rgba(0,229,255,0.7) 100%)';
-      barWidth = cappedWidth;
-    } else {
-      // Exceeded goal
-      progressColor = 'linear-gradient(90deg, rgba(0,255,127,0.7) 0%, rgba(0,255,127,1) 50%, rgba(0,255,127,0.7) 100%)'; // Green
-      barWidth = '100%'; // Cap width at 100%
+        if (progressPercentage < 0) {
+          // Negative progress (Loss)
+          progressColor = 'linear-gradient(90deg, rgba(255, 0, 0, 0.6) 0%, rgba(255, 50, 50, 1) 50%, rgba(255, 0, 0, 0.6) 100%)';
+          barWidth = cappedWidth;
+        } else if (progressPercentage <= 100) {
+          // Normal progress (up to goal)
+          progressColor = 'linear-gradient(90deg, rgba(0,229,255,0.7) 0%, rgba(0,229,255,1) 50%, rgba(0,229,255,0.7) 100%)';
+          barWidth = cappedWidth;
+        } else {
+          // Exceeded goal
+          progressColor = 'linear-gradient(90deg, rgba(0,255,127,0.7) 0%, rgba(0,255,127,1) 50%, rgba(0,255,127,0.7) 100%)'; // Green
+          barWidth = '100%'; // Cap width at 100%
+        }
+
+        goalProgress.innerHTML = `
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${barWidth}; background: ${progressColor}">
+              <div class="progress-text">${Math.round(progressPercentage)}%</div>
+            </div>
+          </div>
+          <div class="progress-details">
+            <span>₹${currentProfit}</span>
+            <span>₹${profitGoal}</span>
+          </div>
+        `;
+      } else {
+        goalProgress.innerHTML = `
+          <p class="no-goal-text" style="width: 100%; text-align: center; margin-top: 1rem;">Set a profit goal to track your progress</p>
+        `;
+      }
     }
-
-    goalProgress.innerHTML = `
-      <div class="progress-container">
-        <div class="progress-bar" style="width: ${barWidth}; background: ${progressColor}">
-          <div class="progress-text">${Math.round(progressPercentage)}%</div>
-        </div>
-      </div>
-      <div class="progress-details">
-        <span>₹${currentProfit}</span>
-        <span>₹${profitGoal}</span>
-      </div>
-    `;
-  } else {
-    goalProgress.innerHTML = `
-      <div class="no-goal-text">Set a profit goal to track your progress</div>
-    `;
-  }
-}
 
     updateProgressBar();
     setInterval(() => {
       updateProgressBar();
     }, 5000);
-  </script>
-  <!-- Music Controls -->
-<div id="musicControls">
-  <audio id="bgMusic" loop>
-    <source src="static/audio/track1.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-  <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
-  <div class="music-buttons">
-    <button id="prevTrack" class="music-btn" title="Previous Track">⏮️</button>
-    <button id="toggleMusic" class="music-btn" title="Play/Pause">🔊</button>
-    <button id="nextTrack" class="music-btn" title="Next Track">⏭️</button>
-  </div>
-</div>
 
-<style>
-  #musicControls {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(30, 30, 30, 0.75);
-    backdrop-filter: blur(8px);
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 188, 212, 0.2);
-    z-index: 9999;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    text-align: center;
-  }
-  
-  #currentTrack {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-  
-  .music-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-  }
-  
-  .music-btn {
-    background: #00e5ff;
-    border: none;
-    color: #121212;
-    font-size: 1.2rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .music-btn:hover {
-    background: #00bcd4;
-    transform: scale(1.1);
-  }
-</style>
+    // Avatar Cycling
+    const avatarList = [
+      'static/sprites/idk.gif',
+      'static/sprites/warsword.gif',
+      'static/sprites/arch.dance.gif',
+    ];
+    let avatarIndex = 0;
 
-<script>
-  const bgMusic = document.getElementById("bgMusic");
-  const toggleBtn = document.getElementById("toggleMusic");
-  const prevBtn = document.getElementById("prevTrack");
-  const nextBtn = document.getElementById("nextTrack");
-  const trackNum = document.getElementById("trackNum");
+    function cycleAvatar() {
+      avatarIndex = (avatarIndex + 1) % avatarList.length;
+      document.getElementById('profile-avatar').src = avatarList[avatarIndex];
+    }
 
-  const tracks = [
-    "static/audio/track1.mp3",
-    "static/audio/track2.mp3",
-    "static/audio/track3.mp3",
-    "static/audio/track4.mp3",
-    "static/audio/track5.mp3"
-  ];
+    // Music Controls
+    const bgMusic = document.getElementById("bgMusic");
+    const toggleBtn = document.getElementById("toggleMusic");
+    const prevBtn = document.getElementById("prevTrack");
+    const nextBtn = document.getElementById("nextTrack");
+    const trackNum = document.getElementById("trackNum");
 
-  let isPlaying = true;
-  let currentIndex = 0;
+    const tracks = [
+      "static/audio/track1.mp3",
+      "static/audio/track2.mp3",
+      "static/audio/track3.mp3",
+      "static/audio/track4.mp3",
+      "static/audio/track5.mp3"
+    ];
 
-  // Start with muted volume
-  bgMusic.volume = 0;
+    let isPlaying = true;
+    let currentIndex = 0;
 
-  function fadeIn(audio, duration = 3000) {
-    let step = 0.01;
-    let interval = duration / (1 / step);
-    let vol = 0;
-    const fade = setInterval(() => {
-      vol += step;
-      if (vol >= 1) {
-        audio.volume = 1;
-        clearInterval(fade);
-      } else {
-        audio.volume = vol;
+    // Start with muted volume
+    bgMusic.volume = 0;
+
+    function fadeIn(audio, duration = 3000) {
+      let step = 0.01;
+      let interval = duration / (1 / step);
+      let vol = 0;
+      const fade = setInterval(() => {
+        vol += step;
+        if (vol >= 1) {
+          audio.volume = 1;
+          clearInterval(fade);
+        } else {
+          audio.volume = vol;
+        }
+      }, interval);
+    }
+
+    function loadTrack(index) {
+      bgMusic.src = tracks[index];
+      bgMusic.load();
+      if (isPlaying) {
+        bgMusic.play().then(() => {
+          bgMusic.volume = 0;
+          fadeIn(bgMusic, 2000);
+        }).catch(() => {});
       }
-    }, interval);
-  }
-
-  function loadTrack(index) {
-    bgMusic.src = tracks[index];
-    bgMusic.load();
-    if (isPlaying) {
-      bgMusic.play().then(() => {
-        bgMusic.volume = 0;
-        fadeIn(bgMusic, 2000);
-      }).catch(() => {});
-    }
-    trackNum.textContent = index + 1;
-  }
-
-  toggleBtn.addEventListener("click", () => {
-    if (isPlaying) {
-      bgMusic.pause();
-      toggleBtn.textContent = "🔇";
-    } else {
-      bgMusic.play().then(() => {
-        bgMusic.volume = 0;
-        fadeIn(bgMusic);
-      }).catch(() => {});
-      toggleBtn.textContent = "🔊";
-    }
-    isPlaying = !isPlaying;
-  });
-
-  nextBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % tracks.length;
-    loadTrack(currentIndex);
-  });
-
-  prevBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(currentIndex);
-  });
-
-  // Start on user interaction (autoplay-safe)
-  let audioStarted = false;
-  window.addEventListener('click', () => {
-    if (!audioStarted) {
-      bgMusic.play().then(() => {
-        fadeIn(bgMusic, 2000);
-      }).catch(() => {});
-      audioStarted = true;
-    }
-  });
-
-  loadTrack(currentIndex);
-</script>
-
-<audio id="clickSound" preload="auto">
-  <source src="static/audio/click.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-
-  const clickSound = document.getElementById("clickSound");
-  document.querySelectorAll('button, a').forEach(element => {
-    element.addEventListener('click', () => {
-      clickSound.currentTime = 0; 
-      clickSound.play().catch(() => {});
-    });
-  });
-  document.querySelectorAll('.music-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); 
-    });
-  });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const toggleBtn = document.getElementById("darkModeToggle");
-
-    function enableLight() {
-      document.body.classList.add("light-mode");
-      document.body.classList.remove("dark-mode");
-      localStorage.setItem("theme", "light");
-      toggleBtn.textContent = "🌙";
-    }
-
-    function enableDark() {
-      document.body.classList.add("dark-mode");
-      document.body.classList.remove("light-mode");
-      localStorage.setItem("theme", "dark");
-      toggleBtn.textContent = "☀️";
-    }
-
-    if (localStorage.getItem("theme") === "light") {
-      enableLight();
-    } else {
-      enableDark(); // default to dark mode
+      trackNum.textContent = index + 1;
     }
 
     toggleBtn.addEventListener("click", () => {
-      if (document.body.classList.contains("light-mode")) {
-        enableDark();
+      if (isPlaying) {
+        bgMusic.pause();
+        toggleBtn.textContent = "🔇";
       } else {
-        enableLight();
+        bgMusic.play().then(() => {
+          bgMusic.volume = 0;
+          fadeIn(bgMusic);
+        }).catch(() => {});
+        toggleBtn.textContent = "🔊";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex + 1) % tracks.length;
+      loadTrack(currentIndex);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentIndex);
+    });
+
+    // Start on user interaction (autoplay-safe)
+    let audioStarted = false;
+    window.addEventListener('click', () => {
+      if (!audioStarted) {
+        bgMusic.play().then(() => {
+          fadeIn(bgMusic, 2000);
+        }).catch(() => {});
+        audioStarted = true;
       }
     });
-  });
-</script>
 
-<script> window.chtlConfig = { chatbotId: "6419857222" } </script>
-<script async data-id="6419857222" id="chtl-script" type="text/javascript" 
-  src="https://chatling.ai/js/embed.js">
-</script>
+    loadTrack(currentIndex);
+
+    // Click Sound
+    const clickSound = document.getElementById("clickSound");
+    document.querySelectorAll('button, a').forEach(element => {
+      element.addEventListener('click', () => {
+        clickSound.currentTime = 0; 
+        clickSound.play().catch(() => {});
+      });
+    });
+    document.querySelectorAll('.music-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+      });
+    });
+
+    // Dark Mode Toggle
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggleBtn = document.getElementById("darkModeToggle");
+
+      function enableLight() {
+        document.body.classList.add("light-mode");
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("theme", "light");
+        toggleBtn.textContent = "🌙";
+      }
+
+      function enableDark() {
+        document.body.classList.add("dark-mode");
+        document.body.classList.remove("light-mode");
+        localStorage.setItem("theme", "dark");
+        toggleBtn.textContent = "☀️";
+      }
+
+      if (localStorage.getItem("theme") === "light") {
+        enableLight();
+      } else {
+        enableDark(); // default to dark mode
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        if (document.body.classList.contains("light-mode")) {
+          enableDark();
+        } else {
+          enableLight();
+        }
+      });
+    });
+
+    // Set profile circle initial
+    const username = "{{ current_user.username }}";
+    document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
+  </script>
+
+  <!-- Chatbot Integration -->
+  <script> window.chtlConfig = { chatbotId: "6419857222" } </script>
+  <script async data-id="6419857222" id="chtl-script" type="text/javascript" 
+    src="https://chatling.ai/js/embed.js">
+  </script>
 </body>
 </html>
