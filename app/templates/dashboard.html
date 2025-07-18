@@ -681,7 +681,8 @@
 
     <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
       <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
-        🔓 Logout
+        <img src="static/photos/logout.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+        LOGOUT
       </button>
     </form>
     <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
@@ -732,7 +733,7 @@
 
     <!-- Welcome Message -->
     <div class="message-bubble">
-      <img src="static/icons/retro-pc.png" class="bubble-icon" />
+      <img src="static/photos/pc.gif" class="bubble-icon" />
       <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
     </div>
 
@@ -742,7 +743,7 @@
       <div class="side-column">
         <!-- Profile Card -->
         <div class="profile">
-          <img src="static/sprites/arch.dance.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
           <h2>{{ current_user.username }}</h2>
           <p class="level">Level 1</p>
           <div class="stats">
