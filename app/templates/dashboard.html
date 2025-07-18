@@ -672,7 +672,13 @@
  <div class="topbar">
   <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
   <div class="topbar-right">
-    <button class="topbar-btn">⚙ Settings</button>
+    
+    <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
+      <button type="submit" class="topbar-btn">
+        ⚙ Profile
+      </button>
+    </form>
+
     <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
       <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
         🔓 Logout
@@ -734,29 +740,21 @@
     <div class="intro-grid">
       <!-- Left Column (Intro, Profile, Events) -->
       <div class="side-column">
-        <!-- Welcome Panel -->
-        <div class="intro-panel">
-          <div class="intro-avatars">
-            <img src="static/icons/desk.png" alt="Desk" class="intro-icon">
-            <img src="static/icons/char.png" alt="Avatar" class="intro-icon">
-          </div>
-          <h2 class="intro-title">Welcome to LOCUS!</h2>
-          <p class="intro-subtext">Your journey to smarter business awaits—let's find something to learn.</p>
-          <button class="get-started-btn">Get Started</button>
-        </div>
-
         <!-- Profile Card -->
         <div class="profile">
           <img src="static/sprites/arch.dance.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
           <h2>{{ current_user.username }}</h2>
           <p class="level">Level 1</p>
           <div class="stats">
-            <div><span>✨ 0</span>Total XP</div>
             <div><span>🧿 0</span>Badges</div>
             <div><span>🥉 Bronze</span>Rank</div>
             <div><span>🔥 1</span>Day Streak</div>
           </div>
-          <button>View Profile</button>
+          <a href="{{ url_for('profile.profile') }}">
+          <div>
+            <button>VIEW PROFILE</button>
+          </div>
+        </a>
         </div>
 
         <!-- Upcoming Events -->
