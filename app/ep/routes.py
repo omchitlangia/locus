@@ -4,6 +4,32 @@ from app.extensions import db
 from app.models import Event
 from datetime import datetime
 from . import event_bp
+from flask import jsonify
+from datetime import datetime
+
+@event_bp.route('/api/upcoming_events')
+@login_required
+def upcoming_events():
+    try:
+        today = datetime.utcnow().date()
+        events = Event.query.filter(
+            Event.user_id == current_user.id,
+            Event.start_date >= today
+        ).order_by(Event.start_date).limit(3).all()
+        
+        events_data = [{
+            'id': event.id,
+            'name': event.name,
+            'start_date': event.start_date.strftime('%Y-%m-%d'),
+            'event_type': event.event_type,
+            'description': event.description
+        } for event in events]
+        
+        return jsonify(events_data)
+    
+    except Exception as e:
+        print(f"Error fetching events: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 @event_bp.route('/dashboard/ep')
 @login_required
