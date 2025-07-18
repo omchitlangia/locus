@@ -672,10 +672,17 @@
  <div class="topbar">
   <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
   <div class="topbar-right">
-    <button class="topbar-btn">⚙ Settings</button>
+    
+    <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
+      <button type="submit" class="topbar-btn">
+        ⚙ Profile
+      </button>
+    </form>
+
     <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
       <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
-        🔓 Logout
+        <img src="static/photos/logout.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+        LOGOUT
       </button>
     </form>
     <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
@@ -726,7 +733,7 @@
 
     <!-- Welcome Message -->
     <div class="message-bubble">
-      <img src="static/icons/retro-pc.png" class="bubble-icon" />
+      <img src="static/photos/pc.gif" class="bubble-icon" />
       <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
     </div>
 
@@ -734,29 +741,21 @@
     <div class="intro-grid">
       <!-- Left Column (Intro, Profile, Events) -->
       <div class="side-column">
-        <!-- Welcome Panel -->
-        <div class="intro-panel">
-          <div class="intro-avatars">
-            <img src="static/icons/desk.png" alt="Desk" class="intro-icon">
-            <img src="static/icons/char.png" alt="Avatar" class="intro-icon">
-          </div>
-          <h2 class="intro-title">Welcome to LOCUS!</h2>
-          <p class="intro-subtext">Your journey to smarter business awaits—let's find something to learn.</p>
-          <button class="get-started-btn">Get Started</button>
-        </div>
-
         <!-- Profile Card -->
         <div class="profile">
-          <img src="static/sprites/arch.dance.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
           <h2>{{ current_user.username }}</h2>
           <p class="level">Level 1</p>
           <div class="stats">
-            <div><span>✨ 0</span>Total XP</div>
             <div><span>🧿 0</span>Badges</div>
             <div><span>🥉 Bronze</span>Rank</div>
             <div><span>🔥 1</span>Day Streak</div>
           </div>
-          <button>View Profile</button>
+          <a href="{{ url_for('profile.profile') }}">
+          <div>
+            <button>VIEW PROFILE</button>
+          </div>
+        </a>
         </div>
 
         <!-- Upcoming Events -->
@@ -809,6 +808,20 @@
           <div class="feature-info">
             <h3>🗓️ Event Planner</h3>
             <p>Manage upcoming business events and team plans.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('business_health.business_health') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🩺 Business Health</h3>
+            <p>Check the health status of your business.</p>
+          </div>
+        </a>
+
+        <a href="{{ url_for('billing.billing_page') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🧾 Billing</h3>
+            <p>Bill your SKU's for your retail store.</p>
           </div>
         </a>
 
