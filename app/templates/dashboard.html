@@ -1114,7 +1114,7 @@
 
     // Function to fetch and display upcoming events
     function loadUpcomingEvents() {
-      fetch('/dashboard/ep/api/upcoming_events')
+      fetch('/api/upcoming_events')
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.json();
