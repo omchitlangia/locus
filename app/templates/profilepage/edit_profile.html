@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROFILE EDITOR TERMINAL | LOCUS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-pink: #ff2a6d;
+      --neon-purple: #d300c5;
+      --neon-cyan: #05d9e8;
+      --neon-yellow: #f7f700;
+      --deep-blue: #0d0221;
+      --dark-bg: #0a0118;
+      --panel-bg: rgba(13, 2, 33, 0.8);
+      --text: #ffffff;
+      --text-light: #b3b3ff;
+      --good: #00ff41;
+      --fair: #ffe700;
+      --poor: #ff2a6d;
+      --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'VT323', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: var(--text);
+      background-image: 
+        linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      image-rendering: pixelated;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    /* TERMINAL CONTAINER */
+    .terminal-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--panel-bg);
+      border-radius: 0;
+      border: 4px solid var(--neon-cyan);
+      box-shadow: 
+        inset 0 0 15px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
+        var(--pixel-shadow);
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* PIXEL CORNERS */
+    .pixel-corner {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+    }
+
+    .corner-tl { top: -8px; left: -8px; }
+    .corner-tr { top: -8px; right: -8px; }
+    .corner-bl { bottom: -8px; left: -8px; }
+    .corner-br { bottom: -8px; right: -8px; }
+
+    /* TERMINAL HEADER */
+    .terminal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .terminal-header h1 {
+      font-size: 2rem;
+      color: var(--neon-yellow);
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 10px var(--neon-yellow);
+      margin-bottom: 0.5rem;
+    }
+
+    .terminal-header p {
+      color: var(--text-light);
+      font-size: 1.4rem;
+    }
+
+    /* PROFILE PICTURE */
+    .profile-pic-container {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid var(--neon-pink);
+      box-shadow: 0 0 15px var(--neon-pink);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--neon-pink);
+    }
+
+    .change-pic {
+      color: var(--neon-cyan);
+      cursor: pointer;
+      font-size: 1.2rem;
+      text-shadow: 0 0 5px var(--neon-cyan);
+      transition: all 0.3s;
+    }
+
+    .change-pic:hover {
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px var(--neon-pink);
+    }
+
+    /* FORM ELEMENTS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .section-title {
+      color: var(--neon-pink);
+      margin: 1.5rem 0;
+      font-size: 1.5rem;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 0 0 8px var(--neon-pink);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--neon-purple);
+      box-shadow: var(--pixel-shadow);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      color: var(--neon-cyan);
+    }
+
+    .form-group input, 
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--deep-blue);
+      border: 3px solid var(--neon-purple);
+      border-radius: 0;
+      color: var(--text);
+      font-size: 1.2rem;
+      box-shadow: var(--pixel-shadow);
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus, 
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--neon-yellow);
+      box-shadow: 0 0 10px var(--neon-yellow);
+    }
+
+    /* BUTTONS */
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0;
+      font-weight: bold;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Press Start 2P', cursive;
+      box-shadow: var(--pixel-shadow);
+      position: relative;
+      overflow: hidden;
+      border: 3px solid;
+      text-shadow: 0 0 5px white;
+    }
+
+    .btn-primary {
+      background-color: var(--neon-purple);
+      color: white;
+      border-color: var(--neon-pink);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--neon-pink);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(5, 217, 232, 0.2);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    /* HIDDEN FILE INPUT */
+    #profile-pic-input {
+      display: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .terminal-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .terminal-header p {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
+    }
+
+    /* TERMINAL TYPING EFFECT */
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--neon-cyan) }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-container">
+    <div class="pixel-corner corner-tl"></div>
+    <div class="pixel-corner corner-tr"></div>
+    <div class="pixel-corner corner-bl"></div>
+    <div class="pixel-corner corner-br"></div>
+    
+    <div class="terminal-header">
+      <h1><i class="fas fa-user-edit"></i> PROFILE EDITOR TERMINAL</h1>
+      <p>UPDATE YOUR USER CONFIGURATION</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('profile.edit_profile') }}" enctype="multipart/form-data">
+      <!-- AVATAR CONFIG -->
+      <div class="profile-pic-container">
+        <img id="profile-pic-preview" 
+             src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
+             class="profile-pic">
+        <div class="change-pic" onclick="document.getElementById('profile-pic-input').click()">
+          <i class="fas fa-camera"></i> CHANGE AVATAR
+        </div>
+        <input type="file" id="profile-pic-input" name="profile_pic" accept="image/*">
+      </div>
+      
+      <!-- USER DATA SECTION -->
+      <h3 class="section-title"><i class="fas fa-id-card"></i> USER DATA</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="username">FULL NAME</label>
+          <input type="text" id="username" name="username" value="{{ user.username }}" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">EMAIL ADDRESS</label>
+          <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+      </div>
+      
+      <!-- BUSINESS CONFIG SECTION -->
+      <h3 class="section-title"><i class="fas fa-briefcase"></i> BUSINESS CONFIG</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="business_name">BUSINESS NAME</label>
+          <input type="text" id="business_name" name="business_name" value="{{ user.business_name or '' }}">
+        </div>
+        
+        <div class="form-group">
+          <label for="business_type">BUSINESS TYPE</label>
+          <select id="business_type" name="business_type">
+            <option value="">SELECT TYPE</option>
+            <option value="Retail" {% if user.business_type == 'Retail' %}selected{% endif %}>RETAIL</option>
+            <option value="Service" {% if user.business_type == 'Service' %}selected{% endif %}>SERVICE</option>
+            <option value="SaaS" {% if user.business_type == 'SaaS' %}selected{% endif %}>SAAS</option>
+            <option value="Manufacturing" {% if user.business_type == 'Manufacturing' %}selected{% endif %}>MANUFACTURING</option>
+            <option value="Other" {% if user.business_type == 'Other' %}selected{% endif %}>OTHER</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="industry">INDUSTRY</label>
+          <input type="text" id="industry" name="industry" value="{{ user.industry or '' }}" placeholder="E.G., F&B, FINTECH">
+        </div>
+        
+        <div class="form-group">
+          <label for="location">LOCATION</label>
+          <input type="text" id="location" name="location" value="{{ user.location or '' }}" placeholder="CITY, COUNTRY">
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+          <i class="fas fa-times"></i> CANCEL
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> SAVE CONFIG
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Preview profile picture when selected
+    document.getElementById('profile-pic-input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('profile-pic-preview').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Terminal typing effect
+    document.addEventListener('DOMContentLoaded', function() {
+      const headers = document.querySelectorAll('.terminal-header h1, .terminal-header p, .section-title');
+      headers.forEach(header => {
+        const text = header.textContent;
+        header.textContent = '';
+        let i = 0;
+        const typing = setInterval(() => {
+          if (i < text.length) {
+            header.textContent += text.charAt(i);
+            i++;
+          } else {
+            clearInterval(typing);
+          }
+        }, 50);
+      });
+    });
+
+    // Add pixel grid effect
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.querySelector('.terminal-container');
+      for (let i = 0; i < 30; i++) {
+        const pixel = document.createElement('div');
+        pixel.style.position = 'absolute';
+        pixel.style.width = '2px';
+        pixel.style.height = '2px';
+        pixel.style.backgroundColor = `rgba(5, 217, 232, ${Math.random() * 0.5})`;
+        pixel.style.left = `${Math.random() * 100}%`;
+        pixel.style.top = `${Math.random() * 100}%`;
+        pixel.style.zIndex = '-1';
+        container.appendChild(pixel);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2,6 +2,7 @@ from flask import Flask
 from app.extensions import db, bcrypt, mail, login_manager
 from flask_migrate import Migrate
 from config import Config 
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -43,5 +44,10 @@ def create_app():
 
     from app.business_health.routes import health_bp
     app.register_blueprint(health_bp)
+    from app.profilepage.routes import profile_bp
+    app.register_blueprint(profile_bp)
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
 
     return app

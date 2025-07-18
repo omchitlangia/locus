@@ -1,102 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Invoice {{ bill.bill_number }} - LOCUS Retail</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ bill.bill_number }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.9);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+        
         @page {
             size: A4;
             margin: 1.5cm;
+            background-color: var(--dark-bg);
         }
+        
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'VT323', monospace;
             margin: 0;
             padding: 20px;
-            color: #333;
-            font-size: 14px;
-            line-height: 1.5;
-            background-color: white;
+            color: var(--text);
+            font-size: 18px;
+            line-height: 1.4;
+            background-color: var(--dark-bg);
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            image-rendering: pixelated;
         }
+        
         .header {
             text-align: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #2c3e50;
+            border-bottom: 4px solid var(--neon-pink);
+            position: relative;
         }
+        
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--neon-purple);
+        }
+        
         .company-name {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 28px;
+            font-weight: normal;
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .company-details {
+            color: var(--text-light);
+            font-size: 18px;
             margin-bottom: 5px;
         }
-        .company-details {
-            color: #555;
-        }
+        
         .invoice-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0066cc;
-            margin: 15px 0;
+            font-size: 22px;
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-cyan);
+            margin: 20px 0;
             text-transform: uppercase;
+            text-shadow: 0 0 8px var(--neon-cyan);
+            position: relative;
         }
+        
+        .invoice-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--neon-purple);
+            box-shadow: var(--pixel-shadow);
+        }
+        
         .bill-info {
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
+        
         .bill-info-column {
             width: 48%;
+            background: var(--panel-bg);
+            border: 3px solid var(--neon-purple);
+            padding: 15px;
+            box-shadow: var(--pixel-shadow);
+            margin-bottom: 20px;
         }
+        
         .bill-info p {
-            color: #444;
-            margin: 5px 0;
+            color: var(--text);
+            margin: 8px 0;
+            font-size: 18px;
         }
+        
+        .bill-info strong {
+            color: var(--neon-cyan);
+        }
+        
         .bill-details {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 30px;
             page-break-inside: avoid;
+            box-shadow: var(--pixel-shadow);
         }
+        
         .bill-details th {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: var(--deep-blue);
+            color: var(--neon-pink);
             text-align: left;
-            padding: 10px;
-            border: 1px solid #ddd;
-            font-weight: 600;
+            padding: 12px;
+            border: 3px solid var(--neon-purple);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            text-transform: uppercase;
         }
+        
         .bill-details td {
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            color: #333;
+            padding: 10px 12px;
+            border: 3px solid var(--neon-purple);
+            color: var(--text);
+            background-color: var(--panel-bg);
         }
+        
+        .bill-details tr:nth-child(even) td {
+            background-color: rgba(5, 217, 232, 0.1);
+        }
+        
         .totals {
             float: right;
             width: 300px;
             margin-top: 20px;
+            background: var(--panel-bg);
+            border: 3px solid var(--neon-purple);
+            padding: 15px;
+            box-shadow: var(--pixel-shadow);
         }
+        
         .totals table {
             width: 100%;
-            border-top: 2px solid #2c3e50;
+            border-top: 3px solid var(--neon-pink);
         }
+        
         .totals td {
-            padding: 8px;
-            color: #333;
+            padding: 10px;
+            color: var(--text);
         }
+        
         .totals tr:last-child td {
-            font-weight: 600;
-            font-size: 15px;
-            color: #0066cc;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 5px var(--neon-yellow);
         }
+        
         .footer {
             margin-top: 50px;
             text-align: center;
-            font-size: 11px;
-            color: #666;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
+            font-size: 14px;
+            color: var(--text-light);
+            border-top: 3px solid var(--neon-purple);
+            padding-top: 15px;
             page-break-inside: avoid;
         }
+        
         .watermark {
             position: fixed;
             opacity: 0.1;
@@ -106,15 +198,70 @@
             top: 40%;
             transform: rotate(-30deg);
             z-index: -1;
-            color: #000;
+            color: var(--neon-pink);
+            font-family: 'Press Start 2P', cursive;
         }
+        
         .item-name {
-            color: #222;
-            font-weight: 500;
+            color: var(--text);
+            font-weight: bold;
         }
+        
         .item-code {
-            color: #0066cc;
-            font-weight: 600;
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+        
+        .print-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .print-button button {
+            background-color: var(--neon-purple);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            border: 3px solid var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .print-button button:hover {
+            background-color: var(--neon-pink);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+        
+        @media print {
+            .print-button {
+                display: none;
+            }
+            
+            body {
+                background-color: transparent;
+                background-image: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .bill-info-column {
+                width: 100%;
+            }
+            
+            .totals {
+                width: 100%;
+                float: none;
+            }
+            
+            .company-name {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
@@ -124,8 +271,8 @@
     {% endif %}
 
     <div class="header">
-        <div class="company-name">LOCUS Retail Store</div>
-        <div class="company-details">Street - 007, GitHub Nagar, Panama City</div>
+        <div class="company-name">LOCUS RETAIL STORE</div>
+        <div class="company-details">STREET - 007, GITHUB NAGAR, PANAMA CITY</div>
         <div class="company-details">GSTIN: GITHUB123 | omchitlangia.github.io</div>
     </div>
     
@@ -133,17 +280,17 @@
     
     <div class="bill-info">
         <div class="bill-info-column">
-            <p><strong>Invoice #:</strong> {{ bill.bill_number }}</p>
-            <p><strong>Date:</strong> {{ bill.date.strftime('%d-%m-%Y %H:%M:%S') }}</p>
-            <p><strong>Customer:</strong> {{ bill.customer_name }}</p>
+            <p><strong>INVOICE #:</strong> {{ bill.bill_number }}</p>
+            <p><strong>DATE:</strong> {{ bill.date.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+            <p><strong>CUSTOMER:</strong> {{ bill.customer_name }}</p>
             {% if bill.customer_phone %}
-            <p><strong>Phone:</strong> {{ bill.customer_phone }}</p>
+            <p><strong>PHONE:</strong> {{ bill.customer_phone }}</p>
             {% endif %}
         </div>
         <div class="bill-info-column">
-            <p><strong>Payment Due:</strong> {{ (bill.date + timedelta(days=7)).strftime('%d-%m-%Y') }}</p>
-            <p><strong>Payment Method:</strong> {{ bill.payment_method }}</p>
-            <p><strong>Salesperson:</strong> {{ current_user.name if current_user else 'System' }}</p>
+            <p><strong>PAYMENT DUE:</strong> {{ (bill.date + timedelta(days=7)).strftime('%d-%m-%Y') }}</p>
+            <p><strong>PAYMENT METHOD:</strong> {{ bill.payment_method }}</p>
+            <p><strong>SALESPERSON:</strong> {{ current_user.name if current_user else 'SYSTEM' }}</p>
         </div>
     </div>
     
@@ -151,11 +298,11 @@
         <thead>
             <tr>
                 <th width="5%">#</th>
-                <th width="15%">SKU Code</th>
-                <th width="30%">Item Description</th>
-                <th width="15%">Unit Price</th>
-                <th width="10%">Qty</th>
-                <th width="15%">Total</th>
+                <th width="15%">SKU CODE</th>
+                <th width="30%">ITEM DESCRIPTION</th>
+                <th width="15%">UNIT PRICE</th>
+                <th width="10%">QTY</th>
+                <th width="15%">TOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -166,7 +313,7 @@
                 <td>
                     <span class="item-name">{{ item.sku_name }}</span>
                     {% if item.expiry_date %}
-                    <br><small>Exp: {{ item.expiry_date.strftime('%d-%m-%Y') if item.expiry_date is string else item.expiry_date.strftime('%d-%m-%Y') }}</small>
+                    <br><small>EXP: {{ item.expiry_date.strftime('%d-%m-%Y') if item.expiry_date is string else item.expiry_date.strftime('%d-%m-%Y') }}</small>
                     {% endif %}
                 </td>
                 <td>₹{{ "%.2f"|format(item.unit_price) }}</td>
@@ -180,30 +327,48 @@
     <div class="totals">
         <table>
             <tr>
-                <td><strong>Subtotal:</strong></td>
+                <td><strong>SUBTOTAL:</strong></td>
                 <td>₹{{ "%.2f"|format(bill.subtotal) }}</td>
             </tr>
             <tr>
-                <td><strong>Tax (18%):</strong></td>
+                <td><strong>TAX (18%):</strong></td>
                 <td>₹{{ "%.2f"|format(bill.tax_amount) }}</td>
             </tr>
             {% if bill.discount > 0 %}
             <tr>
-                <td><strong>Discount:</strong></td>
+                <td><strong>DISCOUNT:</strong></td>
                 <td>-₹{{ "%.2f"|format(bill.discount) }}</td>
             </tr>
             {% endif %}
             <tr>
-                <td><strong>Grand Total:</strong></td>
+                <td><strong>GRAND TOTAL:</strong></td>
                 <td>₹{{ "%.2f"|format(bill.grand_total) }}</td>
             </tr>
         </table>
     </div>
     
     <div class="footer">
-        <p>Thank you for your business! Terms: Net 7 days</p>
-        <p>This is a computer generated invoice. No signature required.</p>
-        <p>Questions? Email billing@retail.example</p>
+        <p>THANK YOU FOR YOUR BUSINESS! TERMS: NET 7 DAYS</p>
+        <p>THIS IS A COMPUTER GENERATED INVOICE. NO SIGNATURE REQUIRED.</p>
+        <p>QUESTIONS? EMAIL BILLING@RETAIL.EXAMPLE</p>
     </div>
+    
+    <div class="print-button">
+        <button onclick="window.print()">
+            <i class="fas fa-print"></i> PRINT INVOICE
+        </button>
+        <a href="{{ url_for('billing.download_bill', bill_id=bill.id) }}">
+            <button>
+                <i class="fas fa-download"></i> DOWNLOAD PDF
+            </button>
+        </a>
+    </div>
+    
+    <script>
+        // Auto-print if coming from process page
+        if(window.location.search.includes('autoprint')) {
+            window.print();
+        }
+    </script>
 </body>
 </html>

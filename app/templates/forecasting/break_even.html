@@ -3,131 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Break-Even Analysis | LOCUS</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>BREAK-EVEN ANALYSIS | LOCUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.9);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #f0f0f0;
+            font-family: 'VT323', monospace;
+            background-color: var(--dark-bg);
+            color: var(--text);
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
             position: relative;
+            image-rendering: pixelated;
         }
-        
-        body::before {
+
+        .navbar {
+            background-color: var(--deep-blue);
+            border-bottom: 4px solid var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+        }
+
+        .navbar-brand {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--neon-yellow);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+        }
+
+        .lead {
+            color: var(--text-light);
+            font-size: 1.3rem;
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border: 4px solid var(--neon-purple);
+            border-radius: 0;
+            box-shadow: var(--pixel-shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card::before {
             content: "";
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300bcd4' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: -1;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(211, 0, 197, 0.1) 0%, rgba(5, 217, 232, 0.1) 100%);
+            z-index: 0;
         }
-        
+
         .card-header {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            color: #fff;
+            background-color: var(--deep-blue);
+            border-bottom: 3px solid var(--neon-pink);
+            padding: 15px;
+            font-family: 'Press Start 2P', cursive;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
         }
-        
+
+        .card-body {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
         .break-even-point {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #00e5ff, #00bcd4);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3rem;
+            background: linear-gradient(90deg, #ff2a6d, #d300c5, #05d9e8, #f7f700);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(5, 217, 232, 0.5);
         }
-        
-        .navbar {
-            background-color: rgba(26, 26, 26, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
+
+        .list-group {
+            border: 3px solid var(--neon-purple);
+            box-shadow: var(--pixel-shadow);
         }
-        
-        .card {
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #1e1e1e;
-            border: 1px solid #00e5ff;
-            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 229, 255, 0.3) !important;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            border: none;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #00e5ff, #00bcd4);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5);
-        }
-        
-        .btn-outline-secondary {
-            border-color: #00bcd4;
-            color: #00bcd4;
-        }
-        
-        .btn-outline-secondary:hover {
-            background-color: rgba(0, 188, 212, 0.1);
-            color: #00e5ff;
-            border-color: #00e5ff;
-        }
-        
+
         .list-group-item {
-            background-color: #2d2d2d;
-            color: #f0f0f0;
-            border-color: #3d3d3d;
+            background-color: var(--panel-bg);
+            color: var(--text);
+            border: 2px solid var(--neon-purple);
+            font-size: 1.2rem;
+            padding: 12px 15px;
         }
-        
+
+        .list-group-item strong {
+            color: var(--neon-cyan);
+        }
+
         .badge {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
+            background-color: var(--neon-purple);
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            border: 2px solid var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+            border-radius: 0;
         }
-        
-        h1 {
-            color: #00bcd4;
+
+        .btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
         }
-        
-        .lead {
-            color: #b0b0b0;
+
+        .btn-primary {
+            background-color: var(--neon-purple);
+            color: white;
+            border: 3px solid var(--neon-pink);
         }
-        
-        .text-muted {
-            color: #8a8a8a !important;
+
+        .btn-outline-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 3px solid #6c757d;
         }
-        
+
+        .btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--neon-pink);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
         .form-select, .form-control {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: #f0f0f0;
+            background-color: var(--deep-blue);
+            border: 3px solid var(--neon-purple);
+            color: var(--text);
+            font-size: 1.2rem;
+            box-shadow: var(--pixel-shadow);
         }
-        
+
         .form-select:focus, .form-control:focus {
-            background-color: #3d3d3d;
-            border-color: #00bcd4;
-            color: #f0f0f0;
-            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+            outline: none;
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        .text-muted {
+            color: var(--text-light) !important;
+        }
+
+        /* Pixel corners */
+        .pixel-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { top: -8px; left: -8px; }
+        .corner-tr { top: -8px; right: -8px; }
+        .corner-bl { bottom: -8px; left: -8px; }
+        .corner-br { bottom: -8px; right: -8px; }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .break-even-point {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                font-size: 0.8rem;
+                padding: 8px 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-balance-scale me-2"></i>LOCUS Forecasting
+                <i class="fas fa-balance-scale me-2"></i>LOCUS TERMINAL
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -135,38 +271,43 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('dashboard.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> Dashboard</a>
+                        <a class="nav-link" href="{{ url_for('dashboard.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i> DASHBOARD</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('forecasting.revenue_prediction') }}"><i class="fas fa-chart-line me-1"></i> Revenue Prediction</a>
+                        <a class="nav-link" href="{{ url_for('forecasting.revenue_prediction') }}"><i class="fas fa-chart-line me-1"></i> REVENUE FORECAST</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-balance-scale me-1"></i> Break-Even</a>
+                        <a class="nav-link active" href="#"><i class="fas fa-crosshairs me-1"></i> BREAK-EVEN</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container py-5">
+    <div class="container py-4">
         <div class="row mb-4">
             <div class="col">
-                <h1 class="display-5 fw-bold"><i class="fas fa-balance-scale me-2" style="color: #00bcd4;"></i>Break-Even Analysis</h1>
-                <p class="lead">Determine when your business becomes profitable</p>
+                <h1><i class="fas fa-crosshairs me-2"></i>BREAK-EVEN ANALYSIS</h1>
+                <p class="lead">CALCULATE WHEN YOUR OPERATION BECOMES PROFITABLE</p>
             </div>
         </div>
 
         {% if break_even %}
         <div class="row mb-5">
             <div class="col">
-                <div class="card border-0 shadow">
-                    <div class="card-header text-white">
-                        <h3><i class="fas fa-bullseye me-2"></i>Break-Even Point</h3>
+                <div class="card">
+                    <div class="pixel-corner corner-tl"></div>
+                    <div class="pixel-corner corner-tr"></div>
+                    <div class="pixel-corner corner-bl"></div>
+                    <div class="pixel-corner corner-br"></div>
+                    
+                    <div class="card-header">
+                        <h3><i class="fas fa-bullseye me-2"></i>BREAK-EVEN POINT</h3>
                     </div>
                     <div class="card-body text-center py-4">
-                        <p class="text-muted mb-1">You need to generate</p>
+                        <p class="text-muted mb-1">REQUIRED REVENUE TO COVER COSTS:</p>
                         <div class="break-even-point">${{ break_even }}</div>
-                        <p class="text-muted mt-1">in revenue to cover all costs</p>
+                        <p class="text-muted mt-1">MISSION SUCCESS THRESHOLD</p>
                     </div>
                 </div>
             </div>
@@ -174,37 +315,47 @@
 
         <div class="row mb-5">
             <div class="col-md-6 mb-4 mb-md-0">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-header text-white">
-                        <h3><i class="fas fa-calculator me-2"></i>Cost Structure</h3>
+                <div class="card h-100">
+                    <div class="pixel-corner corner-tl"></div>
+                    <div class="pixel-corner corner-tr"></div>
+                    <div class="pixel-corner corner-bl"></div>
+                    <div class="pixel-corner corner-br"></div>
+                    
+                    <div class="card-header">
+                        <h3><i class="fas fa-calculator me-2"></i>COST STRUCTURE</h3>
                     </div>
                     <div class="card-body">
-                        <ul class="list-group list-group-flush">
+                        <ul class="list-group">
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Fixed Costs
-                                <span class="badge bg-primary rounded-pill">${{ fixed_costs }}</span>
+                                <strong>FIXED COSTS</strong>
+                                <span class="badge">${{ fixed_costs }}</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Variable Cost Ratio
-                                <span class="badge bg-primary rounded-pill">{{ variable_cost_ratio }}%</span>
+                                <strong>VARIABLE COST RATIO</strong>
+                                <span class="badge">{{ variable_cost_ratio }}%</span>
                             </li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Contribution Margin
-                                <span class="badge bg-primary rounded-pill">{{ contribution_margin }}%</span>
+                                <strong>CONTRIBUTION MARGIN</strong>
+                                <span class="badge">{{ contribution_margin }}%</span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-header text-white">
-                        <h3><i class="fas fa-chart-pie me-2"></i>Visualization</h3>
+                <div class="card h-100">
+                    <div class="pixel-corner corner-tl"></div>
+                    <div class="pixel-corner corner-tr"></div>
+                    <div class="pixel-corner corner-bl"></div>
+                    <div class="pixel-corner corner-br"></div>
+                    
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie me-2"></i>VISUALIZATION</h3>
                     </div>
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <div class="text-center py-4">
-                            <i class="fas fa-chart-pie display-1" style="color: #00bcd4;"></i>
-                            <p class="text-muted">Cost structure visualization would appear here</p>
+                            <i class="fas fa-chart-pie display-1" style="color: var(--neon-cyan);"></i>
+                            <p class="text-muted">COST STRUCTURE ANALYSIS DISPLAY</p>
                         </div>
                     </div>
                 </div>
@@ -213,12 +364,17 @@
         {% else %}
         <div class="row mb-5">
             <div class="col">
-                <div class="card border-0 shadow">
+                <div class="card">
+                    <div class="pixel-corner corner-tl"></div>
+                    <div class="pixel-corner corner-tr"></div>
+                    <div class="pixel-corner corner-bl"></div>
+                    <div class="pixel-corner corner-br"></div>
+                    
                     <div class="card-body text-center py-5">
-                        <i class="fas fa-calculator display-1" style="color: #00bcd4;"></i>
-                        <h3>Break-Even Analysis</h3>
-                        <p class="lead">Calculate when your total revenue will equal your total costs</p>
-                        <p class="text-muted">You'll need revenue and cost data to perform this analysis</p>
+                        <i class="fas fa-calculator display-1" style="color: var(--neon-cyan);"></i>
+                        <h3>BREAK-EVEN ANALYSIS</h3>
+                        <p class="lead">CALCULATE WHEN REVENUE EQUALS COSTS</p>
+                        <p class="text-muted">INPUT FINANCIAL DATA TO INITIATE ANALYSIS</p>
                     </div>
                 </div>
             </div>
@@ -227,25 +383,30 @@
 
         <div class="row">
             <div class="col">
-                <div class="card border-0 shadow">
+                <div class="card">
+                    <div class="pixel-corner corner-tl"></div>
+                    <div class="pixel-corner corner-tr"></div>
+                    <div class="pixel-corner corner-bl"></div>
+                    <div class="pixel-corner corner-br"></div>
+                    
                     <div class="card-body">
                         <form method="POST">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="time_range" class="form-label">Select Time Period</label>
+                                    <label for="time_range" class="form-label">SELECT TIME PERIOD</label>
                                     <select class="form-select" id="time_range" name="time_range">
-                                        <option value="all">All Time</option>
-                                        <option value="year">Last Year</option>
-                                        <option value="quarter">Last Quarter</option>
-                                        <option value="month">Last Month</option>
+                                        <option value="all">ALL TIME</option>
+                                        <option value="year">LAST YEAR</option>
+                                        <option value="quarter">LAST QUARTER</option>
+                                        <option value="month">LAST MONTH</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary me-2">
-                                        <i class="fas fa-calculator me-1"></i> Calculate Break-Even
+                                        <i class="fas fa-calculator me-1"></i> RUN ANALYSIS
                                     </button>
                                     <a href="{{ url_for('forecasting.index') }}" class="btn btn-outline-secondary">
-                                        <i class="fas fa-arrow-left me-1"></i> Back to Forecasting
+                                        <i class="fas fa-arrow-left me-1"></i> BACK
                                     </a>
                                 </div>
                             </div>
@@ -256,7 +417,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

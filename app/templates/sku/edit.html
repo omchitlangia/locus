@@ -3,142 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit SKU | LOCUS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>SKU EDITOR TERMINAL | LOCUS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.8);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --good: #00ff41;
+            --fair: #ffe700;
+            --poor: #ff2a6d;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #f0f0f0;
+            background: var(--dark-bg);
+            color: var(--text);
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
         }
-        
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300bcd4' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            z-index: -1;
+
+        /* TERMINAL NAVBAR */
+        .terminal-nav {
+            background-color: var(--deep-blue);
+            color: var(--neon-cyan);
+            padding: 1rem;
+            font-family: 'Share Tech Mono', monospace;
+            border-bottom: 3px solid var(--neon-pink);
+            box-shadow: 0 4px 0px 0px rgba(0,0,0,0.75);
         }
-        
-        .card {
-            background-color: #1e1e1e;
-            border: 1px solid #00e5ff;
-            border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            color: white;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            border: none;
-            color: white;
+
+        .terminal-nav a {
+            color: var(--neon-cyan);
+            text-decoration: none;
             font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #00e5ff, #00bcd4);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5);
+
+        .terminal-nav a:hover {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
         }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d, #495057);
-            border: none;
+
+        /* MAIN CONTAINER */
+        .terminal-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* EDITOR TERMINAL */
+        .editor-terminal {
+            background: var(--panel-bg);
+            border-radius: 4px;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 
+                inset 0 0 15px var(--neon-cyan),
+                0 0 15px var(--neon-cyan),
+                var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CORNER ACCENTS */
+        .corner-accent {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { 
+            top: -8px; 
+            left: -8px; 
+            border-right: none;
+            border-bottom: none;
+        }
+        .corner-tr { 
+            top: -8px; 
+            right: -8px; 
+            border-left: none;
+            border-bottom: none;
+        }
+        .corner-bl { 
+            bottom: -8px; 
+            left: -8px; 
+            border-right: none;
+            border-top: none;
+        }
+        .corner-br { 
+            bottom: -8px; 
+            right: -8px; 
+            border-left: none;
+            border-top: none;
+        }
+
+        /* TERMINAL HEADER */
+        .terminal-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
             color: white;
+            padding: 1rem 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
-        
+
+        /* FORM ELEMENTS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-cyan);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         .form-control, .form-select {
-            background-color: #2d2d2d;
-            border-color: #3d3d3d;
-            color: #f0f0f0;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--deep-blue);
+            border: 2px solid var(--neon-purple);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1.1rem;
+            box-shadow: var(--pixel-shadow);
+            transition: all 0.3s;
         }
-        
+
         .form-control:focus, .form-select:focus {
-            background-color: #3d3d3d;
-            border-color: #00bcd4;
-            color: #f0f0f0;
-            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+            outline: none;
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        /* BUTTONS */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-top: 2px solid var(--neon-purple);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Share Tech Mono', monospace;
+            box-shadow: var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid;
+        }
+
+        .btn-primary {
+            background-color: var(--neon-purple);
+            color: white;
+            border-color: var(--neon-pink);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--neon-pink);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(5, 217, 232, 0.2);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(26, 26, 26, 0.95);">
+    <nav class="terminal-nav">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('sku.index') }}">
-                <i class="fas fa-boxes me-2"></i>LOCUS SKU Management
+            <a href="{{ url_for('sku.index') }}">
+                <i class="fas fa-boxes"></i> LOCUS INVENTORY TERMINAL
             </a>
         </div>
     </nav>
 
-    <div class="container py-4">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="mb-0"><i class="fas fa-edit me-2"></i>Edit SKU</h2>
+    <div class="terminal-container">
+        <div class="editor-terminal">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            <div class="terminal-header">
+                <h2><i class="fas fa-edit"></i> SKU EDITOR v3.1</h2>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    {{ form.hidden_tag() }}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.code.label(class="form-label") }}
-                                {{ form.code(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.name.label(class="form-label") }}
-                                {{ form.name(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.description.label(class="form-label") }}
-                                {{ form.description(class="form-control", rows="3") }}
-                            </div>
+            
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            {{ form.code.label(class="form-label") }}
+                            {{ form.code(class="form-control") }}
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.cost_price.label(class="form-label") }}
-                                {{ form.cost_price(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.selling_price.label(class="form-label") }}
-                                {{ form.selling_price(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.quantity.label(class="form-label") }}
-                                {{ form.quantity(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.category.label(class="form-label") }}
-                                {{ form.category(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.expiry_date.label(class="form-label") }}
-                                {{ form.expiry_date(class="form-control") }}
-                            </div>
+                        <div class="form-group">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="3") }}
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Update SKU
-                        </button>
-                        <a href="{{ url_for('sku.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-times me-2"></i>Cancel
-                        </a>
+                    <div>
+                        <div class="form-group">
+                            {{ form.cost_price.label(class="form-label") }}
+                            {{ form.cost_price(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.selling_price.label(class="form-label") }}
+                            {{ form.selling_price(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.quantity.label(class="form-label") }}
+                            {{ form.quantity(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.expiry_date.label(class="form-label") }}
+                            {{ form.expiry_date(class="form-control") }}
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> UPDATE INVENTORY
+                    </button>
+                    <a href="{{ url_for('sku.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> TERMINATE
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add subtle grid effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.editor-terminal');
+            for (let i = 0; i < 20; i++) {
+                const pixel = document.createElement('div');
+                pixel.style.position = 'absolute';
+                pixel.style.width = '2px';
+                pixel.style.height = '2px';
+                pixel.style.backgroundColor = `rgba(5, 217, 232, ${Math.random() * 0.3})`;
+                pixel.style.left = `${Math.random() * 100}%`;
+                pixel.style.top = `${Math.random() * 100}%`;
+                pixel.style.zIndex = '-1';
+                container.appendChild(pixel);
+            }
+        });
+    </script>
 </body>
 </html>

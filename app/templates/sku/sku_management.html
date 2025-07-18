@@ -3,262 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKU Management | LOCUS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>INVENTORY TERMINAL | LOCUS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.8);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --good: #00ff41;
+            --fair: #ffe700;
+            --poor: #ff2a6d;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
+            background: var(--dark-bg);
+            color: var(--text);
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
             min-height: 100vh;
         }
-        
-        .card {
-            background-color: #1e1e1e;
-            border: 1px solid #00e5ff;
-            border-radius: 10px;
-            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
-            margin-bottom: 20px;
+
+        /* TERMINAL NAVBAR */
+        .terminal-nav {
+            background-color: var(--deep-blue);
+            color: var(--neon-cyan);
+            padding: 1rem;
+            font-family: 'Share Tech Mono', monospace;
+            border-bottom: 3px solid var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
         }
-        
-        .card-header {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            color: white;
+
+        .terminal-nav a {
+            color: var(--neon-cyan);
+            text-decoration: none;
             font-weight: 600;
+            text-shadow: 0 0 5px var(--neon-cyan);
+            font-size: 1.2rem;
         }
-        
+
+        .terminal-nav a:hover {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        /* MAIN CONTAINER */
+        .terminal-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* TERMINAL PANELS */
+        .terminal-panel {
+            background: var(--panel-bg);
+            border-radius: 4px;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 
+                inset 0 0 15px var(--neon-cyan),
+                0 0 15px var(--neon-cyan),
+                var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        /* CORNER ACCENTS */
+        .corner-accent {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { 
+            top: -8px; 
+            left: -8px; 
+            border-right: none;
+            border-bottom: none;
+        }
+        .corner-tr { 
+            top: -8px; 
+            right: -8px; 
+            border-left: none;
+            border-bottom: none;
+        }
+        .corner-bl { 
+            bottom: -8px; 
+            left: -8px; 
+            border-right: none;
+            border-top: none;
+        }
+        .corner-br { 
+            bottom: -8px; 
+            right: -8px; 
+            border-left: none;
+            border-top: none;
+        }
+
+        /* TERMINAL HEADER */
+        .terminal-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            padding: 1rem 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Share Tech Mono', monospace;
+            box-shadow: var(--pixel-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #00bcd4, #0097a7);
-            border: none;
+            background-color: var(--neon-purple);
             color: white;
-            font-weight: 600;
+            border-color: var(--neon-pink);
         }
-        
+
         .btn-primary:hover {
-            background: linear-gradient(135deg, #00e5ff, #00bcd4);
-            transform: translateY(-2px);
+            background-color: var(--neon-pink);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
         }
-        
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(5, 217, 232, 0.2);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* FORM ELEMENTS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-cyan);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         .form-control, .form-select {
-            background-color: #2d2d2d;
-            border: 1px solid #444;
-            color: #fff;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--deep-blue);
+            border: 2px solid var(--neon-purple);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1.1rem;
+            box-shadow: var(--pixel-shadow);
+            transition: all 0.3s;
         }
-        
+
         .form-control:focus, .form-select:focus {
-            background-color: #3d3d3d;
-            border-color: #00bcd4;
-            color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 188, 212, 0.25);
+            outline: none;
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 10px var(--neon-yellow);
         }
-        
-        .table {
-            color: #e0e0e0;
+
+        .input-group-text {
+            background: var(--deep-blue);
+            border: 2px solid var(--neon-purple);
+            color: var(--neon-cyan);
+            box-shadow: var(--pixel-shadow);
         }
-        
-        .table th {
-            border-bottom: 2px solid #00bcd4;
+
+        /* SEARCH TERMINAL */
+        .search-terminal {
+            background: var(--panel-bg);
+            border-radius: 4px;
+            border: 3px solid var(--neon-yellow);
+            box-shadow: 
+                inset 0 0 15px var(--neon-yellow),
+                0 0 15px var(--neon-yellow),
+                var(--pixel-shadow);
+            padding: 1rem;
+            margin-bottom: 2rem;
         }
-        
-        .table td {
-            border-bottom: 1px solid #444;
+
+        /* TABLE TERMINAL */
+        .table-terminal {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        
+
+        .table-terminal th {
+            background: var(--neon-purple);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            border-bottom: 3px solid var(--neon-pink);
+        }
+
+        .table-terminal td {
+            padding: 1rem;
+            border-bottom: 2px solid rgba(5, 217, 232, 0.2);
+            color: var(--text);
+        }
+
+        .table-terminal tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-terminal tr:hover {
+            background: rgba(5, 217, 232, 0.1);
+        }
+
         .expired-row {
-            background-color: rgba(220, 53, 69, 0.15);
+            background-color: rgba(255, 42, 109, 0.15);
         }
-        
+
         .out-of-stock-row {
-            background-color: rgba(255, 193, 7, 0.15);
+            background-color: rgba(255, 231, 0, 0.15);
         }
-        
+
+        /* BADGES */
+        .badge {
+            padding: 0.35rem 0.65rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
         .badge-expired {
-            background-color: #dc3545;
+            background-color: var(--poor);
+            color: white;
         }
-        
+
         .badge-out-of-stock {
-            background-color: #ffc107;
-            color: #000;
+            background-color: var(--fair);
+            color: black;
         }
-        
-        .search-container {
-            background-color: #252525;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #444;
+
+        .badge-active {
+            background-color: var(--good);
+            color: black;
         }
-        
-        .text-danger {
-            color: #ff6b6b !important;
+
+        /* ANALYTICS TERMINAL */
+        .analytics-terminal {
+            display: none;
         }
-        
+
+        .chart-container {
+            background: var(--deep-blue);
+            border: 2px solid var(--neon-purple);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--pixel-shadow);
+        }
+
+        /* ALERTS */
         .alert {
-            background-color: #252525;
-            border: 1px solid #444;
-            color: #e0e0e0;
+            background: var(--deep-blue);
+            border: 2px solid var(--neon-purple);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--pixel-shadow);
+        }
+
+        .alert-info {
+            border-color: var(--neon-cyan);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .terminal-container {
+                padding: 0 1rem;
+            }
+            
+            .btn {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            .table-terminal th, 
+            .table-terminal td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .flicker {
+            animation: flicker 1.5s infinite;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(26, 26, 26, 0.95);">
+    <nav class="terminal-nav">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('sku.index') }}">
-                <i class="fas fa-boxes me-2"></i>LOCUS SKU Management
+            <a href="{{ url_for('sku.index') }}">
+                <i class="fas fa-boxes"></i> INVENTORY TERMINAL v3.1
             </a>
         </div>
     </nav>
 
-    <div class="container py-4">
-        <!-- Header with Analytics Toggle -->
+    <div class="terminal-container">
+        <!-- HEADER WITH TOGGLE -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0"><i class="fas fa-boxes me-2"></i>SKU Management</h2>
+            <h2 class="mb-0" style="color: var(--neon-yellow); font-family: 'Share Tech Mono', monospace;">
+                <i class="fas fa-boxes"></i> INVENTORY MANAGEMENT
+            </h2>
             <button id="toggleAnalytics" class="btn btn-primary">
-                <i class="fas fa-chart-bar me-2"></i>Show Analytics
+                <i class="fas fa-chart-bar"></i> ANALYTICS MODE
             </button>
         </div>
 
-        <!-- Flash Messages -->
+        <!-- FLASH MESSAGES -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    <div class="alert alert-{{ category }}">
                         {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" style="float: right; color: var(--neon-cyan);" onclick="this.parentElement.style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <!-- Add New SKU Form -->
-        <div class="card">
-            <div class="card-header">Add New SKU</div>
-            <div class="card-body">
-                <form method="POST" id="skuForm">
-                    {{ form.hidden_tag() }}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.code.label(class="form-label") }}
-                                {{ form.code(class="form-control") }}
-                                {% for error in form.code.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.name.label(class="form-label") }}
-                                {{ form.name(class="form-control") }}
-                                {% for error in form.name.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.description.label(class="form-label") }}
-                                {{ form.description(class="form-control", rows="3") }}
-                            </div>
+        <!-- ADD NEW SKU TERMINAL -->
+        <div class="terminal-panel">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            <div class="terminal-header">
+                <h2><i class="fas fa-plus-circle"></i> NEW INVENTORY ENTRY</h2>
+            </div>
+            
+            <form method="POST" id="skuForm">
+                {{ form.hidden_tag() }}
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            {{ form.code.label(class="form-label") }}
+                            {{ form.code(class="form-control") }}
+                            {% for error in form.code.errors %}
+                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                            {% endfor %}
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form.cost_price.label(class="form-label") }}
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    {{ form.cost_price(class="form-control") }}
-                                </div>
-                                {% for error in form.cost_price.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.selling_price.label(class="form-label") }}
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    {{ form.selling_price(class="form-control") }}
-                                </div>
-                                {% for error in form.selling_price.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.quantity.label(class="form-label") }}
-                                {{ form.quantity(class="form-control") }}
-                                {% for error in form.quantity.errors %}
-                                    <div class="text-danger small">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.category.label(class="form-label") }}
-                                {{ form.category(class="form-control") }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.expiry_date.label(class="form-label") }}
-                                {{ form.expiry_date(class="form-control") }}
-                            </div>
+                        <div class="form-group">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                            {% for error in form.name.errors %}
+                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows="3") }}
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Add SKU
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Search Bar -->
-        <div class="search-container">
-            <form method="GET" action="{{ url_for('sku.index') }}" class="row g-3 align-items-center">
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" class="form-control" name="search" placeholder="Search SKUs by code, name, or category..." value="{{ search_query }}">
+                    <div>
+                        <div class="form-group">
+                            {{ form.cost_price.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                {{ form.cost_price(class="form-control") }}
+                                {% for error in form.cost_price.errors %}
+                                    <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form.selling_price.label(class="form-label") }}
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                {{ form.selling_price(class="form-control") }}
+                                {% for error in form.selling_price.errors %}
+                                    <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form.quantity.label(class="form-label") }}
+                            {{ form.quantity(class="form-control") }}
+                            {% for error in form.quantity.errors %}
+                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-control") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.expiry_date.label(class="form-label") }}
+                            {{ form.expiry_date(class="form-control") }}
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="d-flex">
-                        <button type="submit" class="btn btn-primary me-2 flex-grow-1">
-                            <i class="fas fa-search me-2"></i>Search
-                        </button>
-                        {% if search_query %}
-                            <a href="{{ url_for('sku.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i>
-                            </a>
-                        {% endif %}
-                    </div>
+                
+                <div style="padding: 0 1.5rem 1.5rem;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> COMMIT ENTRY
+                    </button>
                 </div>
             </form>
         </div>
 
-        <!-- Current SKUs Table -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Your SKUs</span>
-                <span class="badge bg-primary rounded-pill">{{ all_skus_count }} total</span>
+        <!-- SEARCH TERMINAL -->
+        <div class="search-terminal flicker">
+            <form method="GET" action="{{ url_for('sku.index') }}">
+                <div class="input-group">
+                    <span class="input-group-text" style="color: var(--neon-yellow);">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" name="search" 
+                           placeholder="SEARCH INVENTORY BY CODE, NAME, OR CATEGORY..." 
+                           value="{{ search_query }}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> SCAN
+                    </button>
+                    {% if search_query %}
+                        <a href="{{ url_for('sku.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> RESET
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <!-- INVENTORY TERMINAL -->
+        <div class="terminal-panel">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            <div class="terminal-header">
+                <div>
+                    <h2><i class="fas fa-box-open"></i> INVENTORY DATABASE</h2>
+                </div>
+                <div class="badge" style="background: var(--neon-purple);">
+                    {{ all_skus_count }} ITEMS ONLINE
+                </div>
             </div>
-            <div class="card-body">
+            
+            <div style="padding: 1.5rem;">
                 {% if not skus %}
                     <div class="alert alert-info">
-                        No SKUs found{% if search_query %} matching your search criteria{% endif %}.
+                        NO INVENTORY ITEMS FOUND{% if search_query %} MATCHING SEARCH PARAMETERS{% endif %}
                     </div>
                 {% else %}
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
+                    <div style="overflow-x: auto;">
+                        <table class="table-terminal">
                             <thead>
                                 <tr>
-                                    <th>SKU Code</th>
-                                    <th>Product Name</th>
-                                    <th>Cost</th>
-                                    <th>Price</th>
-                                    <th>Qty</th>
-                                    <th>Category</th>
-                                    <th>Expiry</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>SKU CODE</th>
+                                    <th>PRODUCT</th>
+                                    <th>COST</th>
+                                    <th>PRICE</th>
+                                    <th>QTY</th>
+                                    <th>CATEGORY</th>
+                                    <th>EXPIRY</th>
+                                    <th>STATUS</th>
+                                    <th>ACTIONS</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for sku in skus %}
                                 <tr class="{% if sku.is_expired() %}expired-row{% elif sku.quantity <= 0 %}out-of-stock-row{% endif %}">
-                                    <td class="fw-bold">{{ sku.code }}</td>
+                                    <td style="font-weight: bold;">{{ sku.code }}</td>
                                     <td>{{ sku.name }}</td>
                                     <td>₹{{ "%.2f"|format(sku.cost_price) }}</td>
                                     <td>₹{{ "%.2f"|format(sku.selling_price) }}</td>
@@ -273,16 +568,16 @@
                                     </td>
                                     <td>
                                         {% if sku.expiry_date and sku.is_expired() %}
-                                            <span class="badge badge-expired">Expired</span>
+                                            <span class="badge badge-expired">EXPIRED</span>
                                         {% elif sku.quantity <= 0 %}
-                                            <span class="badge badge-out-of-stock">Out of Stock</span>
+                                            <span class="badge badge-out-of-stock">OUT OF STOCK</span>
                                         {% else %}
-                                            <span class="badge bg-success">Active</span>
+                                            <span class="badge badge-active">ACTIVE</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('sku.edit', id=sku.id) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
+                                        <a href="{{ url_for('sku.edit', id=sku.id) }}" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-edit"></i> EDIT
                                         </a>
                                     </td>
                                 </tr>
@@ -292,9 +587,9 @@
                     </div>
 
                     {% if not show_all and not search_query and all_skus_count > 3 %}
-                        <div class="text-center mt-3">
+                        <div style="text-align: center; margin-top: 1.5rem;">
                             <a href="{{ url_for('sku.index', show_all='true') }}" class="btn btn-primary">
-                                <i class="fas fa-chevron-down me-2"></i>Show All ({{ all_skus_count }})
+                                <i class="fas fa-chevron-down"></i> LOAD FULL INVENTORY ({{ all_skus_count }})
                             </a>
                         </div>
                     {% endif %}
@@ -302,96 +597,88 @@
             </div>
         </div>
 
-        <!-- Analytics Section -->
-        <div id="analyticsSection" class="card mt-4" style="display: none;">
-            <div class="card-header">
-                <i class="fas fa-chart-pie me-2"></i>Inventory Analytics
+        <!-- ANALYTICS TERMINAL -->
+        <div id="analyticsTerminal" class="terminal-panel analytics-terminal">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
+            
+            <div class="terminal-header">
+                <h2><i class="fas fa-chart-pie"></i> INVENTORY ANALYTICS</h2>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card bg-dark mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title text-primary">
-                                    <i class="fas fa-box me-2"></i>Inventory Summary
-                                </h5>
-                                <div class="d-flex align-items-center my-3">
-                                    <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
-                                        <i class="fas fa-boxes fa-lg text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-muted small">Total SKUs</div>
-                                        <div class="h4">{{ analytics.total_skus }}</div>
-                                    </div>
-                                </div>
-                                <hr class="my-2">
-                                <div class="mb-2">
-                                    <span class="text-muted">Inventory Value:</span>
-                                    <span class="float-end fw-bold">
-                                        ₹{{ "%.2f"|format(analytics.total_inventory_value) }}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span class="text-muted">Revenue Potential:</span>
-                                    <span class="float-end fw-bold text-success">
-                                        ₹{{ "%.2f"|format(analytics.total_potential_revenue) }}
-                                    </span>
-                                </div>
+            
+            <div style="padding: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="chart-container">
+                        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
+                            <i class="fas fa-box"></i> INVENTORY SUMMARY
+                        </h3>
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div style="background: rgba(5, 217, 232, 0.1); padding: 1rem; border-radius: 4px; margin-right: 1rem;">
+                                <i class="fas fa-boxes" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-light); font-size: 0.9rem;">TOTAL SKUs</div>
+                                <div style="font-size: 1.5rem; font-weight: bold;">{{ analytics.total_skus }}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span style="color: var(--text-light);">INVENTORY VALUE:</span>
+                                <span style="float: right; font-weight: bold;">
+                                    ₹{{ "%.2f"|format(analytics.total_inventory_value) }}
+                                </span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-light);">REVENUE POTENTIAL:</span>
+                                <span style="float: right; font-weight: bold; color: var(--good);">
+                                    ₹{{ "%.2f"|format(analytics.total_potential_revenue) }}
+                                </span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-md-8">
-                        <div class="card bg-dark h-100">
-                            <div class="card-body">
-                                <h5 class="card-title text-primary">
-                                    <i class="fas fa-chart-line me-2"></i>Profit Distribution
-                                </h5>
-                                <div style="height: 300px;">
-                                    <canvas id="profitChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="chart-container">
+                        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
+                            <i class="fas fa-chart-line"></i> PROFIT DISTRIBUTION
+                        </h3>
+                        <canvas id="profitChart" style="height: 250px;"></canvas>
                     </div>
                 </div>
 
-                <!-- Category Breakdown -->
-                <div class="card bg-dark mt-4">
-                    <div class="card-header text-primary">
-                        <i class="fas fa-tags me-2"></i>Category Breakdown
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div style="height: 250px;">
-                                    <canvas id="categoryChart"></canvas>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-dark">
-                                        <thead>
-                                            <tr>
-                                                <th>Category</th>
-                                                <th>SKUs</th>
-                                                <th>Total Value</th>
-                                                <th>Margin</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for cat in analytics.category_breakdown %}
-                                            <tr>
-                                                <td>{{ cat.category or 'Uncategorized' }}</td>
-                                                <td>{{ cat.count }}</td>
-                                                <td>₹{{ "%.2f"|format(cat.total_value) }}</td>
-                                                <td class="{{ 'text-success' if (cat.total_value - cat.total_cost) >= 0 else 'text-danger' }} fw-bold">
-                                                    {{ "%.1f"|format((cat.total_value - cat.total_cost)/cat.total_value*100 if cat.total_value else 0) }}%
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
+                <div class="chart-container">
+                    <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
+                        <i class="fas fa-tags"></i> CATEGORY BREAKDOWN
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <canvas id="categoryChart" style="height: 300px;"></canvas>
+                        </div>
+                        <div>
+                            <div style="overflow-y: auto; max-height: 300px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">CATEGORY</th>
+                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">SKUs</th>
+                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">VALUE</th>
+                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">MARGIN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cat in analytics.category_breakdown %}
+                                        <tr>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2);">{{ cat.category or 'UNCATEGORIZED' }}</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right;">{{ cat.count }}</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right;">₹{{ "%.2f"|format(cat.total_value) }}</td>
+                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right; font-weight: bold; color: {% if (cat.total_value - cat.total_cost) >= 0 %}var(--good){% else %}var(--poor){% endif %}">
+                                                {{ "%.1f"|format((cat.total_value - cat.total_cost)/cat.total_value*100 if cat.total_value else 0) }}%
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -400,16 +687,15 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle Analytics Section
+        // Toggle Analytics Terminal
         document.getElementById('toggleAnalytics').addEventListener('click', function() {
-            const section = document.getElementById('analyticsSection');
-            const isHidden = section.style.display === 'none';
-            section.style.display = isHidden ? 'block' : 'none';
+            const analyticsTerminal = document.getElementById('analyticsTerminal');
+            const isHidden = analyticsTerminal.style.display === 'none';
+            analyticsTerminal.style.display = isHidden ? 'block' : 'none';
             this.innerHTML = isHidden 
-                ? '<i class="fas fa-times me-2"></i>Hide Analytics' 
-                : '<i class="fas fa-chart-bar me-2"></i>Show Analytics';
+                ? '<i class="fas fa-times"></i> EXIT ANALYTICS' 
+                : '<i class="fas fa-chart-bar"></i> ANALYTICS MODE';
             
             // Initialize charts when shown
             if (isHidden) {
@@ -417,7 +703,7 @@
             }
         });
 
-        // Initialize charts only when needed
+        // Initialize charts
         function initializeCharts() {
             // Prepare chart data
             const skuCodes = [];
@@ -430,7 +716,7 @@
             const categoryLabels = [];
             const categoryValues = [];
             {% for cat in analytics.category_breakdown %}
-                categoryLabels.push('{{ cat.category or "Uncategorized" }}');
+                categoryLabels.push('{{ cat.category or "UNCATEGORIZED" }}');
                 categoryValues.push({{ cat.total_value }});
             {% endfor %}
 
@@ -441,10 +727,10 @@
                 data: {
                     labels: skuCodes,
                     datasets: [{
-                        label: 'Profit per Unit (₹)',
+                        label: 'PROFIT PER UNIT (₹)',
                         data: skuProfits,
-                        backgroundColor: '#00bcd4',
-                        borderColor: '#0097a7',
+                        backgroundColor: '#05d9e8',
+                        borderColor: '#00bcd4',
                         borderWidth: 1
                     }]
                 },
@@ -469,7 +755,19 @@
                             ticks: {
                                 callback: function(value) {
                                     return '₹' + value;
-                                }
+                                },
+                                color: '#b3b3ff'
+                            },
+                            grid: {
+                                color: 'rgba(5, 217, 232, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#b3b3ff'
+                            },
+                            grid: {
+                                color: 'rgba(5, 217, 232, 0.1)'
                             }
                         }
                     }
@@ -485,9 +783,9 @@
                     datasets: [{
                         data: categoryValues,
                         backgroundColor: [
-                            '#00bcd4', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#6c757d'
+                            '#05d9e8', '#ff2a6d', '#f7f700', '#d300c5', '#00ff41', '#6c757d'
                         ],
-                        borderColor: '#1e1e1e',
+                        borderColor: '#0d0221',
                         borderWidth: 2
                     }]
                 },
@@ -497,7 +795,7 @@
                         legend: {
                             position: 'right',
                             labels: {
-                                color: '#e0e0e0'
+                                color: '#ffffff'
                             }
                         },
                         tooltip: {
@@ -512,7 +810,7 @@
                             }
                         }
                     },
-                    cutout: '70%',
+                    cutout: '65%',
                 }
             });
         }
@@ -521,7 +819,7 @@
         document.getElementById('skuForm').addEventListener('submit', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
         });
     </script>
 </body>

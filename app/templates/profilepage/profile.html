@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USER PROFILE TERMINAL | LOCUS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-pink: #ff2a6d;
+      --neon-purple: #d300c5;
+      --neon-cyan: #05d9e8;
+      --neon-yellow: #f7f700;
+      --deep-blue: #0d0221;
+      --dark-bg: #0a0118;
+      --panel-bg: rgba(13, 2, 33, 0.8);
+      --text: #ffffff;
+      --text-light: #b3b3ff;
+      --good: #00ff41;
+      --fair: #ffe700;
+      --poor: #ff2a6d;
+      --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    body {
+      background: var(--dark-bg);
+      color: var(--text);
+      background-image: 
+        linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    /* TERMINAL LAYOUT */
+    .terminal-dashboard {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* PROFILE TERMINAL */
+    .profile-terminal {
+      background: var(--panel-bg);
+      border-radius: 4px;
+      border: 3px solid var(--neon-cyan);
+      box-shadow: 
+        inset 0 0 15px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
+        var(--pixel-shadow);
+      padding: 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    /* CORNER ACCENTS */
+    .corner-accent {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 3px solid var(--neon-cyan);
+      box-shadow: 0 0 5px var(--neon-cyan);
+    }
+
+    .corner-tl { 
+      top: -8px; 
+      left: -8px; 
+      border-right: none;
+      border-bottom: none;
+    }
+    .corner-tr { 
+      top: -8px; 
+      right: -8px; 
+      border-left: none;
+      border-bottom: none;
+    }
+    .corner-bl { 
+      bottom: -8px; 
+      left: -8px; 
+      border-right: none;
+      border-top: none;
+    }
+    .corner-br { 
+      bottom: -8px; 
+      right: -8px; 
+      border-left: none;
+      border-top: none;
+    }
+
+    /* PROFILE ELEMENTS */
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem;
+      border: 3px solid var(--neon-pink);
+      box-shadow: 0 0 15px var(--neon-pink);
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--neon-yellow);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .profile-email {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    /* BUSINESS INFO */
+    .business-info {
+      margin-top: 1.5rem;
+      text-align: left;
+      border-top: 2px solid var(--neon-purple);
+      padding-top: 1.5rem;
+    }
+
+    .business-info h3 {
+      margin-bottom: 1rem;
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .info-item {
+      margin-bottom: 0.75rem;
+      display: flex;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: var(--neon-cyan);
+      min-width: 100px;
+    }
+
+    /* BUTTON */
+    .edit-btn {
+      background-color: var(--neon-purple);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+      font-family: 'Share Tech Mono', monospace;
+      box-shadow: var(--pixel-shadow);
+      border: 2px solid var(--neon-pink);
+    }
+
+    .edit-btn:hover {
+      background-color: var(--neon-pink);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+    }
+
+    /* DASHBOARD TERMINAL */
+    .dashboard-terminal {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    /* HEALTH TERMINAL */
+    .health-terminal {
+      background: var(--panel-bg);
+      border-radius: 4px;
+      border: 3px solid var(--neon-cyan);
+      box-shadow: 
+        inset 0 0 15px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
+        var(--pixel-shadow);
+      padding: 2rem;
+      position: relative;
+    }
+
+    .health-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--neon-purple);
+      padding-bottom: 1rem;
+    }
+
+    .health-header h2 {
+      color: var(--neon-pink);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .health-header a {
+      color: var(--neon-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .health-header a:hover {
+      text-shadow: 0 0 5px var(--neon-cyan);
+    }
+
+    .health-score {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 1rem 0;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .health-status {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .good { 
+      color: var(--good);
+      text-shadow: 0 0 5px var(--good);
+    }
+    .fair { 
+      color: var(--fair);
+      text-shadow: 0 0 5px var(--fair);
+    }
+    .poor { 
+      color: var(--poor);
+      text-shadow: 0 0 5px var(--poor);
+    }
+
+    .progress-container {
+      height: 12px;
+      background: var(--deep-blue);
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+      border: 2px solid var(--neon-yellow);
+      box-shadow: var(--pixel-shadow);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, 
+        #ff3b30 0%, 
+        #ff9500 25%, 
+        #ffd700 50%, 
+        #a8e05f 75%, 
+        #28cd41 100%);
+      width: {{ health_score }}%;
+    }
+
+    /* MODULES TERMINAL */
+    .modules-terminal {
+      background: var(--panel-bg);
+      border-radius: 4px;
+      border: 3px solid var(--neon-cyan);
+      box-shadow: 
+        inset 0 0 15px var(--neon-cyan),
+        0 0 15px var(--neon-cyan),
+        var(--pixel-shadow);
+      padding: 2rem;
+      position: relative;
+    }
+
+    .modules-terminal h2 {
+      color: var(--neon-pink);
+      font-family: 'Share Tech Mono', monospace;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--neon-purple);
+      padding-bottom: 1rem;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .module-card {
+      background: var(--deep-blue);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      border-left: 4px solid var(--neon-purple);
+      box-shadow: var(--pixel-shadow);
+    }
+
+    .module-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+      border-left-color: var(--neon-pink);
+    }
+
+    .module-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--neon-cyan);
+    }
+
+    .module-name {
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .terminal-dashboard {
+        grid-template-columns: 1fr;
+      }
+      
+      .health-score {
+        font-size: 2rem;
+      }
+      
+      .health-status {
+        font-size: 1.1rem;
+      }
+      
+      .modules-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+
+    /* ANIMATIONS */
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-dashboard">
+    <!-- PROFILE TERMINAL -->
+    <div class="profile-terminal">
+      <div class="corner-accent corner-tl"></div>
+      <div class="corner-accent corner-tr"></div>
+      <div class="corner-accent corner-bl"></div>
+      <div class="corner-accent corner-br"></div>
+      
+      <img src="{% if user.profile_pic %}{{ url_for('static', filename='uploads/' + user.profile_pic) }}{% else %}{{ url_for('static', filename='photos/default_profile.png') }}{% endif %}"
+           class="profile-pic">
+      <h2 class="profile-name">{{ user.username }}</h2>
+      <p class="profile-email">{{ user.email }}</p>
+      
+      <div class="business-info">
+        <h3><i class="fas fa-briefcase"></i> BUSINESS CONFIG</h3>
+        <div class="info-item">
+          <span class="info-label">NAME:</span>
+          <span>{{ user.business_name or 'NOT SET' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">TYPE:</span>
+          <span>{{ user.business_type or 'NOT SET' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">INDUSTRY:</span>
+          <span>{{ user.industry or 'NOT SET' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">LOCATION:</span>
+          <span>{{ user.location or 'NOT SET' }}</span>
+        </div>
+      </div>
+      
+      <button class="edit-btn" onclick="window.location.href='{{ url_for('profile.edit_profile') }}'">
+        <i class="fas fa-edit"></i> EDIT CONFIG
+      </button>
+    </div>
+    
+    <!-- DASHBOARD TERMINAL -->
+    <div class="dashboard-terminal">
+      <!-- HEALTH TERMINAL -->
+      <div class="health-terminal">
+        <div class="corner-accent corner-tl"></div>
+        <div class="corner-accent corner-tr"></div>
+        <div class="corner-accent corner-bl"></div>
+        <div class="corner-accent corner-br"></div>
+        
+        <div class="health-header">
+          <h2><i class="fas fa-heartbeat"></i> SYSTEM HEALTH</h2>
+          <a href="{{ url_for('business_health.business_health') }}" class="pulse">VIEW DETAILS <i class="fas fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="health-score">{{ health_score }}%</div>
+        
+        <div class="health-status">
+          {% if health_score >= 75 %}
+            <span class="good"><i class="fas fa-check-circle"></i> SYSTEM OPTIMAL</span>
+          {% elif health_score >= 50 %}
+            <span class="fair"><i class="fas fa-info-circle"></i> SYSTEM STABLE</span>
+          {% else %}
+            <span class="poor"><i class="fas fa-exclamation-triangle"></i> CRITICAL ALERT</span>
+          {% endif %}
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+      
+      <!-- MODULES TERMINAL -->
+      <div class="modules-terminal">
+        <div class="corner-accent corner-tl"></div>
+        <div class="corner-accent corner-tr"></div>
+        <div class="corner-accent corner-bl"></div>
+        <div class="corner-accent corner-br"></div>
+        
+        <h2><i class="fas fa-th-large"></i> SYSTEM MODULES</h2>
+        <div class="modules-grid">
+          <div class="module-card" onclick="window.location.href='{{ url_for('dataentry.index') }}'">
+            <div class="module-icon"><i class="fas fa-database"></i></div>
+            <div class="module-name">DATA ENTRY</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('billing.billing_page') }}'">
+            <div class="module-icon"><i class="fas fa-receipt"></i></div>
+            <div class="module-name">BILLING</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('business_health.business_health') }}'">
+            <div class="module-icon"><i class="fas fa-heartbeat"></i></div>
+            <div class="module-name">HEALTH SCAN</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('forecasting.index') }}'">
+            <div class="module-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="module-name">FORECASTING</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('sku.index') }}'">
+            <div class="module-icon"><i class="fas fa-boxes"></i></div>
+            <div class="module-name">SKU ANALYSIS</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('optimization.optimization_menu') }}'">
+            <div class="module-icon"><i class="fas fa-cogs"></i></div>
+            <div class="module-name">OPTIMIZATION</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('visualization.index') }}'">
+            <div class="module-icon"><i class="fas fa-chart-pie"></i></div>
+            <div class="module-name">VISUALIZATION</div>
+          </div>
+          
+          <div class="module-card" onclick="window.location.href='{{ url_for('event.index') }}'">
+            <div class="module-icon"><i class="fas fa-calendar-alt"></i></div>
+            <div class="module-name">EVENT PLANNER</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Add subtle grid effect
+    document.addEventListener('DOMContentLoaded', function() {
+      const containers = document.querySelectorAll('.profile-terminal, .health-terminal, .modules-terminal');
+      containers.forEach(container => {
+        for (let i = 0; i < 15; i++) {
+          const pixel = document.createElement('div');
+          pixel.style.position = 'absolute';
+          pixel.style.width = '2px';
+          pixel.style.height = '2px';
+          pixel.style.backgroundColor = `rgba(5, 217, 232, ${Math.random() * 0.3})`;
+          pixel.style.left = `${Math.random() * 100}%`;
+          pixel.style.top = `${Math.random() * 100}%`;
+          pixel.style.zIndex = '-1';
+          container.appendChild(pixel);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
