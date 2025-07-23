@@ -1,8 +1,7 @@
 from datetime import datetime
 from app.extensions import db, login_manager
 from flask_login import UserMixin
-from datetime import date
-from app.extensions import db
+
 class SKU(db.Model):
     __tablename__ = 'sku'
     
@@ -60,6 +59,7 @@ def load_user(user_id):
 
 class RevenuePrediction(db.Model):
     __tablename__ = 'revenue_predictions'
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     prediction_date = db.Column(db.DateTime, nullable=False)
@@ -67,7 +67,7 @@ class RevenuePrediction(db.Model):
     period_end = db.Column(db.DateTime, nullable=False)
     predicted_amount = db.Column(db.Float, nullable=False)
     actual_amount = db.Column(db.Float)
-    r_squared = db.Column(db.Float)  # New field for model accuracy
+    r_squared = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Revenue(db.Model):
@@ -178,12 +178,24 @@ class Bill(db.Model):
     def __repr__(self):
         return f'<Bill {self.bill_number}>'
 
+class Achievement(db.Model):
+    __tablename__ = 'achievements'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    icon_class = db.Column(db.String(50), default='fas fa-trophy')
+    required_action = db.Column(db.String(50))
+    required_count = db.Column(db.Integer, default=1)
 
-class DailyStreak(db.Model):
-    __tablename__ = 'daily_streak'
+class UserAchievement(db.Model):
+    __tablename__ = 'user_achievements'
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    current_streak = db.Column(db.Integer, default=0)
-    last_active_date = db.Column(db.Date, nullable=True)
-
-    user = db.relationship('User', backref='daily_streak_entry')
+    achievement_id = db.Column(db.Integer, db.ForeignKey('achievements.id'), nullable=False)
+    progress = db.Column(db.Integer, default=0)
+    unlocked_at = db.Column(db.DateTime)
+    
+    user = db.relationship('User', backref='user_achievements')
+    achievement = db.relationship('Achievement')

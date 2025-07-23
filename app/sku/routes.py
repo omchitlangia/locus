@@ -5,7 +5,7 @@ from app.sku.forms import SKUForm
 from . import sku_bp
 from sqlalchemy import func, or_, and_, desc
 from datetime import datetime
-from app.models import SKU
+from app.models import SKU, Achievement, UserAchievement
 
 @sku_bp.route('/management', methods=['GET', 'POST'])
 @login_required
@@ -32,12 +32,66 @@ def index():
                 category=form.category.data,
                 expiry_date=form.expiry_date.data,
                 user_id=current_user.id,
-                created_at=datetime.utcnow()  # Add creation timestamp
+                created_at=datetime.utcnow()
             )
             db.session.add(sku)
+            
+            # Get current SKU count for achievement tracking
+            sku_count = SKU.query.filter_by(user_id=current_user.id).count()
+            
+            # === ACHIEVEMENT TRACKING WITH PROGRESS CAPPING ===
+            unlocked = []
+            sku_achievements = [
+                ('fifth_sku', 5, 'Budding Business'),
+                ('fifteenth_sku', 15, 'Healthy Stock'), 
+                ('thirtieth_sku', 30, 'Chasing Profits')
+            ]
+
+            progress_messages = []
+            for action, threshold, name in sku_achievements:
+                achievement = Achievement.query.filter_by(required_action=action).first()
+                if not achievement:
+                    continue
+                
+                user_achievement = UserAchievement.query.filter_by(
+                    user_id=current_user.id,
+                    achievement_id=achievement.id
+                ).first()
+                
+                if not user_achievement:
+                    capped_progress = min(sku_count, threshold)
+                    user_achievement = UserAchievement(
+                        user_id=current_user.id,
+                        achievement_id=achievement.id,
+                        progress=capped_progress,
+                        unlocked_at=datetime.utcnow() if capped_progress >= threshold else None
+                    )
+                    db.session.add(user_achievement)
+                else:
+                    new_progress = min(sku_count, threshold)
+                    if user_achievement.progress != new_progress:
+                        user_achievement.progress = new_progress
+                    
+                    if new_progress >= threshold and not user_achievement.unlocked_at:
+                        user_achievement.unlocked_at = datetime.utcnow()
+                        unlocked.append(achievement)
+                
+                if not user_achievement.unlocked_at:
+                    progress_messages.append(f"{name}: {user_achievement.progress}/{threshold}")
+            # === END OF ACHIEVEMENT TRACKING ===
+
             db.session.commit()
-            flash('SKU added successfully!', 'success')
+
+            if unlocked:
+                for achievement in unlocked:
+                    flash(f'🏆 Achievement Unlocked: {achievement.name}!', 'success')
+            elif progress_messages:
+                flash('SKU added! Progress: ' + ', '.join(progress_messages), 'info')
+            else:
+                flash('SKU added successfully!', 'success')
+                
             return redirect(url_for('sku.index'))
+            
         except Exception as e:
             db.session.rollback()
             flash(f'Error creating SKU: {str(e)}', 'danger')

@@ -59,6 +59,65 @@ def business_health():
         current_user.health_score = health_score
         db.session.commit()
 
+                # Check health-score-based achievements
+        from app.models import Achievement, UserAchievement  # if not already imported
+        def unlock_health_score_achievements(score):
+            # Define all thresholds and their corresponding actions
+            all_thresholds = [
+                (75, 'health_score_75'),
+                (90, 'health_score_90'),
+                (100, 'health_score_100')
+            ]
+            
+            # Track which thresholds have been reached
+            reached_thresholds = []
+            
+            for threshold, action in all_thresholds:
+                achievement = Achievement.query.filter_by(required_action=action).first()
+                if not achievement:
+                    continue
+                    
+                user_achievement = UserAchievement.query.filter_by(
+                    user_id=current_user.id,
+                    achievement_id=achievement.id
+                ).first()
+                
+                if score >= threshold:
+                    reached_thresholds.append(threshold)
+                    if not user_achievement:
+                        # Create new achievement record
+                        user_achievement = UserAchievement(
+                            user_id=current_user.id,
+                            achievement_id=achievement.id,
+                            progress=1,
+                            unlocked_at=datetime.utcnow() if score >= threshold else None
+                        )
+                        db.session.add(user_achievement)
+                    else:
+                        # Update existing record if not already unlocked
+                        if user_achievement.unlocked_at is None and score >= threshold:
+                            user_achievement.progress = 1
+                            user_achievement.unlocked_at = datetime.utcnow()
+                else:
+                    # For thresholds not yet reached, calculate progress
+                    prev_threshold = next((t for t in reversed(all_thresholds) if t[0] < threshold), (0, None))
+                    progress = min((score - prev_threshold[0]) / (threshold - prev_threshold[0]), 1)
+                    
+                    if not user_achievement:
+                        user_achievement = UserAchievement(
+                            user_id=current_user.id,
+                            achievement_id=achievement.id,
+                            progress=max(progress, 0),
+                            unlocked_at=None
+                        )
+                        db.session.add(user_achievement)
+                    elif user_achievement.unlocked_at is None:
+                        user_achievement.progress = max(progress, 0)
+            
+            db.session.commit()
+
+        unlock_health_score_achievements(health_score)
+
         return render_template(
             'business_health/business_health.html',
             health_score=round(health_score, 2),
