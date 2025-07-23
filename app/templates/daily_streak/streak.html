@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CORPORATE RPG | STREAK QUEST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.8);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'VT323', monospace;
+            margin: 0;
+            padding: 0;
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            image-rendering: pixelated;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* CRT Scanlines Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(5, 217, 232, 0.03) 1px, 
+                transparent 1px
+            );
+            background-size: 100% 2px;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        .streak-container {
+            background: var(--panel-bg);
+            border: 4px solid var(--neon-cyan);
+            box-shadow: 
+                inset 0 0 15px var(--neon-cyan),
+                0 0 15px var(--neon-cyan),
+                var(--pixel-shadow);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* Pixel corners */
+        .pixel-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { top: -8px; left: -8px; }
+        .corner-tr { top: -8px; right: -8px; }
+        .corner-bl { bottom: -8px; left: -8px; }
+        .corner-br { bottom: -8px; right: -8px; }
+
+        .streak-icon {
+            font-size: 64px;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-bottom: 20px;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .streak-count {
+            font-size: 2rem;
+            color: var(--text);
+            margin: 20px 0;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 0 0 5px white;
+        }
+
+        .streak-count b {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-pink);
+            font-size: 2.2rem;
+        }
+
+        .badge {
+            margin: 25px 0;
+            font-size: 1.5rem;
+            background: linear-gradient(145deg, var(--neon-yellow), #ffc800);
+            color: var(--deep-blue);
+            border-radius: 0;
+            padding: 12px 30px;
+            display: inline-block;
+            font-family: 'Press Start 2P', cursive;
+            border: 3px solid var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .streak-tip {
+            margin-top: 30px;
+            color: var(--text-light);
+            font-size: 1.3rem;
+            border-top: 2px solid var(--neon-purple);
+            padding-top: 20px;
+            text-shadow: 0 0 5px var(--text-light);
+        }
+
+        .flame-effect {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            bottom: -10px;
+            left: 0;
+            background: linear-gradient(to top, 
+                rgba(255, 42, 109, 0.3) 0%, 
+                rgba(255, 42, 109, 0) 100%);
+            z-index: -1;
+        }
+
+        @media (max-width: 768px) {
+            .streak-container {
+                padding: 30px 20px;
+            }
+            
+            .streak-icon {
+                font-size: 48px;
+            }
+            
+            .streak-count {
+                font-size: 1.5rem;
+            }
+            
+            .streak-count b {
+                font-size: 1.7rem;
+            }
+            
+            .badge {
+                font-size: 1.2rem;
+                padding: 10px 20px;
+            }
+            
+            .streak-tip {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="streak-container">
+      <div class="pixel-corner corner-tl"></div>
+      <div class="pixel-corner corner-tr"></div>
+      <div class="pixel-corner corner-bl"></div>
+      <div class="pixel-corner corner-br"></div>
+      
+      <div class="streak-icon">{{ icon }}</div>
+      <div class="streak-count">MISSION STREAK: <b>{{ streak_count }}</b> DAYS</div>
+      {% if badge %}
+        <div class="badge">{{ badge }}</div>
+      {% endif %}
+      <div class="streak-tip">
+        VISIT TERMINAL DAILY TO MAINTAIN YOUR STREAK!
+      </div>
+      <div class="flame-effect"></div>
+  </div>
+</body>
+</html>

@@ -666,6 +666,47 @@
       background-color: #00e5ff;
       color: #000;
     }
+    .quick-note-card {
+    background: #000000;
+    border-left: 7px solid #ffd700;
+    border-radius: 10px;
+    margin-top: 12px;
+    padding: 12px 10px 7px 16px;
+    box-shadow: 0 2px 9px rgba(220, 186, 7, 0.08);
+    min-height: 43px;
+    font-size: 1em;
+    position: relative;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+  }
+  .quick-note-card[data-tag="reminder"] { border-color: #90caf9; }
+  .quick-note-card[data-tag="urgent"] { border-color: #e57373; }
+  .quick-note-card[data-tag="idea"] { border-color: #aed581; }
+  .quick-note-card .quick-note-actions {
+    position: absolute; top: 7px; right: 7px; display:flex; gap:8px;
+  }
+  .quick-note-card .pin-btn { color: #fbc02d; cursor:pointer; font-size:1.20em; background:none; border:none;}
+  .quick-note-card .del-btn { color: #c62828; cursor:pointer; background:none;border:none;}
+  .quick-note-card .edit-btn { color: #1976d2; cursor:pointer; background:none;border:none; }
+  .quick-note-card .tag-label {
+    font-size: .93em; font-weight:bold; padding:2px 7px; border-radius:5px; margin-right:6px;
+  }
+  .quick-note-card[data-tag="to-do"]   .tag-label { background:#ffe082; color:#665700;}
+  .quick-note-card[data-tag="reminder"] .tag-label { background:#bbdefb; color:#095587;}
+  .quick-note-card[data-tag="urgent"]   .tag-label { background:#ffcdd2; color:#b71c1c;}
+  .quick-note-card[data-tag="idea"]     .tag-label { background: #c8e6c9; color: #255d1d;}
+  /* Richtext Highlights */
+  .quick-note-card strong { font-weight: bold; background: #fffde9;}
+  .quick-note-card ul {margin:4px 0 4px 20px; padding:0;}
+  .quick-note-card .highlight { background:#fff59b;border-radius:3px;padding:1px 3px;}
+  .quick-note-editing-area {
+    width:96%; min-height:38px; border-radius:6px; border:1.1px solid #ffd54f; padding:3px 7px;
+    margin-bottom:7px; background:#fffbec;
+  }
+  @media (max-width: 550px){
+    #quickNotesWidget { right: 4vw !important; width: 99vw !important;}
+  }
   </style>
 </head>
 <body>
@@ -685,6 +726,16 @@
         LOGOUT
       </button>
     </form>
+    <!-- 🔥 Daily Streak Badge -->
+    <div class="topbar-streak" style="display:inline-block; margin-right:20px; font-weight:bold; font-size:14px;">
+      🔥 Streak: 
+      {{ current_user.daily_streak_entry[0].current_streak if current_user.daily_streak_entry else 0 }} days
+    </div>
+    <!-- QUICK NOTES BUTTON (in topbar) -->
+    <button id="quickNotesBtn" title="Quick Notes" style="background:#ffeb3b;color:#444;border:none;border-radius:8px;padding:7px 14px;font-size:1em;margin-left:18px;cursor:pointer;">
+      🗒️ NOTES
+    </button>
+
     <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
     <div class="topbar-profile">
       <div class="profile-circle">A</div>
@@ -742,6 +793,7 @@
       <!-- Left Column (Intro, Profile, Events) -->
       <div class="side-column">
         <!-- Profile Card -->
+        <!-- Profile Card -->
         <div class="profile">
           <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
           <h2>{{ current_user.username }}</h2>
@@ -749,14 +801,15 @@
           <div class="stats">
             <div><span>🧿 0</span>Badges</div>
             <div><span>🥉 Bronze</span>Rank</div>
-            <div><span>🔥 1</span>Day Streak</div>
+            <div><span>🔥 {{ current_user.daily_streak_entry[0].current_streak if current_user.daily_streak_entry else 0 }}</span>Day Streak</div>
           </div>
           <a href="{{ url_for('profile.profile') }}">
-          <div>
-            <button>VIEW PROFILE</button>
-          </div>
-        </a>
+            <div>
+              <button>VIEW PROFILE</button>
+            </div>
+          </a>
         </div>
+
 
         <!-- Upcoming Events -->
         <div class="events">
@@ -831,6 +884,12 @@
             <p>Track your unlocked business milestones and goals.</p>
           </div>
         </a>
+        <a href="{{ url_for('daily_streak.show_streak') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🔥 See your Daily Streak </h3>
+            <p>Track user’s consecutive active days with dynamic streaks and badges. .</p>
+          </div>
+        </a>
 
         <a href="{{ url_for('business_health.leaderboard') }}" class="feature-card">
           <div class="feature-info">
@@ -841,6 +900,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- Goal Setting Modal -->
   <div class="modal" id="goalModal">
@@ -1203,11 +1263,184 @@
     const username = "{{ current_user.username }}";
     document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
   </script>
+  <!-- Quick Calculator Popover Button & Widget -->
+  <div id="quick-calc-trigger" style="position:fixed;bottom:110px;right:30px;z-index:9999;">
+    <button onclick="toggleCalcPopover()" style="background:#ff9800;color:#000000;border:none;border-radius:50%;width:52px;height:52px;font-size:1.9em;box-shadow:0 2px 8px rgba(0,0,0,0.18);cursor:pointer;">
+      🧮
+    </button>
+  </div>
+
+  <div id="quick-calc-popover" style="display:none;position:fixed;bottom:175px;right:30px;z-index:10000;background:#000000;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.18);padding:22px 26px; width:300px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>Quick Calculator</strong>
+      <button onclick="toggleCalcPopover()" style="background:none;border:none;font-size:1.2em;cursor:pointer;">✕</button>
+    </div>
+    <hr style="margin:8px 0;">
+    <!-- Gross Margin Calculator -->
+    <div style="margin-bottom:18px;">
+      <label style="font-weight:bold;">Gross Margin (%)</label>
+      <input type="number" id="gm-revenue" placeholder="Revenue" style="width:65px;margin:8px 3px 0 0;">
+      <input type="number" id="gm-cogs" placeholder="COGS" style="width:65px;margin:8px 3px 0 0;">
+      <button onclick="calcGrossMargin()" style="background:#ff9800;color:#000000;border:none;padding:4px 12px;border-radius:7px;cursor:pointer;font-size:.95em;">Calc</button>
+      <div id="gm-result" style="margin-top:6px;font-size:.96em;color:#ff9800;"></div>
+    </div>
+    <!-- CAC Calculator -->
+    <div>
+      <label style="font-weight:bold;">Customer Acquisition Cost</label>
+      <input type="number" id="cac-total" placeholder="Total Spend" style="width:65px;margin:8px 3px 0 0;">
+      <input type="number" id="cac-customers" placeholder="# Customers" style="width:75px;margin:8px 3px 0 0;">
+      <button onclick="calcCAC()" style="background:#ff9800;color:#000000;border:none;padding:4px 12px;border-radius:7px;cursor:pointer;font-size:.95em;">Calc</button>
+      <div id="cac-result" style="margin-top:6px;font-size:.96em;color:#ff9800;"></div>
+    </div>
+  </div>
+
 
   <!-- Chatbot Integration -->
   <script> window.chtlConfig = { chatbotId: "6419857222" } </script>
   <script async data-id="6419857222" id="chtl-script" type="text/javascript" 
     src="https://chatling.ai/js/embed.js">
   </script>
+  <script>
+  function toggleCalcPopover() {
+    const pop = document.getElementById('quick-calc-popover');
+    pop.style.display = pop.style.display === 'none' ? 'block' : 'none';
+  }
+  // Hide popover if user clicks outside
+  window.addEventListener('mousedown', function(e) {
+    const pop = document.getElementById('quick-calc-popover');
+    const btn = document.getElementById('quick-calc-trigger');
+    if(pop.style.display === 'block' && !pop.contains(e.target) && !btn.contains(e.target))
+      pop.style.display = 'none';
+  });
+
+  function calcGrossMargin() {
+    const rev = parseFloat(document.getElementById('gm-revenue').value);
+    const cogs = parseFloat(document.getElementById('gm-cogs').value);
+    const res = document.getElementById('gm-result');
+    if(isNaN(rev)||isNaN(cogs) || rev===0) {
+      res.textContent = "Enter valid numbers.";
+      res.style.color = '#e53935';
+      return;
+    }
+    const margin = ((rev - cogs) / rev) * 100;
+    res.textContent = "Gross Margin: " + margin.toFixed(2) + "%";
+    res.style.color = '#388e3c';
+  }
+  function calcCAC() {
+    const spend = parseFloat(document.getElementById('cac-total').value);
+    const customers = parseFloat(document.getElementById('cac-customers').value);
+    const res = document.getElementById('cac-result');
+    if(isNaN(spend)||isNaN(customers)||customers===0) {
+      res.textContent = "Enter valid numbers.";
+      res.style.color = '#e53935';
+      return;
+    }
+    const cac = spend / customers;
+    res.textContent = "CAC: ₹" + cac.toFixed(2);
+    res.style.color = '#388e3c';
+  }
+  </script>
+  <!-- QUICK NOTES WIDGET PANEL -->
+  <div id="quickNotesWidget" style="display:none;position:fixed;top:67px;right:35px;width:360px;max-width:94vw;max-height:84vh;overflow-y:auto;z-index:2500;background:#000000;box-shadow:0 4px 24px rgba(0,0,0,.19);border-radius:14px;padding:0 0 18px 0;">
+    <div style="padding:14px 18px 8px 18px;border-bottom:1px solid #000000;display:flex;justify-content:space-between;align-items:center;">
+      <b>Quick Notes</b>
+      <button onclick="toggleNotesWidget()" style="border:none;background:none;font-size:1.4em;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:12px 18px 9px 18px;">
+      <div style="display:flex;gap:8px;">
+        <input id="newNoteText" style="flex:1;padding:6px 7px;font-size:1em;border:1.3px solid #efd700;border-radius:6px;background:#fff8c6;" placeholder="Add a note! Try *bold*, - bullet, ~highlight~" onkeydown="if(event.key==='Enter'){addNote()}">
+        <select id="noteTagSelect" style="padding:4px 5px;border-radius:5px;border:1px solid #141313;background:#fff7b2;">
+          <option value="to-do">To-Do</option>
+          <option value="reminder">Reminder</option>
+          <option value="urgent">Urgent</option>
+          <option value="idea">Idea</option>
+        </select>
+        <button onclick="addNote()" style="background:#ffd54f;border:none;border-radius:7px;padding:5px 9px;font-size:.99em;">＋</button>
+      </div>
+    </div>
+    <div id="notesList" style="padding:6px 16px 16px 16px;"></div>
+  </div>
+<script>
+function toggleNotesWidget() {
+  const el = document.getElementById('quickNotesWidget');
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+document.getElementById('quickNotesBtn').onclick = toggleNotesWidget;
+
+let quickNotes = JSON.parse(localStorage.getItem('quickNotes_data')||"[]");
+
+function renderNotes() {
+  // Pin notes to top, urgent above others
+  const sorted = [...quickNotes].sort((a,b) => (b.pinned||0)-(a.pinned||0) || (b.tag==='urgent')-(a.tag==='urgent') || b.ts-a.ts);
+  let html = '';
+  sorted.forEach((note, i) => {
+    // Simple markdown-like formatting
+    let txt = note.text
+      .replace(/\*([^\*]+)\*/g,'<strong>$1</strong>')           // *bold*
+      .replace(/\~([^\~]+)\~/g,'<span class="highlight">$1</span>'); // ~highlight~
+    // Bullet points: - text
+    if (txt.includes('- ')) txt = '<ul>' + txt.split('\n').map(line=>line.startsWith('- ')?'<li>'+line.slice(2)+'</li>':'').join('') + '</ul>';
+    html += `<div class="quick-note-card" data-tag="${note.tag||'to-do'}">
+      <span class="tag-label">${note.tag ? note.tag.replace(/^\w/,c=>c.toUpperCase()) : "To-Do"}</span>
+      <span class="quick-note-content" id="note-content-${i}">${txt}</span>
+      <div class="quick-note-actions">
+        <button class="pin-btn" title="Pin" onclick="pinNote(${i})">${note.pinned?'📌':'📍'}</button>
+        <button class="edit-btn" title="Edit" onclick="editNote(${i})">✏️</button>
+        <button class="del-btn" title="Delete" onclick="deleteNote(${i})">🗑️</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('notesList').innerHTML = html||"<div style='color:#aaa;margin-top:18px;'>No notes yet.</div>";
+}
+
+function addNote() {
+  let text = document.getElementById('newNoteText').value.trim();
+  let tag  = document.getElementById('noteTagSelect').value;
+  if (!text) return;
+  quickNotes.push({text, tag, pinned:false, ts:Date.now()});
+  document.getElementById('newNoteText').value = '';
+  autoSaveNotes();
+}
+function deleteNote(idx) {
+  if (confirm("Delete this note?")) quickNotes.splice(idx,1);
+  autoSaveNotes();
+}
+function pinNote(idx) {
+  quickNotes[idx].pinned = !quickNotes[idx].pinned;
+  autoSaveNotes();
+}
+function editNote(idx) {
+  const note = quickNotes[idx];
+  let area = document.createElement('textarea');
+  area.value = note.text;
+  area.className = "quick-note-editing-area";
+  let saveBtn = document.createElement('button');
+  saveBtn.textContent = "Save";
+  saveBtn.style = "margin-right:5px;background:#ffe082;border:none;border-radius:6px;padding:4px 10px;";
+  saveBtn.onclick = function(){
+    note.text = area.value.trim();
+    autoSaveNotes();
+  };
+  let cancelBtn = document.createElement('button');
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.style = "background:#fff;border:none;color:#d32f2f;border-radius:6px;padding:4px 10px;";
+  cancelBtn.onclick = renderNotes;
+  let parent = document.getElementById('note-content-'+idx).parentNode;
+  parent.querySelector('.quick-note-content').replaceWith(area);
+  parent.querySelector('.quick-note-actions').innerHTML = '';
+  parent.querySelector('.quick-note-actions').appendChild(saveBtn);
+  parent.querySelector('.quick-note-actions').appendChild(cancelBtn);
+  area.focus();
+}
+function autoSaveNotes() {
+  localStorage.setItem('quickNotes_data', JSON.stringify(quickNotes));
+  renderNotes();
+}
+// INITIAL LOAD
+renderNotes();
+</script>
+
+
+
 </body>
 </html>

@@ -290,9 +290,8 @@
     <form method="POST" action="{{ url_for('profile.edit_profile') }}" enctype="multipart/form-data">
       <!-- AVATAR CONFIG -->
       <div class="profile-pic-container">
-        <img id="profile-pic-preview" 
-             src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
-             class="profile-pic">
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
+     class="profile-pic">
         <div class="change-pic" onclick="document.getElementById('profile-pic-input').click()">
           <i class="fas fa-camera"></i> CHANGE AVATAR
         </div>
@@ -304,12 +303,12 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="username">FULL NAME</label>
-          <input type="text" id="username" name="username" value="{{ user.username }}" required>
+          <input type="text" id="username" name="username" value="{{ current_user.username }}" required>
         </div>
         
         <div class="form-group">
           <label for="email">EMAIL ADDRESS</label>
-          <input type="email" id="email" name="email" value="{{ user.email }}" required>
+          <input type="email" id="email" name="email" value="{{ current_user.email }}" required>
         </div>
       </div>
       
@@ -318,29 +317,29 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="business_name">BUSINESS NAME</label>
-          <input type="text" id="business_name" name="business_name" value="{{ user.business_name or '' }}">
+          <input type="text" id="business_name" name="business_name" value="{{ current_user.business_name or '' }}">
         </div>
         
         <div class="form-group">
           <label for="business_type">BUSINESS TYPE</label>
           <select id="business_type" name="business_type">
             <option value="">SELECT TYPE</option>
-            <option value="Retail" {% if user.business_type == 'Retail' %}selected{% endif %}>RETAIL</option>
-            <option value="Service" {% if user.business_type == 'Service' %}selected{% endif %}>SERVICE</option>
-            <option value="SaaS" {% if user.business_type == 'SaaS' %}selected{% endif %}>SAAS</option>
-            <option value="Manufacturing" {% if user.business_type == 'Manufacturing' %}selected{% endif %}>MANUFACTURING</option>
-            <option value="Other" {% if user.business_type == 'Other' %}selected{% endif %}>OTHER</option>
+            <option value="Retail" {% if current_user.business_type == 'Retail' %}selected{% endif %}>RETAIL</option>
+            <option value="Service" {% if current_user.business_type == 'Service' %}selected{% endif %}>SERVICE</option>
+            <option value="SaaS" {% if current_user.business_type == 'SaaS' %}selected{% endif %}>SAAS</option>
+            <option value="Manufacturing" {% if current_user.business_type == 'Manufacturing' %}selected{% endif %}>MANUFACTURING</option>
+            <option value="Other" {% if current_user.business_type == 'Other' %}selected{% endif %}>OTHER</option>
           </select>
         </div>
         
         <div class="form-group">
           <label for="industry">INDUSTRY</label>
-          <input type="text" id="industry" name="industry" value="{{ user.industry or '' }}" placeholder="E.G., F&B, FINTECH">
+          <input type="text" id="industry" name="industry" value="{{ current_user.industry or '' }}" placeholder="E.G., F&B, FINTECH">
         </div>
         
         <div class="form-group">
           <label for="location">LOCATION</label>
-          <input type="text" id="location" name="location" value="{{ user.location or '' }}" placeholder="CITY, COUNTRY">
+          <input type="text" id="location" name="location" value="{{ current_user.location or '' }}" placeholder="CITY, COUNTRY">
         </div>
       </div>
       
