@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retro Dashboard v2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -47,7 +47,117 @@
       padding: 2rem;
     }
 
-    /* ===== NEW IMPROVED PROFIT TRACKER STYLES ===== */
+    /* ===== TOPBAR ===== */
+    .topbar {
+      background: #090c1f;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      color: #ffd500;
+      box-shadow: 0 4px 0 #000, 0 0 15px #00ffd0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left {
+      text-shadow: 1px 1px #000;
+      font-size: 0.7rem;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .topbar-btn {
+      background: #0f132a;
+      color: #00ffd0;
+      border: 2px solid #00ffd0;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      box-shadow: 3px 3px #000;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .topbar-btn:hover {
+      background-color: #00ffd0;
+      color: #000;
+      box-shadow: 5px 5px #000;
+      transform: translateY(-2px);
+    }
+
+    /* ENHANCED LOGOUT BUTTON */
+    .topbar-btn.logout-btn {
+      background: rgba(255, 50, 50, 0.15) !important;
+      border: 2px solid #ff3232 !important;
+      color: #ff6b6b !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-btn.logout-btn:hover {
+      background: rgba(255, 50, 50, 0.3) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3), 3px 3px #000 !important;
+      color: white !important;
+    }
+
+    .logout-icon {
+      width: 16px;
+      height: 16px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.7));
+      transition: transform 0.2s;
+    }
+
+    .topbar-btn.logout-btn:hover .logout-icon {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.9));
+    }
+
+    .topbar-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-circle {
+      width: 34px;
+      height: 34px;
+      background-color: #0094e0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.65rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffd500;
+      box-shadow: 0 0 6px #00ffd0, 2px 2px #000;
+      text-shadow: 1px 1px #000;
+      cursor: pointer;
+    }
+
+    /* ===== DASHBOARD CONTENT ===== */
+    .dashboard-title h1 {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      text-shadow: 0 0 10px var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+
     .profit-tracker {
       position: relative;
       overflow: hidden;
@@ -157,14 +267,6 @@
       margin-top: 0.2rem;
     }
 
-    /* ALL OTHER EXISTING STYLES REMAIN THE SAME */
-    .dashboard-title h1 {
-      font-size: 1.2rem;
-      color: var(--secondary-color);
-      text-shadow: 0 0 10px var(--secondary-color);
-      margin-bottom: 1rem;
-    }
-
     .set-goal-btn {
       background-color: var(--secondary-color);
       color: #000;
@@ -209,6 +311,8 @@
       text-align: left;
       width: 100%;
       cursor: pointer;
+      text-decoration: none;
+      display: block;
     }
 
     .feature-card:hover {
@@ -261,7 +365,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       font-size: 0.6rem;
       color: #aad9ff;
@@ -460,76 +564,6 @@
       text-align: center;
     }
 
-    .topbar {
-      background: #090c1f;
-      border-bottom: 3px dashed #00ffd0;
-      padding: 0.8rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.6rem;
-      color: #ffd500;
-      box-shadow: 0 4px 0 #000, 0 0 15px #00ffd0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .topbar-left {
-      text-shadow: 1px 1px #000;
-      font-size: 0.7rem;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .topbar-btn {
-      background: #0f132a;
-      color: #00ffd0;
-      border: 2px solid #00ffd0;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.5rem;
-      padding: 0.5rem 0.8rem;
-      border-radius: 4px;
-      box-shadow: 3px 3px #000;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .topbar-btn:hover {
-      background-color: #00ffd0;
-      color: #000;
-      box-shadow: 5px 5px #000;
-      transform: translateY(-2px);
-    }
-
-    .topbar-profile {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .profile-circle {
-      width: 34px;
-      height: 34px;
-      background-color: #0094e0;
-      color: white;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.65rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #ffd500;
-      box-shadow: 0 0 6px #00ffd0, 2px 2px #000;
-      text-shadow: 1px 1px #000;
-      cursor: pointer;
-    }
-
     /* Modal Styles */
     .modal {
       display: none;
@@ -669,36 +703,34 @@
   </style>
 </head>
 <body>
- <div class="topbar">
-  <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
-  <div class="topbar-right">
-    
-    <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
-      <button type="submit" class="topbar-btn">
-        ⚙ Profile
-      </button>
-    </form>
+  <div class="topbar">
+    <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
+    <div class="topbar-right">
+      <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
+        <button type="submit" class="topbar-btn">
+          ⚙ Profile
+        </button>
+      </form>
 
-    <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
-      <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
-        <img src="static/photos/logout.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
-        LOGOUT
-      </button>
-    </form>
-    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
-    <div class="topbar-profile">
-      <div class="profile-circle">A</div>
+      <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
+        <button type="submit" class="topbar-btn logout-btn" onclick="return confirm('Are you sure you want to logout?')">
+          <img src="static/photos/logout.gif" alt="Logout" class="logout-icon">
+          LOGOUT
+        </button>
+      </form>
+      
+      <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
+      <div class="topbar-profile">
+        <div class="profile-circle">A</div>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="container">
-    <!-- Dashboard Title -->
     <div class="dashboard-title">
       <h1>Your Business Analysis</h1>
     </div>
 
-    <!-- ===== NEW IMPROVED PROFIT TRACKER ===== -->
     <div class="profit-tracker">
       <div class="tracker-header">
         <h2>💰 Profit Tracker</h2>
@@ -731,19 +763,15 @@
       </div>
     </div>
 
-    <!-- Welcome Message -->
     <div class="message-bubble">
-      <img src="static/photos/pc.gif" class="bubble-icon" />
+      <img src="static/photos/pc.gif" class="bubble-icon">
       <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
     </div>
 
-    <!-- Main Content Grid -->
     <div class="intro-grid">
-      <!-- Left Column (Intro, Profile, Events) -->
       <div class="side-column">
-        <!-- Profile Card -->
         <div class="profile">
-          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()">
           <h2>{{ current_user.username }}</h2>
           <p class="level">Level 1</p>
           <div class="stats">
@@ -752,13 +780,12 @@
             <div><span>🔥 1</span>Day Streak</div>
           </div>
           <a href="{{ url_for('profile.profile') }}">
-          <div>
-            <button>VIEW PROFILE</button>
-          </div>
-        </a>
+            <div>
+              <button>VIEW PROFILE</button>
+            </div>
+          </a>
         </div>
 
-        <!-- Upcoming Events -->
         <div class="events">
           <h3>Upcoming Events</h3>
           <div id="upcomingEventsContainer">
@@ -767,7 +794,6 @@
         </div>
       </div>
 
-      <!-- Right Column (Feature Cards) -->
       <div class="features">
         <a href="{{ url_for('dataentry.index') }}" class="feature-card">
           <div class="feature-info">
@@ -876,7 +902,7 @@
   </audio>
 
   <script>
-    // ===== NEW IMPROVED PROFIT TRACKER LOGIC =====
+    // ===== PROFIT TRACKER LOGIC =====
     const setGoalBtn = document.getElementById('setGoalBtn');
     const goalModal = document.getElementById('goalModal');
     const closeModal = document.getElementById('closeModal');
@@ -886,11 +912,9 @@
     const targetProfitEl = document.getElementById('targetProfit');
     const remainingProfitEl = document.getElementById('remainingProfit');
     
-    // Initialize with current profit from backend
     let currentProfit = {{ profit|default(0) }};
     let profitGoal = localStorage.getItem('profitGoal') || 0;
     
-    // Update all display elements
     function updateProfitDisplay() {
       currentProfitEl.textContent = `₹${currentProfit.toLocaleString()}`;
       targetProfitEl.textContent = `₹${profitGoal.toLocaleString()}`;
@@ -907,7 +931,6 @@
       updateProgressBar();
     }
     
-    // Improved progress bar
     function updateProgressBar() {
       if (profitGoal > 0) {
         const progressPercentage = Math.min((currentProfit / profitGoal) * 100, 100);
@@ -938,14 +961,12 @@
           </div>
         `;
         
-        // Reset stats
         targetProfitEl.textContent = '₹0';
         remainingProfitEl.textContent = '₹0';
         remainingProfitEl.style.color = '#ffd500';
       }
     }
     
-    // Modal handling
     setGoalBtn.addEventListener('click', () => {
       goalModal.style.display = 'flex';
       document.getElementById('goalAmount').focus();
@@ -972,15 +993,13 @@
         goalModal.style.display = 'none';
         goalForm.reset();
         
-        // Play success sound
         const successSound = new Audio('static/audio/success.mp3');
         successSound.volume = 0.3;
         successSound.play().catch(() => {});
       }
     });
 
-    // ===== ALL OTHER EXISTING JAVASCRIPT REMAINS THE SAME =====
-    // Avatar Cycling
+    // ===== AVATAR CYCLING =====
     const avatarList = [
       'static/sprites/idk.gif',
       'static/sprites/warsword.gif',
@@ -993,7 +1012,7 @@
       document.getElementById('profile-avatar').src = avatarList[avatarIndex];
     }
 
-    // Music Controls
+    // ===== MUSIC CONTROLS =====
     const bgMusic = document.getElementById("bgMusic");
     const toggleBtn = document.getElementById("toggleMusic");
     const prevBtn = document.getElementById("prevTrack");
@@ -1011,7 +1030,6 @@
     let isPlaying = true;
     let currentIndex = 0;
 
-    // Start with muted volume
     bgMusic.volume = 0;
 
     function fadeIn(audio, duration = 3000) {
@@ -1065,7 +1083,6 @@
       loadTrack(currentIndex);
     });
 
-    // Start on user interaction (autoplay-safe)
     let audioStarted = false;
     window.addEventListener('click', () => {
       if (!audioStarted) {
@@ -1078,7 +1095,7 @@
 
     loadTrack(currentIndex);
 
-    // Click Sound
+    // ===== CLICK SOUNDS =====
     const clickSound = document.getElementById("clickSound");
     document.querySelectorAll('button, a').forEach(element => {
       element.addEventListener('click', () => {
@@ -1092,7 +1109,7 @@
       });
     });
 
-    // Dark Mode Toggle
+    // ===== DARK MODE TOGGLE =====
     document.addEventListener('DOMContentLoaded', function () {
       const toggleBtn = document.getElementById("darkModeToggle");
 
@@ -1113,7 +1130,7 @@
       if (localStorage.getItem("theme") === "light") {
         enableLight();
       } else {
-        enableDark(); // default to dark mode
+        enableDark();
       }
 
       toggleBtn.addEventListener("click", () => {
@@ -1125,7 +1142,7 @@
       });
     });
 
-    // Function to fetch and display upcoming events
+    // ===== LOAD EVENTS =====
     function loadUpcomingEvents() {
       fetch('/api/upcoming_events')
         .then(response => {
@@ -1149,8 +1166,7 @@
             const month = eventDate.toLocaleString('default', { month: 'short' }).toUpperCase();
             const day = eventDate.getDate();
             
-            // Determine color based on event type
-            let colorClass = 'yellow'; // default
+            let colorClass = 'yellow';
             if (event.event_type === 'business') colorClass = 'green';
             if (event.event_type === 'personal') colorClass = 'red';
             
@@ -1167,7 +1183,6 @@
               </div>
             `;
             
-            // Make event clickable to view details
             eventElement.addEventListener('click', () => {
               window.location.href = `/dashboard/ep/${event.id}`;
             });
@@ -1186,22 +1201,18 @@
         });
     }
 
-    // Load events when page loads
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadUpcomingEvents();
       updateProfitDisplay();
       
-      // Simulate profit updates (replace with real data)
       setInterval(() => {
-        // In a real app, you would fetch this from your backend
-        // currentProfit = getCurrentProfitFromAPI();
         updateProfitDisplay();
       }, 5000);
-    });
 
-    // Set profile circle initial
-    const username = "{{ current_user.username }}";
-    document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
+      const username = "{{ current_user.username }}";
+      document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
+    });
   </script>
 
   <!-- Chatbot Integration -->
