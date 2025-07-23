@@ -48,6 +48,10 @@ def create_app():
     app.register_blueprint(profile_bp)
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
+    
+    from app.daily_streak.routes import streak_bp
+    app.register_blueprint(streak_bp)
+
 
 
     return app

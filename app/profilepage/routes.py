@@ -7,6 +7,7 @@ from app.business_health.routes import ALL_KPIS, calculate_automatic_kpis
 import os
 from werkzeug.utils import secure_filename
 from config import Config
+import time
 
 @profile_bp.route('/profile')
 @login_required
@@ -57,20 +58,26 @@ def edit_profile():
             if 'profile_pic' in request.files:
                 file = request.files['profile_pic']
                 if file.filename != '' and allowed_file(file.filename):
+                    # Ensure upload folder exists inside app/static
+                    upload_path = os.path.join(current_app.root_path, 'static', 'uploads')
+                    os.makedirs(upload_path, exist_ok=True)
                     # Delete old file if exists
                     if current_user.profile_pic:
                         try:
-                            old_file = os.path.join(current_app.config['UPLOAD_FOLDER'], current_user.profile_pic)
+                            old_file = os.path.join(upload_path, current_user.profile_pic)
                             if os.path.exists(old_file):
                                 os.remove(old_file)
                         except Exception as e:
                             current_app.logger.error(f"Error deleting old profile pic: {str(e)}")
                     
-                    # Save new file
-                    filename = secure_filename(f"user_{current_user.id}_{file.filename}")
-                    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    
+                                        # Save new file
+                    ext = os.path.splitext(file.filename)[1].lower()
+                    filename = f"user_{current_user.id}_{int(time.time())}{ext}"
+                    filepath = os.path.join(upload_path, filename)
                     file.save(filepath)
                     current_user.profile_pic = filename
+
             
             db.session.commit()
             flash('Profile updated successfully!', 'success')

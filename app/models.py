@@ -1,7 +1,8 @@
 from datetime import datetime
 from app.extensions import db, login_manager
 from flask_login import UserMixin
-
+from datetime import date
+from app.extensions import db
 class SKU(db.Model):
     __tablename__ = 'sku'
     
@@ -32,8 +33,14 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     email_verified = db.Column(db.Boolean, default=False)
+    profile_pic = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    health_score = db.Column(db.Float, default=0.0)
+    business_name = db.Column(db.String(100))
+    business_type = db.Column(db.String(50))
+    industry = db.Column(db.String(50))
+    location = db.Column(db.String(100))
+    health_score = db.Column(db.Float)
+    # ... other fields ...
 
     def is_authenticated(self):
         return True
@@ -170,3 +177,13 @@ class Bill(db.Model):
 
     def __repr__(self):
         return f'<Bill {self.bill_number}>'
+
+
+class DailyStreak(db.Model):
+    __tablename__ = 'daily_streak'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    current_streak = db.Column(db.Integer, default=0)
+    last_active_date = db.Column(db.Date, nullable=True)
+
+    user = db.relationship('User', backref='daily_streak_entry')
