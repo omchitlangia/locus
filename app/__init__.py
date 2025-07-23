@@ -39,6 +39,9 @@ def create_app():
     from app.sku.routes import sku_bp
     app.register_blueprint(sku_bp)
 
+    from app.achievements.routes import bp as achievements_bp
+    app.register_blueprint(achievements_bp)
+
     from app.billing.routes import billing_bp
     app.register_blueprint(billing_bp)
 
@@ -48,10 +51,6 @@ def create_app():
     app.register_blueprint(profile_bp)
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
-    
-    from app.daily_streak.routes import streak_bp
-    app.register_blueprint(streak_bp)
-
 
 
     return app

@@ -1,15 +1,15 @@
 from flask import render_template, request, jsonify, send_file, current_app, url_for, flash, redirect
 from flask_login import login_required, current_user
 from datetime import datetime, date, timedelta
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 import pdfkit
-from jinja2 import Environment, FileSystemLoader
 import os
 import tempfile
 import logging
 from . import billing_bp
-from app.models import SKU, Bill, BillingItem, db, Revenue, VariableCost
+from app.models import SKU, Bill, BillingItem, db, Revenue, VariableCost, Achievement, UserAchievement
 from sqlalchemy.exc import SQLAlchemyError
+from app.achievements.routes import check_achievement_progress
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -57,11 +57,11 @@ def get_skus():
 @login_required
 def process_bill():
     data = request.get_json()
-    current_app.logger.info(f"Received bill data: {data}")  # Log incoming data
-    
+    current_app.logger.info(f"Received bill data: {data}")
+
     try:
         # Start transaction
-        db.session.begin_nested()  # Use nested transaction for better control
+        db.session.begin_nested()
         
         # Validate items
         for item in data.get('items', []):
@@ -95,14 +95,12 @@ def process_bill():
         )
         db.session.add(bill)
         db.session.flush()
-        current_app.logger.info(f"Created bill: {bill.bill_number}")
 
         # Process items
         total_cost = 0
         for item in data['items']:
             sku = SKU.query.get(item['sku_id'])
             
-            # Create billing item
             billing_item = BillingItem(
                 bill_id=bill.id,
                 sku_id=sku.id,
@@ -115,12 +113,10 @@ def process_bill():
             )
             db.session.add(billing_item)
             
-            # Update inventory
             sku.quantity -= item['quantity']
             db.session.add(sku)
             
             total_cost += sku.cost_price * item['quantity']
-            current_app.logger.debug(f"Processed item: {sku.code} x{item['quantity']}")
 
         # Record financials
         revenue_entry = Revenue(
@@ -145,12 +141,65 @@ def process_bill():
         db.session.commit()
         current_app.logger.info(f"Successfully processed bill {bill.bill_number}")
 
+        # === ACHIEVEMENT TRACKING WITH PROGRESS CAPPING ===
+        bill_count = Bill.query.filter_by(user_id=current_user.id).count()
+        unlocked = []
+        bill_achievements = [
+            ('fifth_bill', 5, 'Starting Sales'),
+            ('fifteenth_bill', 15, 'Busy Cashier'), 
+            ('thirtieth_bill', 30, 'Thriving Trade')
+        ]
+
+        progress_messages = []
+        for action, threshold, name in bill_achievements:
+            achievement = Achievement.query.filter_by(required_action=action).first()
+            if not achievement:
+                continue
+            
+            user_achievement = UserAchievement.query.filter_by(
+                user_id=current_user.id,
+                achievement_id=achievement.id
+            ).first()
+            
+            if not user_achievement:
+                capped_progress = min(bill_count, threshold)
+                user_achievement = UserAchievement(
+                    user_id=current_user.id,
+                    achievement_id=achievement.id,
+                    progress=capped_progress,
+                    unlocked_at=datetime.utcnow() if capped_progress >= threshold else None
+                )
+                db.session.add(user_achievement)
+            else:
+                new_progress = min(bill_count, threshold)
+                if user_achievement.progress != new_progress:
+                    user_achievement.progress = new_progress
+                
+                if new_progress >= threshold and not user_achievement.unlocked_at:
+                    user_achievement.unlocked_at = datetime.utcnow()
+                    unlocked.append(achievement)
+            
+            if not user_achievement.unlocked_at:
+                progress_messages.append(f"{name}: {user_achievement.progress}/{threshold}")
+        # === END OF ACHIEVEMENT TRACKING ===
+
+        db.session.commit()
+
+        if unlocked:
+            for achievement in unlocked:
+                flash(f'🏆 Achievement Unlocked: {achievement.name}!', 'success')
+        elif progress_messages:
+            flash('Bill generated! Progress: ' + ', '.join(progress_messages), 'info')
+
         return jsonify({
             'success': True,
             'bill_id': bill.id,
             'bill_number': bill.bill_number,
             'pdf_url': url_for('billing.download_bill', bill_id=bill.id),
-            'view_url': url_for('billing.view_bill', bill_id=bill.id, _external=True) + '?autoprint=true'
+            'view_url': url_for('billing.view_bill', bill_id=bill.id, _external=True) + '?autoprint=true',
+            'achievement_unlocked': bool(unlocked),
+            'progress_messages': progress_messages,
+            'current_bill_count': bill_count
         })
 
     except Exception as e:
@@ -158,7 +207,7 @@ def process_bill():
         current_app.logger.error(f"Error processing bill: {str(e)}", exc_info=True)
         return jsonify({
             'success': False,
-            'message': f"Error: {str(e)}"  # Return actual error to client
+            'message': f"Error: {str(e)}"
         }), 500
 
 @billing_bp.route('/billing/view/<int:bill_id>')

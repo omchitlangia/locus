@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #55FF55;
+            text-shadow: 2px 2px #0a0a0a;
+            font-size: 2.5em;
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+        .badge {
+            background: #333;
+            border: 4px solid #555;
+            padding: 15px;
+            text-align: center;
+            image-rendering: pixelated;
+            transition: all 0.3s ease;
+        }
+        .badge.unlocked {
+            border-color: #55FF55;
+            box-shadow: 0 0 15px #55FF55;
+        }
+        .pixel-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 10px;
+            image-rendering: pixelated;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .progress-container {
+            margin: 15px 0;
+        }
+        .progress-bar {
+            background: #222;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #55FF55;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            margin-top: 5px;
+            font-size: 0.8em;
+        }
+        .locked-text {
+            color: #FF5555;
+        }
+        .unlocked-text {
+            color: #55FF55;
+        }
+        .unlocked-date {
+            font-size: 0.9em;
+            margin-top: 3px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⛏️ Achievements</h1>
+    </div>
+
+    <div class="badge-grid">
+        {% for achievement in achievements %}
+        <div class="badge {% if not achievement.is_locked %}unlocked{% endif %}">
+            <div class="pixel-icon" 
+                 style="background-image: url('/static/pixel_icons/{{ achievement.icon }}.png')"></div>
+            <h3>{{ achievement.name }}</h3>
+            <p>{{ achievement.description }}</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" 
+                         style="width: {{ (achievement.progress / achievement.required_progress) * 100 }}%"></div>
+                </div>
+                <div class="progress-text">
+                    {{ achievement.progress }}/{{ achievement.required_progress }} 
+                    ({{ ((achievement.progress / achievement.required_progress) * 100)|round }}%)
+                </div>
+            </div>
+            
+            {% if achievement.is_locked %}
+                <p class="locked-text"><i class="fas fa-lock"></i> Locked</p>
+            {% else %}
+                <div class="unlocked-text">
+                    <i class="fas fa-unlock"></i> Unlocked
+                    {% if achievement.unlocked_at %}
+                        <div class="unlocked-date">
+                            {{ achievement.unlocked_at.strftime('%b %d, %Y') }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Achievement cards animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const badges = document.querySelectorAll('.badge');
+            badges.forEach((badge, index) => {
+                badge.style.opacity = 0;
+                badge.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    badge.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    badge.style.opacity = 1;
+                    badge.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
