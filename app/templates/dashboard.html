@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retro Dashboard v2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -29,6 +29,7 @@
       background-size: cover;
       color: var(--text-color);
       min-height: 100vh;
+      cursor: url('static/cursors/r3.png') 1 1, auto;
     }
 
     body::before {
@@ -38,7 +39,6 @@
       background: rgba(9, 12, 26, 0.85);
       z-index: 0;
     }
-
     .container {
       position: relative;
       z-index: 1;
@@ -47,7 +47,117 @@
       padding: 2rem;
     }
 
-    /* ===== NEW IMPROVED PROFIT TRACKER STYLES ===== */
+    /* ===== TOPBAR ===== */
+    .topbar {
+      background: #090c1f;
+      padding: 0.8rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.6rem;
+      color: #ffd500;
+      box-shadow: 0 4px 0 #000, 0 0 15px #00ffd0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left {
+      text-shadow: 1px 1px #000;
+      font-size: 0.7rem;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .topbar-btn {
+      background: #0f132a;
+      color: #00ffd0;
+      border: 2px solid #00ffd0;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      padding: 0.5rem 0.8rem;
+      border-radius: 4px;
+      box-shadow: 3px 3px #000;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .topbar-btn:hover {
+      background-color: #00ffd0;
+      color: #000;
+      box-shadow: 5px 5px #000;
+      transform: translateY(-2px);
+    }
+
+    /* ENHANCED LOGOUT BUTTON */
+    .topbar-btn.logout-btn {
+      background: rgba(255, 50, 50, 0.15) !important;
+      border: 2px solid #ff3232 !important;
+      color: #ff6b6b !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-btn.logout-btn:hover {
+      background: rgba(255, 50, 50, 0.3) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3), 3px 3px #000 !important;
+      color: white !important;
+    }
+
+    .logout-icon {
+      width: 16px;
+      height: 16px;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.7));
+      transition: transform 0.2s;
+    }
+
+    .topbar-btn.logout-btn:hover .logout-icon {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.9));
+    }
+
+    .topbar-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-circle {
+      width: 34px;
+      height: 34px;
+      background-color: #0094e0;
+      color: white;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.65rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ffd500;
+      box-shadow: 0 0 6px #00ffd0, 2px 2px #000;
+      text-shadow: 1px 1px #000;
+      cursor: pointer;
+    }
+
+    /* ===== DASHBOARD CONTENT ===== */
+    .dashboard-title h1 {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      text-shadow: 0 0 10px var(--secondary-color);
+      margin-bottom: 1rem;
+    }
+
     .profit-tracker {
       position: relative;
       overflow: hidden;
@@ -157,14 +267,6 @@
       margin-top: 0.2rem;
     }
 
-    /* ALL OTHER EXISTING STYLES REMAIN THE SAME */
-    .dashboard-title h1 {
-      font-size: 1.2rem;
-      color: var(--secondary-color);
-      text-shadow: 0 0 10px var(--secondary-color);
-      margin-bottom: 1rem;
-    }
-
     .set-goal-btn {
       background-color: var(--secondary-color);
       color: #000;
@@ -209,6 +311,8 @@
       text-align: left;
       width: 100%;
       cursor: pointer;
+      text-decoration: none;
+      display: block;
     }
 
     .feature-card:hover {
@@ -261,7 +365,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
       font-size: 0.6rem;
       color: #aad9ff;
@@ -460,76 +564,6 @@
       text-align: center;
     }
 
-    .topbar {
-      background: #090c1f;
-      border-bottom: 3px dashed #00ffd0;
-      padding: 0.8rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.6rem;
-      color: #ffd500;
-      box-shadow: 0 4px 0 #000, 0 0 15px #00ffd0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .topbar-left {
-      text-shadow: 1px 1px #000;
-      font-size: 0.7rem;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .topbar-btn {
-      background: #0f132a;
-      color: #00ffd0;
-      border: 2px solid #00ffd0;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.5rem;
-      padding: 0.5rem 0.8rem;
-      border-radius: 4px;
-      box-shadow: 3px 3px #000;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .topbar-btn:hover {
-      background-color: #00ffd0;
-      color: #000;
-      box-shadow: 5px 5px #000;
-      transform: translateY(-2px);
-    }
-
-    .topbar-profile {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .profile-circle {
-      width: 34px;
-      height: 34px;
-      background-color: #0094e0;
-      color: white;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.65rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #ffd500;
-      box-shadow: 0 0 6px #00ffd0, 2px 2px #000;
-      text-shadow: 1px 1px #000;
-      cursor: pointer;
-    }
-
     /* Modal Styles */
     .modal {
       display: none;
@@ -666,90 +700,114 @@
       background-color: #00e5ff;
       color: #000;
     }
-    .quick-note-card {
-    background: #000000;
-    border-left: 7px solid #ffd700;
+    .health-gauge-wrapper {
+    margin-top: 2rem;
+    background: var(--card-bg);
+    border: 2px solid var(--primary-color);
     border-radius: 10px;
-    margin-top: 12px;
-    padding: 12px 10px 7px 16px;
-    box-shadow: 0 2px 9px rgba(220, 186, 7, 0.08);
-    min-height: 43px;
-    font-size: 1em;
-    position: relative;
-    word-break: break-word;
-    display: flex;
-    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 0 12px rgba(0,255,208,0.3);
+    text-align: center;
   }
-  .quick-note-card[data-tag="reminder"] { border-color: #90caf9; }
-  .quick-note-card[data-tag="urgent"] { border-color: #e57373; }
-  .quick-note-card[data-tag="idea"] { border-color: #aed581; }
-  .quick-note-card .quick-note-actions {
-    position: absolute; top: 7px; right: 7px; display:flex; gap:8px;
+
+  .health-gauge-wrapper h3 {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px #000;
   }
-  .quick-note-card .pin-btn { color: #fbc02d; cursor:pointer; font-size:1.20em; background:none; border:none;}
-  .quick-note-card .del-btn { color: #c62828; cursor:pointer; background:none;border:none;}
-  .quick-note-card .edit-btn { color: #1976d2; cursor:pointer; background:none;border:none; }
-  .quick-note-card .tag-label {
-    font-size: .93em; font-weight:bold; padding:2px 7px; border-radius:5px; margin-right:6px;
+
+  #healthGauge {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: auto;
   }
-  .quick-note-card[data-tag="to-do"]   .tag-label { background:#ffe082; color:#665700;}
-  .quick-note-card[data-tag="reminder"] .tag-label { background:#bbdefb; color:#095587;}
-  .quick-note-card[data-tag="urgent"]   .tag-label { background:#ffcdd2; color:#b71c1c;}
-  .quick-note-card[data-tag="idea"]     .tag-label { background: #c8e6c9; color: #255d1d;}
-  /* Richtext Highlights */
-  .quick-note-card strong { font-weight: bold; background: #fffde9;}
-  .quick-note-card ul {margin:4px 0 4px 20px; padding:0;}
-  .quick-note-card .highlight { background:#fff59b;border-radius:3px;padding:1px 3px;}
-  .quick-note-editing-area {
-    width:96%; min-height:38px; border-radius:6px; border:1.1px solid #ffd54f; padding:3px 7px;
-    margin-bottom:7px; background:#fffbec;
-  }
-  @media (max-width: 550px){
-    #quickNotesWidget { right: 4vw !important; width: 99vw !important;}
-  }
+  .business-health {
+  margin-top: 2rem;
+  background: var(--card-bg);
+  border: 2px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 0 12px rgba(0, 255, 208, 0.3);
+  color: var(--text-color);
+  width: 100%;
+}
+
+.business-health h2 {
+  font-size: 1rem;
+  color: var(--secondary-color);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px #000;
+}
+
+.health-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric {
+  background: #0f132a;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid #00ffd0;
+  text-align: center;
+  box-shadow: 3px 3px #000;
+  transition: transform 0.2s ease;
+}
+
+.metric:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 6px #000;
+  background: #11173b;
+}
+
+.metric h4 {
+  font-size: 0.65rem;
+  color: #ffd500;
+  margin-bottom: 0.5rem;
+}
+
+.metric p {
+  font-size: 0.7rem;
+  color: #aad9ff;
+}
+button:hover, a:hover, .feature-card:hover {
+  cursor: url('static/cursors/r2.png') 2 2, pointer;
+}
   </style>
 </head>
 <body>
- <div class="topbar">
-  <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
-  <div class="topbar-right">
-    
-    <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
-      <button type="submit" class="topbar-btn">
-        ⚙ Profile
-      </button>
-    </form>
+  <div class="topbar">
+    <div class="topbar-left">🕹️ LOCUS SYSTEM</div>
+    <div class="topbar-right">
+      <form action="{{ url_for('profile.edit_profile') }}" method="POST" style="display: inline;">
+        <button type="submit" class="topbar-btn">
+          ⚙ Profile
+        </button>
+      </form>
 
-    <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
-      <button type="submit" class="topbar-btn" onclick="return confirm('Are you sure you want to logout?')">
-        <img src="static/photos/logout.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
-        LOGOUT
-      </button>
-    </form>
-    <!-- 🔥 Daily Streak Badge -->
-    <div class="topbar-streak" style="display:inline-block; margin-right:20px; font-weight:bold; font-size:14px;">
-      🔥 Streak: 
-      {{ current_user.daily_streak_entry[0].current_streak if current_user.daily_streak_entry else 0 }} days
-    </div>
-    <!-- QUICK NOTES BUTTON (in topbar) -->
-    <button id="quickNotesBtn" title="Quick Notes" style="background:#ffeb3b;color:#444;border:none;border-radius:8px;padding:7px 14px;font-size:1em;margin-left:18px;cursor:pointer;">
-      🗒️ NOTES
-    </button>
-
-    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
-    <div class="topbar-profile">
-      <div class="profile-circle">A</div>
+      <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
+        <button type="submit" class="topbar-btn logout-btn" onclick="return confirm('Are you sure you want to logout?')">
+          <img src="static/photos/logout.gif" alt="Logout" class="logout-icon">
+          LOGOUT
+        </button>
+      </form>
+      
+      <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
+      <div class="topbar-profile">
+        <div class="profile-circle">A</div>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="container">
-    <!-- Dashboard Title -->
     <div class="dashboard-title">
       <h1>Your Business Analysis</h1>
     </div>
 
-    <!-- ===== NEW IMPROVED PROFIT TRACKER ===== -->
     <div class="profit-tracker">
       <div class="tracker-header">
         <h2>💰 Profit Tracker</h2>
@@ -782,26 +840,21 @@
       </div>
     </div>
 
-    <!-- Welcome Message -->
     <div class="message-bubble">
-      <img src="static/photos/pc.gif" class="bubble-icon" />
+      <img src="static/photos/pc.gif" class="bubble-icon">
       <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
     </div>
 
-    <!-- Main Content Grid -->
     <div class="intro-grid">
-      <!-- Left Column (Intro, Profile, Events) -->
       <div class="side-column">
-        <!-- Profile Card -->
-        <!-- Profile Card -->
         <div class="profile">
-          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()" />
+          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()">
           <h2>{{ current_user.username }}</h2>
           <p class="level">Level 1</p>
           <div class="stats">
             <div><span>🧿 0</span>Badges</div>
             <div><span>🥉 Bronze</span>Rank</div>
-            <div><span>🔥 {{ current_user.daily_streak_entry[0].current_streak if current_user.daily_streak_entry else 0 }}</span>Day Streak</div>
+            <div><span>🔥 1</span>Day Streak</div>
           </div>
           <a href="{{ url_for('profile.profile') }}">
             <div>
@@ -810,8 +863,6 @@
           </a>
         </div>
 
-
-        <!-- Upcoming Events -->
         <div class="events">
           <h3>Upcoming Events</h3>
           <div id="upcomingEventsContainer">
@@ -820,7 +871,6 @@
         </div>
       </div>
 
-      <!-- Right Column (Feature Cards) -->
       <div class="features">
         <a href="{{ url_for('dataentry.index') }}" class="feature-card">
           <div class="feature-info">
@@ -884,12 +934,6 @@
             <p>Track your unlocked business milestones and goals.</p>
           </div>
         </a>
-        <a href="{{ url_for('daily_streak.show_streak') }}" class="feature-card">
-          <div class="feature-info">
-            <h3>🔥 See your Daily Streak </h3>
-            <p>Track user’s consecutive active days with dynamic streaks and badges. .</p>
-          </div>
-        </a>
 
         <a href="{{ url_for('business_health.leaderboard') }}" class="feature-card">
           <div class="feature-info">
@@ -900,7 +944,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- Goal Setting Modal -->
   <div class="modal" id="goalModal">
@@ -936,7 +979,7 @@
   </audio>
 
   <script>
-    // ===== NEW IMPROVED PROFIT TRACKER LOGIC =====
+    // ===== PROFIT TRACKER LOGIC =====
     const setGoalBtn = document.getElementById('setGoalBtn');
     const goalModal = document.getElementById('goalModal');
     const closeModal = document.getElementById('closeModal');
@@ -946,11 +989,9 @@
     const targetProfitEl = document.getElementById('targetProfit');
     const remainingProfitEl = document.getElementById('remainingProfit');
     
-    // Initialize with current profit from backend
     let currentProfit = {{ profit|default(0) }};
     let profitGoal = localStorage.getItem('profitGoal') || 0;
     
-    // Update all display elements
     function updateProfitDisplay() {
       currentProfitEl.textContent = `₹${currentProfit.toLocaleString()}`;
       targetProfitEl.textContent = `₹${profitGoal.toLocaleString()}`;
@@ -967,7 +1008,6 @@
       updateProgressBar();
     }
     
-    // Improved progress bar
     function updateProgressBar() {
       if (profitGoal > 0) {
         const progressPercentage = Math.min((currentProfit / profitGoal) * 100, 100);
@@ -998,14 +1038,12 @@
           </div>
         `;
         
-        // Reset stats
         targetProfitEl.textContent = '₹0';
         remainingProfitEl.textContent = '₹0';
         remainingProfitEl.style.color = '#ffd500';
       }
     }
     
-    // Modal handling
     setGoalBtn.addEventListener('click', () => {
       goalModal.style.display = 'flex';
       document.getElementById('goalAmount').focus();
@@ -1032,15 +1070,13 @@
         goalModal.style.display = 'none';
         goalForm.reset();
         
-        // Play success sound
         const successSound = new Audio('static/audio/success.mp3');
         successSound.volume = 0.3;
         successSound.play().catch(() => {});
       }
     });
 
-    // ===== ALL OTHER EXISTING JAVASCRIPT REMAINS THE SAME =====
-    // Avatar Cycling
+    // ===== AVATAR CYCLING =====
     const avatarList = [
       'static/sprites/idk.gif',
       'static/sprites/warsword.gif',
@@ -1053,7 +1089,7 @@
       document.getElementById('profile-avatar').src = avatarList[avatarIndex];
     }
 
-    // Music Controls
+    // ===== MUSIC CONTROLS =====
     const bgMusic = document.getElementById("bgMusic");
     const toggleBtn = document.getElementById("toggleMusic");
     const prevBtn = document.getElementById("prevTrack");
@@ -1071,7 +1107,6 @@
     let isPlaying = true;
     let currentIndex = 0;
 
-    // Start with muted volume
     bgMusic.volume = 0;
 
     function fadeIn(audio, duration = 3000) {
@@ -1125,7 +1160,6 @@
       loadTrack(currentIndex);
     });
 
-    // Start on user interaction (autoplay-safe)
     let audioStarted = false;
     window.addEventListener('click', () => {
       if (!audioStarted) {
@@ -1138,7 +1172,7 @@
 
     loadTrack(currentIndex);
 
-    // Click Sound
+    // ===== CLICK SOUNDS =====
     const clickSound = document.getElementById("clickSound");
     document.querySelectorAll('button, a').forEach(element => {
       element.addEventListener('click', () => {
@@ -1152,7 +1186,7 @@
       });
     });
 
-    // Dark Mode Toggle
+    // ===== DARK MODE TOGGLE =====
     document.addEventListener('DOMContentLoaded', function () {
       const toggleBtn = document.getElementById("darkModeToggle");
 
@@ -1173,7 +1207,7 @@
       if (localStorage.getItem("theme") === "light") {
         enableLight();
       } else {
-        enableDark(); // default to dark mode
+        enableDark();
       }
 
       toggleBtn.addEventListener("click", () => {
@@ -1185,7 +1219,7 @@
       });
     });
 
-    // Function to fetch and display upcoming events
+    // ===== LOAD EVENTS =====
     function loadUpcomingEvents() {
       fetch('/api/upcoming_events')
         .then(response => {
@@ -1209,8 +1243,7 @@
             const month = eventDate.toLocaleString('default', { month: 'short' }).toUpperCase();
             const day = eventDate.getDate();
             
-            // Determine color based on event type
-            let colorClass = 'yellow'; // default
+            let colorClass = 'yellow';
             if (event.event_type === 'business') colorClass = 'green';
             if (event.event_type === 'personal') colorClass = 'red';
             
@@ -1227,7 +1260,6 @@
               </div>
             `;
             
-            // Make event clickable to view details
             eventElement.addEventListener('click', () => {
               window.location.href = `/dashboard/ep/${event.id}`;
             });
@@ -1246,54 +1278,19 @@
         });
     }
 
-    // Load events when page loads
+    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadUpcomingEvents();
       updateProfitDisplay();
       
-      // Simulate profit updates (replace with real data)
       setInterval(() => {
-        // In a real app, you would fetch this from your backend
-        // currentProfit = getCurrentProfitFromAPI();
         updateProfitDisplay();
       }, 5000);
+
+      const username = "{{ current_user.username }}";
+      document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
     });
-
-    // Set profile circle initial
-    const username = "{{ current_user.username }}";
-    document.querySelector('.profile-circle').textContent = username.charAt(0).toUpperCase();
   </script>
-  <!-- Quick Calculator Popover Button & Widget -->
-  <div id="quick-calc-trigger" style="position:fixed;bottom:110px;right:30px;z-index:9999;">
-    <button onclick="toggleCalcPopover()" style="background:#ff9800;color:#000000;border:none;border-radius:50%;width:52px;height:52px;font-size:1.9em;box-shadow:0 2px 8px rgba(0,0,0,0.18);cursor:pointer;">
-      🧮
-    </button>
-  </div>
-
-  <div id="quick-calc-popover" style="display:none;position:fixed;bottom:175px;right:30px;z-index:10000;background:#000000;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.18);padding:22px 26px; width:300px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong>Quick Calculator</strong>
-      <button onclick="toggleCalcPopover()" style="background:none;border:none;font-size:1.2em;cursor:pointer;">✕</button>
-    </div>
-    <hr style="margin:8px 0;">
-    <!-- Gross Margin Calculator -->
-    <div style="margin-bottom:18px;">
-      <label style="font-weight:bold;">Gross Margin (%)</label>
-      <input type="number" id="gm-revenue" placeholder="Revenue" style="width:65px;margin:8px 3px 0 0;">
-      <input type="number" id="gm-cogs" placeholder="COGS" style="width:65px;margin:8px 3px 0 0;">
-      <button onclick="calcGrossMargin()" style="background:#ff9800;color:#000000;border:none;padding:4px 12px;border-radius:7px;cursor:pointer;font-size:.95em;">Calc</button>
-      <div id="gm-result" style="margin-top:6px;font-size:.96em;color:#ff9800;"></div>
-    </div>
-    <!-- CAC Calculator -->
-    <div>
-      <label style="font-weight:bold;">Customer Acquisition Cost</label>
-      <input type="number" id="cac-total" placeholder="Total Spend" style="width:65px;margin:8px 3px 0 0;">
-      <input type="number" id="cac-customers" placeholder="# Customers" style="width:75px;margin:8px 3px 0 0;">
-      <button onclick="calcCAC()" style="background:#ff9800;color:#000000;border:none;padding:4px 12px;border-radius:7px;cursor:pointer;font-size:.95em;">Calc</button>
-      <div id="cac-result" style="margin-top:6px;font-size:.96em;color:#ff9800;"></div>
-    </div>
-  </div>
-
 
   <!-- Chatbot Integration -->
   <script> window.chtlConfig = { chatbotId: "6419857222" } </script>
@@ -1301,146 +1298,46 @@
     src="https://chatling.ai/js/embed.js">
   </script>
   <script>
-  function toggleCalcPopover() {
-    const pop = document.getElementById('quick-calc-popover');
-    pop.style.display = pop.style.display === 'none' ? 'block' : 'none';
-  }
-  // Hide popover if user clicks outside
-  window.addEventListener('mousedown', function(e) {
-    const pop = document.getElementById('quick-calc-popover');
-    const btn = document.getElementById('quick-calc-trigger');
-    if(pop.style.display === 'block' && !pop.contains(e.target) && !btn.contains(e.target))
-      pop.style.display = 'none';
+  document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('healthGauge').getContext('2d');
+    const gauge = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Health Score', 'Remaining'],
+        datasets: [{
+          data: [{{ health_score|default(70) }}, 100 - {{ health_score|default(70) }}],
+          backgroundColor: ['#00ffd0', '#0f132a'],
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        cutout: '70%',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+          title: {
+            display: true,
+            text: '{{ health_score|default(70) }}%',
+            color: '#ffd500',
+            font: { size: 16 }
+          }
+        }
+      }
+    });
   });
-
-  function calcGrossMargin() {
-    const rev = parseFloat(document.getElementById('gm-revenue').value);
-    const cogs = parseFloat(document.getElementById('gm-cogs').value);
-    const res = document.getElementById('gm-result');
-    if(isNaN(rev)||isNaN(cogs) || rev===0) {
-      res.textContent = "Enter valid numbers.";
-      res.style.color = '#e53935';
-      return;
-    }
-    const margin = ((rev - cogs) / rev) * 100;
-    res.textContent = "Gross Margin: " + margin.toFixed(2) + "%";
-    res.style.color = '#388e3c';
-  }
-  function calcCAC() {
-    const spend = parseFloat(document.getElementById('cac-total').value);
-    const customers = parseFloat(document.getElementById('cac-customers').value);
-    const res = document.getElementById('cac-result');
-    if(isNaN(spend)||isNaN(customers)||customers===0) {
-      res.textContent = "Enter valid numbers.";
-      res.style.color = '#e53935';
-      return;
-    }
-    const cac = spend / customers;
-    res.textContent = "CAC: ₹" + cac.toFixed(2);
-    res.style.color = '#388e3c';
-  }
-  </script>
-  <!-- QUICK NOTES WIDGET PANEL -->
-  <div id="quickNotesWidget" style="display:none;position:fixed;top:67px;right:35px;width:360px;max-width:94vw;max-height:84vh;overflow-y:auto;z-index:2500;background:#000000;box-shadow:0 4px 24px rgba(0,0,0,.19);border-radius:14px;padding:0 0 18px 0;">
-    <div style="padding:14px 18px 8px 18px;border-bottom:1px solid #000000;display:flex;justify-content:space-between;align-items:center;">
-      <b>Quick Notes</b>
-      <button onclick="toggleNotesWidget()" style="border:none;background:none;font-size:1.4em;cursor:pointer;">✕</button>
-    </div>
-    <div style="padding:12px 18px 9px 18px;">
-      <div style="display:flex;gap:8px;">
-        <input id="newNoteText" style="flex:1;padding:6px 7px;font-size:1em;border:1.3px solid #efd700;border-radius:6px;background:#fff8c6;" placeholder="Add a note! Try *bold*, - bullet, ~highlight~" onkeydown="if(event.key==='Enter'){addNote()}">
-        <select id="noteTagSelect" style="padding:4px 5px;border-radius:5px;border:1px solid #141313;background:#fff7b2;">
-          <option value="to-do">To-Do</option>
-          <option value="reminder">Reminder</option>
-          <option value="urgent">Urgent</option>
-          <option value="idea">Idea</option>
-        </select>
-        <button onclick="addNote()" style="background:#ffd54f;border:none;border-radius:7px;padding:5px 9px;font-size:.99em;">＋</button>
-      </div>
-    </div>
-    <div id="notesList" style="padding:6px 16px 16px 16px;"></div>
-  </div>
-<script>
-function toggleNotesWidget() {
-  const el = document.getElementById('quickNotesWidget');
-  el.style.display = el.style.display === 'block' ? 'none' : 'block';
-}
-document.getElementById('quickNotesBtn').onclick = toggleNotesWidget;
-
-let quickNotes = JSON.parse(localStorage.getItem('quickNotes_data')||"[]");
-
-function renderNotes() {
-  // Pin notes to top, urgent above others
-  const sorted = [...quickNotes].sort((a,b) => (b.pinned||0)-(a.pinned||0) || (b.tag==='urgent')-(a.tag==='urgent') || b.ts-a.ts);
-  let html = '';
-  sorted.forEach((note, i) => {
-    // Simple markdown-like formatting
-    let txt = note.text
-      .replace(/\*([^\*]+)\*/g,'<strong>$1</strong>')           // *bold*
-      .replace(/\~([^\~]+)\~/g,'<span class="highlight">$1</span>'); // ~highlight~
-    // Bullet points: - text
-    if (txt.includes('- ')) txt = '<ul>' + txt.split('\n').map(line=>line.startsWith('- ')?'<li>'+line.slice(2)+'</li>':'').join('') + '</ul>';
-    html += `<div class="quick-note-card" data-tag="${note.tag||'to-do'}">
-      <span class="tag-label">${note.tag ? note.tag.replace(/^\w/,c=>c.toUpperCase()) : "To-Do"}</span>
-      <span class="quick-note-content" id="note-content-${i}">${txt}</span>
-      <div class="quick-note-actions">
-        <button class="pin-btn" title="Pin" onclick="pinNote(${i})">${note.pinned?'📌':'📍'}</button>
-        <button class="edit-btn" title="Edit" onclick="editNote(${i})">✏️</button>
-        <button class="del-btn" title="Delete" onclick="deleteNote(${i})">🗑️</button>
-      </div>
-    </div>`;
-  });
-  document.getElementById('notesList').innerHTML = html||"<div style='color:#aaa;margin-top:18px;'>No notes yet.</div>";
-}
-
-function addNote() {
-  let text = document.getElementById('newNoteText').value.trim();
-  let tag  = document.getElementById('noteTagSelect').value;
-  if (!text) return;
-  quickNotes.push({text, tag, pinned:false, ts:Date.now()});
-  document.getElementById('newNoteText').value = '';
-  autoSaveNotes();
-}
-function deleteNote(idx) {
-  if (confirm("Delete this note?")) quickNotes.splice(idx,1);
-  autoSaveNotes();
-}
-function pinNote(idx) {
-  quickNotes[idx].pinned = !quickNotes[idx].pinned;
-  autoSaveNotes();
-}
-function editNote(idx) {
-  const note = quickNotes[idx];
-  let area = document.createElement('textarea');
-  area.value = note.text;
-  area.className = "quick-note-editing-area";
-  let saveBtn = document.createElement('button');
-  saveBtn.textContent = "Save";
-  saveBtn.style = "margin-right:5px;background:#ffe082;border:none;border-radius:6px;padding:4px 10px;";
-  saveBtn.onclick = function(){
-    note.text = area.value.trim();
-    autoSaveNotes();
-  };
-  let cancelBtn = document.createElement('button');
-  cancelBtn.textContent = "Cancel";
-  cancelBtn.style = "background:#fff;border:none;color:#d32f2f;border-radius:6px;padding:4px 10px;";
-  cancelBtn.onclick = renderNotes;
-  let parent = document.getElementById('note-content-'+idx).parentNode;
-  parent.querySelector('.quick-note-content').replaceWith(area);
-  parent.querySelector('.quick-note-actions').innerHTML = '';
-  parent.querySelector('.quick-note-actions').appendChild(saveBtn);
-  parent.querySelector('.quick-note-actions').appendChild(cancelBtn);
-  area.focus();
-}
-function autoSaveNotes() {
-  localStorage.setItem('quickNotes_data', JSON.stringify(quickNotes));
-  renderNotes();
-}
-// INITIAL LOAD
-renderNotes();
 </script>
+<audio id="btn-sound" src="static/audio/click.mp3" preload="auto"></audio>
+<script>
+  const buttonSound = document.getElementById('btn-sound');
 
-
-
+  // Attach to all buttons
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttonSound.currentTime = 0; // rewind to start
+      buttonSound.play();
+    });
+  });
+</script>
 </body>
 </html>

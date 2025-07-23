@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INVENTORY TERMINAL | LOCUS</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>SKU TERMINAL | LOCUS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-pink: #ff2a6d;
@@ -28,8 +29,9 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 0.5px;
+            font-family: 'VT323', monospace;
+            letter-spacing: 1px;
+            image-rendering: pixelated;
         }
 
         body {
@@ -42,232 +44,148 @@
             min-height: 100vh;
         }
 
-        /* TERMINAL NAVBAR */
-        .terminal-nav {
+        /* TERMINAL HEADER */
+        .terminal-header {
             background-color: var(--deep-blue);
             color: var(--neon-cyan);
             padding: 1rem;
-            font-family: 'Share Tech Mono', monospace;
-            border-bottom: 3px solid var(--neon-pink);
-            box-shadow: var(--pixel-shadow);
+            font-size: 1.5rem;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            border-bottom: 4px solid var(--neon-pink);
+            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+            box-shadow: 0 4px 0px 0px rgba(0,0,0,0.75);
+            position: relative;
+            z-index: 10;
         }
 
-        .terminal-nav a {
-            color: var(--neon-cyan);
-            text-decoration: none;
-            font-weight: 600;
-            text-shadow: 0 0 5px var(--neon-cyan);
-            font-size: 1.2rem;
+        .terminal-header::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--neon-purple);
         }
 
-        .terminal-nav a:hover {
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow);
-        }
-
-        /* MAIN CONTAINER */
-        .terminal-container {
-            max-width: 1400px;
+        .container {
+            max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1.5rem;
         }
 
-        /* TERMINAL PANELS */
-        .terminal-panel {
+        /* CARDS */
+        .card {
             background: var(--panel-bg);
-            border-radius: 4px;
-            border: 3px solid var(--neon-cyan);
+            border-radius: 0;
+            border: 4px solid var(--neon-cyan);
             box-shadow: 
                 inset 0 0 15px var(--neon-cyan),
                 0 0 15px var(--neon-cyan),
                 var(--pixel-shadow);
+            padding: 1.5rem;
             position: relative;
-            overflow: hidden;
             margin-bottom: 2rem;
         }
 
-        /* CORNER ACCENTS */
-        .corner-accent {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border: 3px solid var(--neon-cyan);
-            box-shadow: 0 0 5px var(--neon-cyan);
-        }
-
-        .corner-tl { 
-            top: -8px; 
-            left: -8px; 
-            border-right: none;
-            border-bottom: none;
-        }
-        .corner-tr { 
-            top: -8px; 
-            right: -8px; 
-            border-left: none;
-            border-bottom: none;
-        }
-        .corner-bl { 
-            bottom: -8px; 
-            left: -8px; 
-            border-right: none;
-            border-top: none;
-        }
-        .corner-br { 
-            bottom: -8px; 
-            right: -8px; 
-            border-left: none;
-            border-top: none;
-        }
-
-        /* TERMINAL HEADER */
-        .terminal-header {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+        .card-header {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
             color: white;
-            padding: 1rem 1.5rem;
-            font-family: 'Share Tech Mono', monospace;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .terminal-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            border-bottom: 3px solid var(--neon-pink);
+            padding: 0.75rem 1.5rem;
+            text-shadow: 0 0 5px white;
         }
 
         /* BUTTONS */
-        .btn {
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            border-radius: 0;
             padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Share Tech Mono', monospace;
+            border: 3px solid var(--neon-pink);
             box-shadow: var(--pixel-shadow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
             position: relative;
             overflow: hidden;
-            border: 2px solid;
-        }
-
-        .btn-primary {
-            background-color: var(--neon-purple);
-            color: white;
-            border-color: var(--neon-pink);
         }
 
         .btn-primary:hover {
-            background-color: var(--neon-pink);
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
             transform: translate(-2px, -2px);
             box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
         }
 
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--neon-cyan);
-            border-color: var(--neon-cyan);
+        .btn-primary:active {
+            transform: translate(0, 0);
+            box-shadow: var(--pixel-shadow);
         }
 
-        .btn-secondary:hover {
-            background-color: rgba(5, 217, 232, 0.2);
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
+        .btn-outline-secondary {
+            border: 3px solid var(--neon-yellow);
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            border-radius: 0;
+            box-shadow: var(--pixel-shadow);
         }
 
         /* FORM ELEMENTS */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--neon-cyan);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
         .form-control, .form-select {
-            width: 100%;
-            padding: 0.75rem;
-            background: var(--deep-blue);
-            border: 2px solid var(--neon-purple);
-            border-radius: 4px;
+            background-color: var(--deep-blue);
+            border: 3px solid var(--neon-purple);
             color: var(--text);
-            font-size: 1.1rem;
+            border-radius: 0;
+            font-size: 1.2rem;
+            padding: 0.75rem;
             box-shadow: var(--pixel-shadow);
-            transition: all 0.3s;
         }
 
         .form-control:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--neon-yellow);
-            box-shadow: 0 0 10px var(--neon-yellow);
+            background-color: var(--deep-blue);
+            border-color: var(--neon-cyan);
+            color: var(--text);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .form-label {
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
 
         .input-group-text {
-            background: var(--deep-blue);
-            border: 2px solid var(--neon-purple);
-            color: var(--neon-cyan);
+            background-color: var(--neon-purple);
+            color: white;
+            border: 3px solid var(--neon-pink);
+            border-radius: 0;
+            font-family: 'Press Start 2P', cursive;
             box-shadow: var(--pixel-shadow);
         }
 
-        /* SEARCH TERMINAL */
-        .search-terminal {
-            background: var(--panel-bg);
-            border-radius: 4px;
-            border: 3px solid var(--neon-yellow);
-            box-shadow: 
-                inset 0 0 15px var(--neon-yellow),
-                0 0 15px var(--neon-yellow),
-                var(--pixel-shadow);
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* TABLE TERMINAL */
-        .table-terminal {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        .table-terminal th {
-            background: var(--neon-purple);
-            color: white;
-            padding: 1rem;
-            text-align: left;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.9rem;
-            border-bottom: 3px solid var(--neon-pink);
-        }
-
-        .table-terminal td {
-            padding: 1rem;
-            border-bottom: 2px solid rgba(5, 217, 232, 0.2);
+        /* TABLES */
+        .table {
             color: var(--text);
+            font-size: 1.1rem;
         }
 
-        .table-terminal tr:last-child td {
-            border-bottom: none;
+        .table th {
+            border-bottom: 3px solid var(--neon-cyan);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            text-transform: uppercase;
         }
 
-        .table-terminal tr:hover {
-            background: rgba(5, 217, 232, 0.1);
+        .table td {
+            border-bottom: 2px solid var(--neon-purple);
+            vertical-align: middle;
         }
 
         .expired-row {
@@ -275,16 +193,17 @@
         }
 
         .out-of-stock-row {
-            background-color: rgba(255, 231, 0, 0.15);
+            background-color: rgba(247, 247, 0, 0.15);
         }
 
         /* BADGES */
         .badge {
-            padding: 0.35rem 0.65rem;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0;
+            text-transform: uppercase;
+            box-shadow: var(--pixel-shadow);
         }
 
         .badge-expired {
@@ -293,36 +212,37 @@
         }
 
         .badge-out-of-stock {
-            background-color: var(--fair);
+            background-color: var(--neon-yellow);
             color: black;
         }
 
-        .badge-active {
+        .badge-success {
             background-color: var(--good);
             color: black;
         }
 
-        /* ANALYTICS TERMINAL */
-        .analytics-terminal {
-            display: none;
+        .badge-primary {
+            background-color: var(--neon-purple);
+            color: white;
         }
 
-        .chart-container {
-            background: var(--deep-blue);
-            border: 2px solid var(--neon-purple);
-            border-radius: 4px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+        /* SEARCH CONTAINER */
+        .search-container {
+            background-color: var(--panel-bg);
+            padding: 1.5rem;
+            border-radius: 0;
+            margin-bottom: 2rem;
+            border: 4px solid var(--neon-yellow);
             box-shadow: var(--pixel-shadow);
         }
 
         /* ALERTS */
         .alert {
-            background: var(--deep-blue);
-            border: 2px solid var(--neon-purple);
-            border-radius: 4px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            background-color: var(--panel-bg);
+            border: 3px solid var(--neon-cyan);
+            color: var(--text);
+            border-radius: 0;
+            font-size: 1.1rem;
             box-shadow: var(--pixel-shadow);
         }
 
@@ -330,27 +250,73 @@
             border-color: var(--neon-cyan);
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 992px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+        /* CORNER ACCENTS */
+        .corner-accent {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
         }
 
+        .corner-tl { top: -8px; left: -8px; }
+        .corner-tr { top: -8px; right: -8px; }
+        .corner-bl { bottom: -8px; left: -8px; }
+        .corner-br { bottom: -8px; right: -8px; }
+
+        /* HEADINGS */
+        h2 {
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--neon-pink);
+            box-shadow: var(--pixel-shadow);
+        }
+
+        /* TEXT COLORS */
+        .text-danger {
+            color: var(--poor) !important;
+            text-shadow: 0 0 5px var(--poor);
+        }
+
+        .text-success {
+            color: var(--good) !important;
+            text-shadow: 0 0 5px var(--good);
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .terminal-container {
+            .container {
                 padding: 0 1rem;
             }
             
-            .btn {
-                font-size: 1rem;
-                padding: 0.6rem 1.2rem;
+            .card-header {
+                font-size: 0.8rem;
             }
             
-            .table-terminal th, 
-            .table-terminal td {
-                padding: 0.75rem;
-                font-size: 0.9rem;
+            .form-control, .form-select {
+                font-size: 1rem;
+            }
+            
+            .table {
+                font-size: 1rem;
+            }
+            
+            .btn-primary {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
             }
         }
 
@@ -364,183 +330,168 @@
         .pulse {
             animation: pulse 2s infinite;
         }
-
-        @keyframes flicker {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
-        }
-
-        .flicker {
-            animation: flicker 1.5s infinite;
+        
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
         }
     </style>
 </head>
 <body>
-    <nav class="terminal-nav">
-        <div class="container">
-            <a href="{{ url_for('sku.index') }}">
-                <i class="fas fa-boxes"></i> INVENTORY TERMINAL v3.1
-            </a>
-        </div>
-    </nav>
+    <div class="terminal-header">
+        <i class="fas fa-boxes"></i> SKU MANAGEMENT TERMINAL v2.0
+    </div>
 
-    <div class="terminal-container">
-        <!-- HEADER WITH TOGGLE -->
+    <div class="container">
+        <!-- Header with Analytics Toggle -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0" style="color: var(--neon-yellow); font-family: 'Share Tech Mono', monospace;">
-                <i class="fas fa-boxes"></i> INVENTORY MANAGEMENT
-            </h2>
+            <h2><i class="fas fa-boxes me-2"></i>INVENTORY CONTROL</h2>
             <button id="toggleAnalytics" class="btn btn-primary">
-                <i class="fas fa-chart-bar"></i> ANALYTICS MODE
+                <i class="fas fa-chart-bar me-2"></i>SHOW ANALYTICS
             </button>
         </div>
 
-        <!-- FLASH MESSAGES -->
+        <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
                         {{ message }}
-                        <button type="button" class="btn-close" style="float: right; color: var(--neon-cyan);" onclick="this.parentElement.style.display='none'">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <!-- ADD NEW SKU TERMINAL -->
-        <div class="terminal-panel">
+        <!-- Add New SKU Form -->
+        <div class="card">
             <div class="corner-accent corner-tl"></div>
             <div class="corner-accent corner-tr"></div>
             <div class="corner-accent corner-bl"></div>
             <div class="corner-accent corner-br"></div>
             
-            <div class="terminal-header">
-                <h2><i class="fas fa-plus-circle"></i> NEW INVENTORY ENTRY</h2>
-            </div>
-            
-            <form method="POST" id="skuForm">
-                {{ form.hidden_tag() }}
-                <div class="form-grid">
-                    <div>
-                        <div class="form-group">
-                            {{ form.code.label(class="form-label") }}
-                            {{ form.code(class="form-control") }}
-                            {% for error in form.code.errors %}
-                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
-                            {% endfor %}
+            <div class="card-header">ADD NEW SKU</div>
+            <div class="card-body">
+                <form method="POST" id="skuForm">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.code.label(class="form-label") }}
+                                {{ form.code(class="form-control") }}
+                                {% for error in form.code.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control") }}
+                                {% for error in form.name.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.description.label(class="form-label") }}
+                                {{ form.description(class="form-control", rows="3") }}
+                            </div>
                         </div>
-                        <div class="form-group">
-                            {{ form.name.label(class="form-label") }}
-                            {{ form.name(class="form-control") }}
-                            {% for error in form.name.errors %}
-                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.description.label(class="form-label") }}
-                            {{ form.description(class="form-control", rows="3") }}
-                        </div>
-                    </div>
-                    <div>
-                        <div class="form-group">
-                            {{ form.cost_price.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text">₹</span>
-                                {{ form.cost_price(class="form-control") }}
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.cost_price.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    {{ form.cost_price(class="form-control") }}
+                                </div>
                                 {% for error in form.cost_price.errors %}
-                                    <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                                    <div class="text-danger small">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
-                        <div class="form-group">
-                            {{ form.selling_price.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text">₹</span>
-                                {{ form.selling_price(class="form-control") }}
+                            <div class="mb-3">
+                                {{ form.selling_price.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    {{ form.selling_price(class="form-control") }}
+                                </div>
                                 {% for error in form.selling_price.errors %}
-                                    <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
+                                    <div class="text-danger small">{{ error }}</div>
                                 {% endfor %}
                             </div>
-                        </div>
-                        <div class="form-group">
-                            {{ form.quantity.label(class="form-label") }}
-                            {{ form.quantity(class="form-control") }}
-                            {% for error in form.quantity.errors %}
-                                <div style="color: var(--poor); font-size: 0.9rem;">{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                        <div class="form-group">
-                            {{ form.category.label(class="form-label") }}
-                            {{ form.category(class="form-control") }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.expiry_date.label(class="form-label") }}
-                            {{ form.expiry_date(class="form-control") }}
+                            <div class="mb-3">
+                                {{ form.quantity.label(class="form-label") }}
+                                {{ form.quantity(class="form-control") }}
+                                {% for error in form.quantity.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.category.label(class="form-label") }}
+                                {{ form.category(class="form-control") }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.expiry_date.label(class="form-label") }}
+                                {{ form.expiry_date(class="form-control") }}
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div style="padding: 0 1.5rem 1.5rem;">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> COMMIT ENTRY
+                        <i class="fas fa-plus me-2"></i>ADD SKU
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
-        <!-- SEARCH TERMINAL -->
-        <div class="search-terminal flicker">
-            <form method="GET" action="{{ url_for('sku.index') }}">
-                <div class="input-group">
-                    <span class="input-group-text" style="color: var(--neon-yellow);">
-                        <i class="fas fa-search"></i>
-                    </span>
-                    <input type="text" class="form-control" name="search" 
-                           placeholder="SEARCH INVENTORY BY CODE, NAME, OR CATEGORY..." 
-                           value="{{ search_query }}">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> SCAN
-                    </button>
-                    {% if search_query %}
-                        <a href="{{ url_for('sku.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-undo"></i> RESET
-                        </a>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-
-        <!-- INVENTORY TERMINAL -->
-        <div class="terminal-panel">
+        <!-- Search Bar -->
+        <div class="search-container">
             <div class="corner-accent corner-tl"></div>
             <div class="corner-accent corner-tr"></div>
             <div class="corner-accent corner-bl"></div>
             <div class="corner-accent corner-br"></div>
             
-            <div class="terminal-header">
-                <div>
-                    <h2><i class="fas fa-box-open"></i> INVENTORY DATABASE</h2>
+            <form method="GET" action="{{ url_for('sku.index') }}" class="row g-3 align-items-center">
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" name="search" placeholder="SEARCH SKUS BY CODE, NAME, OR CATEGORY..." value="{{ search_query }}">
+                    </div>
                 </div>
-                <div class="badge" style="background: var(--neon-purple);">
-                    {{ all_skus_count }} ITEMS ONLINE
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary me-2 flex-grow-1">
+                            <i class="fas fa-search me-2"></i>SEARCH
+                        </button>
+                        {% if search_query %}
+                            <a href="{{ url_for('sku.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+            </form>
+        </div>
+
+        <!-- Current SKUs Table -->
+        <div class="card">
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
             
-            <div style="padding: 1.5rem;">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>YOUR INVENTORY</span>
+                <span class="badge bg-primary rounded-pill">{{ all_skus_count }} TOTAL</span>
+            </div>
+            <div class="card-body">
                 {% if not skus %}
                     <div class="alert alert-info">
-                        NO INVENTORY ITEMS FOUND{% if search_query %} MATCHING SEARCH PARAMETERS{% endif %}
+                        NO SKUS FOUND{% if search_query %} MATCHING YOUR SEARCH CRITERIA{% endif %}.
                     </div>
                 {% else %}
-                    <div style="overflow-x: auto;">
-                        <table class="table-terminal">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th>SKU CODE</th>
-                                    <th>PRODUCT</th>
+                                    <th>PRODUCT NAME</th>
                                     <th>COST</th>
                                     <th>PRICE</th>
                                     <th>QTY</th>
@@ -553,7 +504,7 @@
                             <tbody>
                                 {% for sku in skus %}
                                 <tr class="{% if sku.is_expired() %}expired-row{% elif sku.quantity <= 0 %}out-of-stock-row{% endif %}">
-                                    <td style="font-weight: bold;">{{ sku.code }}</td>
+                                    <td class="fw-bold">{{ sku.code }}</td>
                                     <td>{{ sku.name }}</td>
                                     <td>₹{{ "%.2f"|format(sku.cost_price) }}</td>
                                     <td>₹{{ "%.2f"|format(sku.selling_price) }}</td>
@@ -572,12 +523,12 @@
                                         {% elif sku.quantity <= 0 %}
                                             <span class="badge badge-out-of-stock">OUT OF STOCK</span>
                                         {% else %}
-                                            <span class="badge badge-active">ACTIVE</span>
+                                            <span class="badge bg-success">ACTIVE</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('sku.edit', id=sku.id) }}" class="btn btn-sm btn-secondary">
-                                            <i class="fas fa-edit"></i> EDIT
+                                        <a href="{{ url_for('sku.edit', id=sku.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -587,9 +538,9 @@
                     </div>
 
                     {% if not show_all and not search_query and all_skus_count > 3 %}
-                        <div style="text-align: center; margin-top: 1.5rem;">
+                        <div class="text-center mt-3">
                             <a href="{{ url_for('sku.index', show_all='true') }}" class="btn btn-primary">
-                                <i class="fas fa-chevron-down"></i> LOAD FULL INVENTORY ({{ all_skus_count }})
+                                <i class="fas fa-chevron-down me-2"></i>SHOW ALL ({{ all_skus_count }})
                             </a>
                         </div>
                     {% endif %}
@@ -597,88 +548,101 @@
             </div>
         </div>
 
-        <!-- ANALYTICS TERMINAL -->
-        <div id="analyticsTerminal" class="terminal-panel analytics-terminal">
+        <!-- Analytics Section -->
+        <div id="analyticsSection" class="card mt-4" style="display: none;">
             <div class="corner-accent corner-tl"></div>
             <div class="corner-accent corner-tr"></div>
             <div class="corner-accent corner-bl"></div>
             <div class="corner-accent corner-br"></div>
             
-            <div class="terminal-header">
-                <h2><i class="fas fa-chart-pie"></i> INVENTORY ANALYTICS</h2>
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-2"></i>INVENTORY ANALYTICS
             </div>
-            
-            <div style="padding: 1.5rem;">
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                    <div class="chart-container">
-                        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
-                            <i class="fas fa-box"></i> INVENTORY SUMMARY
-                        </h3>
-                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                            <div style="background: rgba(5, 217, 232, 0.1); padding: 1rem; border-radius: 4px; margin-right: 1rem;">
-                                <i class="fas fa-boxes" style="color: var(--neon-cyan); font-size: 1.5rem;"></i>
-                            </div>
-                            <div>
-                                <div style="color: var(--text-light); font-size: 0.9rem;">TOTAL SKUs</div>
-                                <div style="font-size: 1.5rem; font-weight: bold;">{{ analytics.total_skus }}</div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 1.5rem;">
-                            <div style="margin-bottom: 0.5rem;">
-                                <span style="color: var(--text-light);">INVENTORY VALUE:</span>
-                                <span style="float: right; font-weight: bold;">
-                                    ₹{{ "%.2f"|format(analytics.total_inventory_value) }}
-                                </span>
-                            </div>
-                            <div>
-                                <span style="color: var(--text-light);">REVENUE POTENTIAL:</span>
-                                <span style="float: right; font-weight: bold; color: var(--good);">
-                                    ₹{{ "%.2f"|format(analytics.total_potential_revenue) }}
-                                </span>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4" style="background: var(--panel-bg); border: 3px solid var(--neon-purple);">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--neon-cyan); font-family: 'Press Start 2P', cursive;">
+                                    <i class="fas fa-box me-2"></i>INVENTORY SUMMARY
+                                </h5>
+                                <div class="d-flex align-items-center my-3">
+                                    <div style="background: rgba(5, 217, 232, 0.1); padding: 1rem; border-radius: 0; margin-right: 1rem; border: 2px solid var(--neon-cyan);">
+                                        <i class="fas fa-boxes fa-lg" style="color: var(--neon-cyan);"></i>
+                                    </div>
+                                    <div>
+                                        <div style="color: var(--text-light); font-size: 0.9rem;">TOTAL SKUS</div>
+                                        <div style="font-size: 1.5rem; font-family: 'Press Start 2P', cursive; color: var(--neon-yellow);">{{ analytics.total_skus }}</div>
+                                    </div>
+                                </div>
+                                <hr style="border-color: var(--neon-purple);">
+                                <div class="mb-2">
+                                    <span style="color: var(--text-light);">INVENTORY VALUE:</span>
+                                    <span style="float-end; font-family: 'Press Start 2P', cursive; color: var(--neon-yellow);">
+                                        ₹{{ "%.2f"|format(analytics.total_inventory_value) }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-light);">REVENUE POTENTIAL:</span>
+                                    <span style="float-end; font-family: 'Press Start 2P', cursive; color: var(--good);">
+                                        ₹{{ "%.2f"|format(analytics.total_potential_revenue) }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="chart-container">
-                        <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
-                            <i class="fas fa-chart-line"></i> PROFIT DISTRIBUTION
-                        </h3>
-                        <canvas id="profitChart" style="height: 250px;"></canvas>
+                    <div class="col-md-8">
+                        <div class="card h-100" style="background: var(--panel-bg); border: 3px solid var(--neon-purple);">
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--neon-cyan); font-family: 'Press Start 2P', cursive;">
+                                    <i class="fas fa-chart-line me-2"></i>PROFIT DISTRIBUTION
+                                </h5>
+                                <div style="height: 300px;">
+                                    <canvas id="profitChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="chart-container">
-                    <h3 style="color: var(--neon-cyan); margin-bottom: 1rem; font-family: 'Share Tech Mono', monospace;">
-                        <i class="fas fa-tags"></i> CATEGORY BREAKDOWN
-                    </h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                        <div>
-                            <canvas id="categoryChart" style="height: 300px;"></canvas>
-                        </div>
-                        <div>
-                            <div style="overflow-y: auto; max-height: 300px;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">CATEGORY</th>
-                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">SKUs</th>
-                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">VALUE</th>
-                                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid var(--neon-purple); color: var(--neon-cyan);">MARGIN</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for cat in analytics.category_breakdown %}
-                                        <tr>
-                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2);">{{ cat.category or 'UNCATEGORIZED' }}</td>
-                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right;">{{ cat.count }}</td>
-                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right;">₹{{ "%.2f"|format(cat.total_value) }}</td>
-                                            <td style="padding: 0.75rem; border-bottom: 1px solid rgba(5, 217, 232, 0.2); text-align: right; font-weight: bold; color: {% if (cat.total_value - cat.total_cost) >= 0 %}var(--good){% else %}var(--poor){% endif %}">
-                                                {{ "%.1f"|format((cat.total_value - cat.total_cost)/cat.total_value*100 if cat.total_value else 0) }}%
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                <!-- Category Breakdown -->
+                <div class="card mt-4" style="background: var(--panel-bg); border: 3px solid var(--neon-purple);">
+                    <div class="card-header" style="color: var(--neon-cyan); font-family: 'Press Start 2P', cursive;">
+                        <i class="fas fa-tags me-2"></i>CATEGORY BREAKDOWN
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div style="height: 250px;">
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>CATEGORY</th>
+                                                <th>SKUS</th>
+                                                <th>TOTAL VALUE</th>
+                                                <th>MARGIN</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for cat in analytics.category_breakdown %}
+                                            <tr>
+                                                <td>{{ cat.category or 'UNCATEGORIZED' }}</td>
+                                                <td>{{ cat.count }}</td>
+                                                <td>₹{{ "%.2f"|format(cat.total_value) }}</td>
+                                                <td style="{{ 'color: var(--good)' if (cat.total_value - cat.total_cost) >= 0 else 'color: var(--poor)' }}; font-family: 'Press Start 2P', cursive;">
+                                                    {{ "%.1f"|format((cat.total_value - cat.total_cost)/cat.total_value*100 if cat.total_value else 0) }}%
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -687,15 +651,16 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle Analytics Terminal
+        // Toggle Analytics Section
         document.getElementById('toggleAnalytics').addEventListener('click', function() {
-            const analyticsTerminal = document.getElementById('analyticsTerminal');
-            const isHidden = analyticsTerminal.style.display === 'none';
-            analyticsTerminal.style.display = isHidden ? 'block' : 'none';
+            const section = document.getElementById('analyticsSection');
+            const isHidden = section.style.display === 'none';
+            section.style.display = isHidden ? 'block' : 'none';
             this.innerHTML = isHidden 
-                ? '<i class="fas fa-times"></i> EXIT ANALYTICS' 
-                : '<i class="fas fa-chart-bar"></i> ANALYTICS MODE';
+                ? '<i class="fas fa-times me-2"></i>HIDE ANALYTICS' 
+                : '<i class="fas fa-chart-bar me-2"></i>SHOW ANALYTICS';
             
             // Initialize charts when shown
             if (isHidden) {
@@ -703,7 +668,7 @@
             }
         });
 
-        // Initialize charts
+        // Initialize charts only when needed
         function initializeCharts() {
             // Prepare chart data
             const skuCodes = [];
@@ -730,8 +695,8 @@
                         label: 'PROFIT PER UNIT (₹)',
                         data: skuProfits,
                         backgroundColor: '#05d9e8',
-                        borderColor: '#00bcd4',
-                        borderWidth: 1
+                        borderColor: '#d300c5',
+                        borderWidth: 2
                     }]
                 },
                 options: {
@@ -739,13 +704,28 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            display: false
+                            display: false,
+                            labels: {
+                                color: '#ffffff',
+                                font: {
+                                    family: 'VT323',
+                                    size: 14
+                                }
+                            }
                         },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
                                     return '₹' + context.raw.toFixed(2);
                                 }
+                            },
+                            bodyFont: {
+                                family: 'VT323',
+                                size: 16
+                            },
+                            titleFont: {
+                                family: 'Press Start 2P',
+                                size: 12
                             }
                         }
                     },
@@ -756,7 +736,11 @@
                                 callback: function(value) {
                                     return '₹' + value;
                                 },
-                                color: '#b3b3ff'
+                                color: '#ffffff',
+                                font: {
+                                    family: 'VT323',
+                                    size: 14
+                                }
                             },
                             grid: {
                                 color: 'rgba(5, 217, 232, 0.1)'
@@ -764,7 +748,11 @@
                         },
                         x: {
                             ticks: {
-                                color: '#b3b3ff'
+                                color: '#ffffff',
+                                font: {
+                                    family: 'VT323',
+                                    size: 12
+                                }
                             },
                             grid: {
                                 color: 'rgba(5, 217, 232, 0.1)'
@@ -783,10 +771,10 @@
                     datasets: [{
                         data: categoryValues,
                         backgroundColor: [
-                            '#05d9e8', '#ff2a6d', '#f7f700', '#d300c5', '#00ff41', '#6c757d'
+                            '#ff2a6d', '#05d9e8', '#d300c5', '#f7f700', '#00ff41', '#b3b3ff'
                         ],
                         borderColor: '#0d0221',
-                        borderWidth: 2
+                        borderWidth: 3
                     }]
                 },
                 options: {
@@ -795,7 +783,11 @@
                         legend: {
                             position: 'right',
                             labels: {
-                                color: '#ffffff'
+                                color: '#ffffff',
+                                font: {
+                                    family: 'VT323',
+                                    size: 14
+                                }
                             }
                         },
                         tooltip: {
@@ -807,10 +799,18 @@
                                     const percentage = Math.round((value / total) * 100);
                                     return `${label}: ₹${value.toFixed(2)} (${percentage}%)`;
                                 }
+                            },
+                            bodyFont: {
+                                family: 'VT323',
+                                size: 16
+                            },
+                            titleFont: {
+                                family: 'Press Start 2P',
+                                size: 12
                             }
                         }
                     },
-                    cutout: '65%',
+                    cutout: '70%',
                 }
             });
         }
@@ -819,7 +819,25 @@
         document.getElementById('skuForm').addEventListener('submit', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESSING...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>PROCESSING...';
+        });
+
+        // Add pixel grid effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const containers = document.querySelectorAll('.card, .search-container');
+            containers.forEach(container => {
+                for (let i = 0; i < 20; i++) {
+                    const pixel = document.createElement('div');
+                    pixel.style.position = 'absolute';
+                    pixel.style.width = '2px';
+                    pixel.style.height = '2px';
+                    pixel.style.backgroundColor = `rgba(5, 217, 232, ${Math.random() * 0.3})`;
+                    pixel.style.left = `${Math.random() * 100}%`;
+                    pixel.style.top = `${Math.random() * 100}%`;
+                    pixel.style.zIndex = '-1';
+                    container.appendChild(pixel);
+                }
+            });
         });
     </script>
 </body>
