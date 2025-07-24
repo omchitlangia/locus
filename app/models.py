@@ -2,6 +2,15 @@ from datetime import datetime
 from app.extensions import db, login_manager
 from flask_login import UserMixin
 
+class DailyStreak(db.Model):
+    __tablename__ = 'daily_streak'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    current_streak = db.Column(db.Integer, default=0)
+    last_active_date = db.Column(db.Date, nullable=True)
+
+    user = db.relationship('User', backref='daily_streak_entry')
+
 class SKU(db.Model):
     __tablename__ = 'sku'
     
