@@ -59,4 +59,7 @@ def create_app():
     from app.feedback.routes import feedback_bp
     app.register_blueprint(feedback_bp)
 
+    from app.quiz.routes import quiz_bp
+    app.register_blueprint(quiz_bp)
+
     return app
