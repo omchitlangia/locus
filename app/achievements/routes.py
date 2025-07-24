@@ -10,105 +10,105 @@ DEFAULT_ACHIEVEMENTS = [
     {
         'name': 'Starting Sales',
         'description': 'Generate 5 bills',
-        'icon_class': 'pixel-icon-receipt',
+        'icon_class': 'starting-sales',
         'required_action': 'fifth_bill',
         'required_count': 5
     },
     {
         'name': 'Busy Cashier',
         'description': 'Generate 15 bills',
-        'icon_class': 'pixel-icon-receipt',
+        'icon_class': 'busy-cashier',
         'required_action': 'fifteenth_bill',
         'required_count': 15
     },
     {
         'name': 'Thriving Trade',
         'description': 'Generate 30 bills',
-        'icon_class': 'pixel-icon-receipt',
+        'icon_class': 'thriving-trade',
         'required_action': 'thirtieth_bill',
         'required_count': 30
     }, 
     {
         'name': 'Health Conscious',
         'description': 'Achieve a Business Health Score above 75',
-        'icon_class': 'pixel-icon-heart',
+        'icon_class': 'health-conscious',
         'required_action': 'health_score_75',
         'required_count': 1
     },
     {
         'name': 'Peak Performer',
         'description': 'Achieve a Business Health Score above 90',
-        'icon_class': 'pixel-icon-heart',
+        'icon_class': 'peak-performer',
         'required_action': 'health_score_90',
         'required_count': 1
     },
     {
         'name': 'Perfect Score',
         'description': 'Achieve a Business Health Score of 100',
-        'icon_class': 'pixel-icon-heart',
+        'icon_class': 'perfect-score',
         'required_action': 'health_score_100',
         'required_count': 1
     },   
     {
         'name': 'Rising Analyst',
         'description': 'Complete 5 forecasts',
-        'icon_class': 'pixel-icon-chart',
+        'icon_class': 'rising-analyst',
         'required_action': 'fifth_forecast',
         'required_count': 5
     },
     {
         'name': 'Seasoned Forecaster',
         'description': 'Complete 15 forecasts',
-        'icon_class': 'pixel-icon-chart',
+        'icon_class': 'seasoned-forecaster',
         'required_action': 'fifteenth_forecast',
         'required_count': 15
     },
     {
         'name': 'Master Tracker',
         'description': 'Complete 30 forecasts',
-        'icon_class': 'pixel-icon-chart',
+        'icon_class': 'master-tracker',
         'required_action': 'thirtieth_forecast',
         'required_count': 30
     },
     {
         'name': 'Elite Entrepreneur',
         'description': 'Reach ₹100,000 in total revenue',
-        'icon_class': 'pixel-icon-trophy',
+        'icon_class': 'elite-entrepreneur',
         'required_action': '100k_earned',
         'required_count': 100000
     },
     {
         'name': 'Total Tycoon',
         'description': 'Reach ₹1,000,000 in total revenue',
-        'icon_class': 'pixel-icon-trophy',
+        'icon_class': 'total-tycoon',
         'required_action': '1mil_earned',
         'required_count': 1000000
     },
     {
         'name': 'Keeping Tabs',
         'description': 'Enter your first set of data',
-        'icon_class': 'pixel-icon-upload',
+        'icon_class': 'keeping-tabs',
         'required_action': 'first_data_entry',
         'required_count': 1
     },
     {
         'name': 'Budding Business',
         'description': 'Enter 5 SKUs into the system',
-        'icon_class': 'pixel-icon-database',
+        'icon_class': 'budding-business',
         'required_action': 'fifth_sku',
         'required_count': 5
     },
     {
         'name': 'Healthy Stock',
         'description': 'Enter 15 SKUs into the system',
-        'icon_class': 'pixel-icon-database',
+        'icon_class': 'healthy-stock',
         'required_action': 'fifteenth_sku',
         'required_count': 15
     },
     {
         'name': 'Chasing Profits',
         'description': 'Enter 30 SKUs into the system',
-        'icon_class': 'pixel-icon-database',
+        'icon_class': 'chasing-profits',
         'required_action': 'thirtieth_sku',
         'required_count': 30
     }
