@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CORPORATE RPG | TAX CALCULATION TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff2a6d;
+            --neon-purple: #d300c5;
+            --neon-cyan: #05d9e8;
+            --neon-yellow: #f7f700;
+            --deep-blue: #0d0221;
+            --dark-bg: #0a0118;
+            --panel-bg: rgba(13, 2, 33, 0.8);
+            --text: #ffffff;
+            --text-light: #b3b3ff;
+            --pixel-shadow: 4px 4px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text);
+            font-family: 'VT323', monospace;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            image-rendering: pixelated;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* CRT Scanlines Effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(5, 217, 232, 0.03) 1px, 
+                transparent 1px
+            );
+            background-size: 100% 2px;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 4px solid var(--neon-cyan);
+            box-shadow: 
+                inset 0 0 15px var(--neon-cyan),
+                0 0 15px var(--neon-cyan),
+                var(--pixel-shadow);
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+        }
+
+        /* Pixel corners */
+        .pixel-corner {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .corner-tl { top: -8px; left: -8px; }
+        .corner-tr { top: -8px; right: -8px; }
+        .corner-bl { bottom: -8px; left: -8px; }
+        .corner-br { bottom: -8px; right: -8px; }
+
+        h2 {
+            color: var(--neon-yellow);
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 0 0 10px var(--neon-yellow);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-align: center;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: var(--neon-purple);
+            box-shadow: var(--pixel-shadow);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: var(--deep-blue);
+            border: 3px solid var(--neon-pink);
+            color: var(--text);
+            font-size: 1.2rem;
+            box-shadow: var(--pixel-shadow);
+            font-family: 'VT323', monospace;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-yellow);
+            box-shadow: 0 0 10px var(--neon-yellow);
+        }
+
+        button {
+            background-color: var(--neon-purple);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.3rem;
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--pixel-shadow);
+            border: 3px solid var(--neon-pink);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: var(--neon-pink);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.75);
+        }
+
+        button:active {
+            transform: translate(0, 0);
+            box-shadow: var(--pixel-shadow);
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            transform: rotate(30deg);
+        }
+
+        button:hover::after {
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        .output {
+            margin-top: 30px;
+            border-top: 3px solid var(--neon-purple);
+            padding-top: 20px;
+            font-size: 1.3rem;
+        }
+
+        .output p {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .output span {
+            color: var(--neon-yellow);
+            text-shadow: 0 0 5px var(--neon-yellow);
+            margin-left: 10px;
+            font-weight: normal;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            input, select, button {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            
+            .output {
+                font-size: 1.1rem;
+            }
+            
+            .output span {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="pixel-corner corner-tl"></div>
+    <div class="pixel-corner corner-tr"></div>
+    <div class="pixel-corner corner-bl"></div>
+    <div class="pixel-corner corner-br"></div>
+    
+    <h2>TAX CALCULATION TERMINAL</h2>
+    <form id="taxForm">
+        <label>CORPORATE REVENUE</label>
+        <input type="number" id="revenue" value="{{ total_revenue }}" readonly>
+
+        <label>TOTAL OPERATIONAL COSTS</label>
+        <input type="number" id="expense" value="{{ total_expense }}" readonly>
+
+        <label>GST RATE (%)</label>
+        <select id="gstRate">
+            <option value="5">5% (ESSENTIAL GOODS)</option>
+            <option value="12">12% (STANDARD RATE)</option>
+            <option value="18" selected>18% (DEFAULT RATE)</option>
+            <option value="28">28% (LUXURY ITEMS)</option>
+        </select>
+
+        <label>CORPORATE TAX SLAB</label>
+        <select id="slabRate">
+            <option value="15">MSME (15%)</option>
+            <option value="22">STARTUP (22%)</option>
+            <option value="25">PRIVATE LTD. (25%)</option>
+            <option value="30" selected>DEFAULT (30%)</option>
+        </select>
+
+        <button type="button" onclick="estimateTax()">CALCULATE TAX OBLIGATION</button>
+    </form>
+
+    <div class="output" id="taxOutput"></div>
+</div>
+
+<script>
+function estimateTax() {
+    const revenue = parseFloat(document.getElementById("revenue").value) || 0;
+    const expense = parseFloat(document.getElementById("expense").value) || 0;
+    const gstRate = parseFloat(document.getElementById("gstRate").value) / 100;
+    const slabRate = parseFloat(document.getElementById("slabRate").value) / 100;
+
+    const profit = revenue - expense;
+    const gst = revenue * gstRate;
+    const incomeTax = profit > 0 ? profit * slabRate : 0;
+    const effectiveTaxRate = profit > 0 ? ((gst + incomeTax) / profit) * 100 : 0;
+
+    document.getElementById("taxOutput").innerHTML =
+        `<p>📈 <span>TAXABLE PROFIT:</span> ₹${profit.toFixed(2)}</p>
+         <p>🧾 <span>ESTIMATED GST:</span> ₹${gst.toFixed(2)}</p>
+         <p>💰 <span>ESTIMATED INCOME TAX:</span> ₹${incomeTax.toFixed(2)}</p>
+         <p>⚠️ <span>EFFECTIVE TAX RATE:</span> ${effectiveTaxRate.toFixed(2)}%</p>`;
+}
+</script>
+</body>
+</html>

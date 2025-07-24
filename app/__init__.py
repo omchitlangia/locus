@@ -61,5 +61,11 @@ def create_app():
 
     from app.quiz.routes import quiz_bp
     app.register_blueprint(quiz_bp)
+    
+    from app.tax_estimator.routes import tax_bp
+    app.register_blueprint(tax_bp)
+    
+    from app.currency_converter.routes import currency_bp
+    app.register_blueprint(currency_bp)
 
     return app

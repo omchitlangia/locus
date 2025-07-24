@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Retro Dashboard v2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root {
       --primary-color: #00ffd0;
@@ -421,60 +424,6 @@
       color: #aad9ff;
     }
 
-    .intro-panel {
-      flex: 2;
-      background: var(--card-bg);
-      border: 2px solid var(--primary-color);
-      border-radius: 10px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      box-shadow: 0 0 15px var(--primary-color);
-    }
-
-    .intro-avatars {
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .intro-icon {
-      width: 72px;
-      height: 72px;
-      image-rendering: pixelated;
-    }
-
-    .intro-title {
-      font-size: 1rem;
-      color: var(--secondary-color);
-      margin-bottom: 0.8rem;
-      text-shadow: 1px 1px #000;
-    }
-
-    .intro-subtext {
-      font-size: 0.65rem;
-      color: #aad9ff;
-      margin-bottom: 1.5rem;
-    }
-
-    .get-started-btn {
-      background: linear-gradient(to bottom, #00bfff, #0080ff);
-      color: white;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      font-size: 0.65rem;
-      font-family: 'Press Start 2P', cursive;
-      border-radius: 6px;
-      box-shadow: 3px 3px 0 #000, 0 0 10px #00bfff;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .get-started-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 16px #00bfff;
-    }
-
     .intro-grid {
       display: flex;
       flex-wrap: wrap;
@@ -775,8 +724,109 @@
   color: #aad9ff;
 }
 button:hover, a:hover, .feature-card:hover {
-  cursor: url('static/cursors/r2.png') 2 2, pointer;
+ cursor: url('static/cursors/r2.png') 2 2, pointer;
 }
+
+.quick-note-card {
+  background: #000000;
+  border-left: 7px solid #ffd700;
+  border-radius: 10px;
+  margin-top: 12px;
+  padding: 12px 10px 7px 16px;
+  box-shadow: 0 2px 9px rgba(220, 186, 7, 0.08);
+  min-height: 43px;
+  font-size: 1em;
+  position: relative;
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+}
+.quick-note-card[data-tag="reminder"] { border-color: #90caf9; }
+.quick-note-card[data-tag="urgent"] { border-color: #e57373; }
+.quick-note-card[data-tag="idea"] { border-color: #aed581; }
+.quick-note-card .quick-note-actions {
+  position: absolute; top: 7px; right: 7px; display:flex; gap:8px;
+}
+.quick-note-card .pin-btn { color: #fbc02d; cursor:pointer; font-size:1.20em; background:none; border:none;}
+.quick-note-card .del-btn { color: #c62828; cursor:pointer; background:none;border:none;}
+.quick-note-card .edit-btn { color: #1976d2; cursor:pointer; background:none;border:none; }
+.quick-note-card .tag-label {
+  font-size: .93em; font-weight:bold; padding:2px 7px; border-radius:5px; margin-right:6px;
+}
+.quick-note-card[data-tag="to-do"]   .tag-label { background:#ffe082; color:#665700;}
+.quick-note-card[data-tag="reminder"] .tag-label { background:#bbdefb; color:#095587;}
+.quick-note-card[data-tag="urgent"]   .tag-label { background:#ffcdd2; color:#b71c1c;}
+.quick-note-card[data-tag="idea"]     .tag-label { background: #c8e6c9; color: #255d1d;}
+/* Richtext Highlights */
+.quick-note-card strong { font-weight: bold; background: #fffde9;}
+.quick-note-card ul {margin:4px 0 4px 20px; padding:0;}
+.quick-note-card .highlight { background:#fff59b;border-radius:3px;padding:1px 3px;}
+.quick-note-editing-area {
+  width:96%; min-height:38px; border-radius:6px; border:1.1px solid #ffd54f; padding:3px 7px;
+  margin-bottom:7px; background:#ffffff;
+}
+
+
+@media (max-width: 550px){
+
+  #quickNotesWidget { right: 4vw !important; width: 99vw !important;}
+}
+#quickCalcWidget input {
+  border: 1px solid #ff9800;
+  border-radius: 5px;
+  padding: 4px 7px;
+  margin-bottom: 4px;
+  background: #fffde7;
+  font-size: 1em;
+}
+#quickCalcWidget label { color:#00ffea; }
+#quickCalcWidget button { font-family: 'Press Start 2P', cursive; }
+@media (max-width: 550px){
+  #quickCalcWidget { right: 2vw !important; width: 98vw !important; }
+}
+/* Base Topbar Button Style */
+.topbar-btn {
+  text-decoration: none;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border: 2px solid #00ffd0;
+  border-radius: 4px;
+  background: #0f132a;
+  color: #00ffd0;
+  box-shadow: 3px 3px #000;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-left: 8px;
+}
+
+/* === Notes Button Specific === */
+.topbar-btn.notes-btn {
+  color: #ffd500;
+  border-color: #ffd500;
+}
+
+/* === Calculator Button Specific === */
+.topbar-btn.calculator-btn {
+  color: #76ff88;
+  border-color: #76ff88;
+}
+
+/* === Hover Effects === */
+.topbar-btn.notes-btn:hover {
+  background-color: #ffd500;
+  color: #000;
+  box-shadow: 5px 5px #000;
+}
+
+.topbar-btn.calculator-btn:hover {
+  background-color: #76ff88;
+  color: #000;
+  box-shadow: 5px 5px #000;
+}
+
+
+
   </style>
 </head>
 <body>
@@ -788,18 +838,39 @@ button:hover, a:hover, .feature-card:hover {
           ⚙ Profile
         </button>
       </form>
+      
+        <!-- QUICK NOTES BUTTON (in topbar) -->
+        <button class="topbar-btn notes-btn" id="quickNotesBtn" title="Quick Notes">
+          🗒️ NOTES
+        </button>
+        <!-- Quick Calculator Button in Topbar -->
+        <button class="topbar-btn calculator-btn" id="quickCalcBtn" title="Quick Calculator">
+          🧮 CALC
+        </button>
+      <!-- Suggestion Button in Topbar -->
+      <a href="{{ url_for('feedback.feedback') }}" class="topbar-btn suggestion-btn" title="Send a Suggestion" style="margin-left:12px;">
+        💡 Suggestion
+      </a>
 
       <form action="{{ url_for('auth.logout') }}" method="POST" style="display: inline;">
         <button type="submit" class="topbar-btn logout-btn" onclick="return confirm('Are you sure you want to logout?')">
-          <img src="static/photos/logout.gif" alt="Logout" class="logout-icon">
+          <img src="static/photos/logout.gif" alt="Logout" class="logout-icon" />
           LOGOUT
         </button>
       </form>
       
       <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
       <div class="topbar-profile">
-        <div class="profile-circle">A</div>
+        <a href="{{ url_for('profile.profile') }}" style="display: inline-block; cursor: pointer;">
+          <img 
+            src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) if current_user.profile_pic else url_for('static', filename='photos/default_profile.png') }}" 
+            alt="Profile Picture" 
+            class="profile-pic" 
+            style="width:34px; height:34px; border-radius:50%; object-fit:cover; border: 2px solid #ffd500; box-shadow: 0 0 6px #00ffd0, 2px 2px #000; cursor: pointer;"
+          >
+        </a>
       </div>
+
     </div>
   </div>
 
@@ -841,45 +912,34 @@ button:hover, a:hover, .feature-card:hover {
     </div>
 
     <div class="message-bubble">
-      <img src="static/photos/pc.gif" class="bubble-icon">
+      <img src="static/photos/pc.gif" class="bubble-icon" />
       <div class="bubble-text">Namaste! Welcome back, {{ current_user.username }}! Here's your business analytics dashboard.</div>
     </div>
 
     <div class="intro-grid">
       <div class="side-column">
         <div class="profile">
-          <img src="{{ current_user.avatar_url or url_for('static', filename='photos/avatar.gif') }}" alt="Avatar" id="profile-avatar">
-          <h2 style="margin-bottom:18px;">{{ current_user.username }}</h2>
+          <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
+     class="profile-pic">
+          <h2 style="margin-bottom:18px">{{ current_user.username }}</h2>
           <div class="stats" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
-            <div>
-              <span>🔥 {{ streak_count }} Days Streak</span>
-            </div>
+            <div><span>🔥 {{ streak_count }} Days Streak</span></div>
             <div>
               <span>🏆 Rank
-                {% if user_rank %}
-                  #{{ user_rank }}
-                {% else %}
-                  Unranked
-                {% endif %}
+                {% if user_rank %}#{{ user_rank }}{% else %}Unranked{% endif %}
               </span>
             </div>
-            <div>
-              <span>🧿 {{ achievements_unlocked }} Badges</span>
-            </div>
+            <div><span>🧿 {{ achievements_unlocked }} Badges</span></div>
           </div>
 
           <a href="{{ url_for('profile.profile') }}">
-            <div>
-              <button>VIEW PROFILE</button>
-            </div>
+            <div><button>VIEW PROFILE</button></div>
           </a>
         </div>
 
         <div class="events">
           <h3>Upcoming Events</h3>
-          <div id="upcomingEventsContainer">
-            <div class="no-events">Loading upcoming events...</div>
-          </div>
+          <div id="upcomingEventsContainer"><div class="no-events">Loading upcoming events...</div></div>
         </div>
       </div>
 
@@ -897,6 +957,13 @@ button:hover, a:hover, .feature-card:hover {
             <p>Predict future trends using advanced models and inputs.</p>
           </div>
         </a>
+        <a href="{{ url_for('currency_converter.converter') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>💱 Currency Converter</h3>
+            <p>Convert global currencies in real-time.</p>
+          </div>
+        </a>
+
 
         <a href="{{ url_for('sku.index') }}" class="feature-card">
           <div class="feature-info">
@@ -940,7 +1007,7 @@ button:hover, a:hover, .feature-card:hover {
           </div>
         </a>
 
-        <a href="{{ url_for('achievements.index')}}" class="feature-card">
+        <a href="{{ url_for('achievements.index') }}" class="feature-card">
           <div class="feature-info">
             <h3>🏆 Achievements</h3>
             <p>Track your unlocked business milestones and goals.</p>
@@ -953,6 +1020,24 @@ button:hover, a:hover, .feature-card:hover {
             <p>See how you rank compared to others in performance.</p>
           </div>
         </a>
+
+        <a href="{{ url_for('tax_estimator.tax_estimator') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🧾 Tax Estimator Tool</h3>
+            <p>Estimate GST and income tax based on your revenue and expenses.</p>
+          </div>
+        </a>
+        <a href="{{ url_for('quiz.quiz') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🧠 Quiz</h3>
+            <p>Insightful. Fun. Reveals your unique traits..</p>
+          </div>
+        </a>
+        <a href="{{ url_for('feedback.feedback') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>💲 Feedback</h3>
+            <p>Predict future trends using advanced models and inputs.</p>
+          </div>
         </a>
       </div>
     </div>
@@ -975,7 +1060,7 @@ button:hover, a:hover, .feature-card:hover {
   <!-- Music Controls -->
   <div id="musicControls">
     <audio id="bgMusic" loop>
-      <source src="static/audio/track1.mp3" type="audio/mpeg">
+      <source src="static/audio/track1.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
     <div id="currentTrack">🎵 Track: <span id="trackNum">1</span></div>
@@ -988,7 +1073,7 @@ button:hover, a:hover, .feature-card:hover {
 
   <!-- Click Sound -->
   <audio id="clickSound" preload="auto">
-    <source src="static/audio/click.mp3" type="audio/mpeg">
+    <source src="static/audio/click.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -1199,38 +1284,7 @@ button:hover, a:hover, .feature-card:hover {
       });
     });
 
-    // ===== DARK MODE TOGGLE =====
-    document.addEventListener('DOMContentLoaded', function () {
-      const toggleBtn = document.getElementById("darkModeToggle");
-
-      function enableLight() {
-        document.body.classList.add("light-mode");
-        document.body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light");
-        toggleBtn.textContent = "🌙";
-      }
-
-      function enableDark() {
-        document.body.classList.add("dark-mode");
-        document.body.classList.remove("light-mode");
-        localStorage.setItem("theme", "dark");
-        toggleBtn.textContent = "☀️";
-      }
-
-      if (localStorage.getItem("theme") === "light") {
-        enableLight();
-      } else {
-        enableDark();
-      }
-
-      toggleBtn.addEventListener("click", () => {
-        if (document.body.classList.contains("light-mode")) {
-          enableDark();
-        } else {
-          enableLight();
-        }
-      });
-    });
+    
 
     // ===== LOAD EVENTS =====
     function loadUpcomingEvents() {
@@ -1310,6 +1364,7 @@ button:hover, a:hover, .feature-card:hover {
   <script async data-id="6419857222" id="chtl-script" type="text/javascript" 
     src="https://chatling.ai/js/embed.js">
   </script>
+
   <script>
   document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('healthGauge').getContext('2d');
@@ -1340,18 +1395,223 @@ button:hover, a:hover, .feature-card:hover {
     });
   });
 </script>
-<audio id="btn-sound" src="static/audio/click.mp3" preload="auto"></audio>
-<script>
-  const buttonSound = document.getElementById('btn-sound');
+  <audio id="btn-sound" src="static/audio/click.mp3" preload="auto"></audio>
+  <script>
+    const buttonSound = document.getElementById('btn-sound');
 
-  // Attach to all buttons
-  document.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttonSound.currentTime = 0; // rewind to start
-      buttonSound.play();
+    // Attach to all buttons
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttonSound.currentTime = 0; // rewind to start
+        buttonSound.play();
+      });
     });
+  </script>
+
+</div>
+    <!-- QUICK NOTES WIDGET PANEL -->
+    <div id="quickNotesWidget" style="display:none;position:fixed;top:67px;right:35px;width:360px;max-width:94vw;max-height:84vh;overflow-y:auto;z-index:2500;background:#04011f;box-shadow:0 4px 24px rgba(0,0,0,.19);border-radius:14px;padding:0 0 18px 0;">
+      <div style="padding:14px 18px 8px 18px;border-bottom:1px solid #000000;display:flex;justify-content:space-between;align-items:center;">
+        <b>Quick Notes</b>
+        <button onclick="toggleNotesWidget()" style="border:none;background:none;font-size:1.4em;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:12px 18px 9px 18px;">
+        <div style="display:flex;gap:8px;">
+          <input id="newNoteText" style="flex:1;padding:6px 7px;font-size:1em;border:1.3px solid #efd700;border-radius:6px;background:#fff8c6;" placeholder="Add a note! Try *bold*, - bullet, ~highlight~" onkeydown="if(event.key==='Enter'){addNote()}">
+          <select id="noteTagSelect" style="padding:4px 5px;border-radius:5px;border:1px solid #000000;background:#fff7b2;">
+            <option value="to-do">To-Do</option>
+            <option value="reminder">Reminder</option>
+            <option value="urgent">Urgent</option>
+            <option value="idea">Idea</option>
+          </select>
+          <button onclick="addNote()" style="background:#ffd54f;border:none;border-radius:7px;padding:5px 9px;font-size:.99em;">＋</button>
+        </div>
+      </div>
+      <div id="notesList" style="padding:6px 16px 16px 16px;"></div>
+    </div>
+
+
+
+  <script>
+  function toggleNotesWidget() {
+    const el = document.getElementById('quickNotesWidget');
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  }
+  document.getElementById('quickNotesBtn').onclick = toggleNotesWidget;
+
+  let quickNotes = JSON.parse(localStorage.getItem('quickNotes_data')||"[]");
+
+  function renderNotes() {
+    // Pin notes to top, urgent above others
+    const sorted = [...quickNotes].sort((a,b) => (b.pinned||0)-(a.pinned||0) || (b.tag==='urgent')-(a.tag==='urgent') || b.ts-a.ts);
+    let html = '';
+    sorted.forEach((note, i) => {
+      // Simple markdown-like formatting
+      let txt = note.text
+        .replace(/\*([^\*]+)\*/g,'<strong>$1</strong>')           // *bold*
+        .replace(/\~([^\~]+)\~/g,'<span class="highlight">$1</span>'); // ~highlight~
+      // Bullet points: - text
+      if (txt.includes('- ')) txt = '<ul>' + txt.split('\n').map(line=>line.startsWith('- ')?'<li>'+line.slice(2)+'</li>':'').join('') + '</ul>';
+      html += `<div class="quick-note-card" data-tag="${note.tag||'to-do'}">
+        <span class="tag-label">${note.tag ? note.tag.replace(/^\w/,c=>c.toUpperCase()) : "To-Do"}</span>
+        <span class="quick-note-content" id="note-content-${i}">${txt}</span>
+        <div class="quick-note-actions">
+          <button class="pin-btn" title="Pin" onclick="pinNote(${i})">${note.pinned?'📌':'📍'}</button>
+          <button class="edit-btn" title="Edit" onclick="editNote(${i})">✏️</button>
+          <button class="del-btn" title="Delete" onclick="deleteNote(${i})">🗑️</button>
+        </div>
+      </div>`;
+    });
+    document.getElementById('notesList').innerHTML = html||"<div style='color:#aaa;margin-top:18px;'>No notes yet.</div>";
+  }
+
+  function addNote() {
+    let text = document.getElementById('newNoteText').value.trim();
+    let tag  = document.getElementById('noteTagSelect').value;
+    if (!text) return;
+    quickNotes.push({text, tag, pinned:false, ts:Date.now()});
+    document.getElementById('newNoteText').value = '';
+    autoSaveNotes();
+  }
+  function deleteNote(idx) {
+    if (confirm("Delete this note?")) quickNotes.splice(idx,1);
+    autoSaveNotes();
+  }
+  function pinNote(idx) {
+    quickNotes[idx].pinned = !quickNotes[idx].pinned;
+    autoSaveNotes();
+  }
+  function editNote(idx) {
+    const note = quickNotes[idx];
+    let area = document.createElement('textarea');
+    area.value = note.text;
+    area.className = "quick-note-editing-area";
+    let saveBtn = document.createElement('button');
+    saveBtn.textContent = "Save";
+    saveBtn.style = "margin-right:5px;background:#ffe082;border:none;border-radius:6px;padding:4px 10px;";
+    saveBtn.onclick = function(){
+      note.text = area.value.trim();
+      autoSaveNotes();
+    };
+    let cancelBtn = document.createElement('button');
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.style = "background:#fff;border:none;color:#d32f2f;border-radius:6px;padding:4px 10px;";
+    cancelBtn.onclick = renderNotes;
+    let parent = document.getElementById('note-content-'+idx).parentNode;
+    parent.querySelector('.quick-note-content').replaceWith(area);
+    parent.querySelector('.quick-note-actions').innerHTML = '';
+    parent.querySelector('.quick-note-actions').appendChild(saveBtn);
+    parent.querySelector('.quick-note-actions').appendChild(cancelBtn);
+    area.focus();
+  }
+  function autoSaveNotes() {
+    localStorage.setItem('quickNotes_data', JSON.stringify(quickNotes));
+    renderNotes();
+  }
+  // INITIAL LOAD
+  renderNotes();
+  </script>
+    <!-- Quick Calculator Widget Panel -->
+    <div id="quickCalcWidget" style="display:none;position:fixed;top:67px;right:35px;width:340px;max-width:95vw;z-index:2000;background:#000000;box-shadow:0 6px 24px rgba(0,0,0,0.18);border-radius:16px;padding:0 0 18px 0;">
+      <div style="padding:15px 20px 10px 20px;border-bottom:1px solid #ffe082;display:flex;justify-content:space-between;align-items:center;">
+        <b style="color:#ff9800;">Quick Calculator</b>
+        <button onclick="toggleCalcWidget()" style="border:none;background:none;font-size:1.3em;cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:16px 22px 6px 22px;">
+        <div style="margin-bottom:22px;">
+          <label style="font-weight:bold;">Gross Margin (%)</label><br>
+          <input type="number" id="gm-revenue" placeholder="Revenue" style="width:82px;margin:8px 3px 0 0;">
+          <input type="number" id="gm-cogs" placeholder="COGS" style="width:72px;margin:8px 3px 0 0;">
+          <button onclick="calcGrossMargin()" style="background:#ff9800;color:#fff;border:none;padding:3px 10px;border-radius:7px;cursor:pointer;font-size:.96em;">Calc</button>
+          <div id="gm-result" style="margin-top:6px;font-size:.98em;color:#222;"></div>
+        </div>
+        <div>
+          <label style="font-weight:bold;">Customer Acquisition Cost</label><br>
+          <input type="number" id="cac-total" placeholder="Total Spend" style="width:82px;margin:8px 3px 0 0;">
+          <input type="number" id="cac-customers" placeholder="# Customers" style="width:88px;margin:8px 3px 0 0;">
+          <button onclick="calcCAC()" style="background:#ff9800;color:#fff;border:none;padding:3px 10px;border-radius:7px;cursor:pointer;font-size:.96em;">Calc</button>
+          <div id="cac-result" style="margin-top:6px;font-size:.98em;color:#222;"></div>
+        </div>
+      </div>
+    </div>
+  <script>
+  // Widget toggle logic
+  function toggleCalcWidget() {
+    const widget = document.getElementById('quickCalcWidget');
+    widget.style.display = (widget.style.display === 'block') ? 'none' : 'block';
+  }
+  document.getElementById('quickCalcBtn').onclick = toggleCalcWidget;
+  window.addEventListener('mousedown', function(e) {
+    const widget = document.getElementById('quickCalcWidget');
+    const btn = document.getElementById('quickCalcBtn');
+    if(widget.style.display === 'block' && !widget.contains(e.target) && !btn.contains(e.target))
+      widget.style.display = 'none';
   });
-  
-</script>
+  // Calculator functions
+  function calcGrossMargin() {
+    const rev = parseFloat(document.getElementById('gm-revenue').value);
+    const cogs = parseFloat(document.getElementById('gm-cogs').value);
+    const res = document.getElementById('gm-result');
+    if(isNaN(rev)||isNaN(cogs) || rev===0) {
+      res.textContent = "Enter valid numbers.";
+      res.style.color = '#e53935';
+      return;
+    }
+    const margin = ((rev - cogs) / rev) * 100;
+    res.textContent = "Gross Margin: " + margin.toFixed(2) + "%";
+    res.style.color = '#388e3c';
+  }
+  function calcCAC() {
+    const spend = parseFloat(document.getElementById('cac-total').value);
+    const customers = parseFloat(document.getElementById('cac-customers').value);
+    const res = document.getElementById('cac-result');
+    if(isNaN(spend)||isNaN(customers)||customers===0) {
+      res.textContent = "Enter valid numbers.";
+      res.style.color = '#e53935';
+      return;
+    }
+    const cac = spend / customers;
+    res.textContent = "CAC: ₹" + cac.toFixed(2);
+    res.style.color = '#388e3c';
+  }
+  </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById("darkModeToggle");
+
+    // Apply stored theme on page load
+    if (localStorage.getItem("theme") === "light") {
+      enableLight();
+    } else {
+      enableDark();
+    }
+
+    // Toggle mode on click
+    toggleBtn.addEventListener("click", () => {
+      if (document.body.classList.contains("light-mode")) {
+        enableDark();
+      } else {
+        enableLight();
+      }
+    });
+
+    function enableLight() {
+      document.body.classList.add("light-mode");
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+      toggleBtn.textContent = "🌙";
+    }
+
+    function enableDark() {
+      document.body.classList.add("dark-mode");
+      document.body.classList.remove("light-mode");
+      localStorage.setItem("theme", "dark");
+      toggleBtn.textContent = "☀️";
+    }
+  });
+  </script>
+
+
+    
 </body>
 </html>
