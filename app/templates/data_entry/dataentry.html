@@ -142,19 +142,19 @@
     <div class="summary-cards">
       <div class="card">
         <h3>Total Revenue</h3>
-        <div class="amount">₹{{ total_revenue }}</div>
+        <div class="amount">₹{{ total_revenue | round(2) }}</div>
       </div>
       <div class="card">
         <h3>Fixed Costs</h3>
-        <div class="amount">₹{{ total_fixed }}</div>
+        <div class="amount">₹{{ total_fixed | round(2) }}</div>
       </div>
       <div class="card">
         <h3>Variable Costs</h3>
-        <div class="amount">₹{{ total_variable }}</div>
+        <div class="amount">₹{{ total_variable | round(2) }}</div>
       </div>
       <div class="card {% if profit >= 0 %}profit{% else %}loss{% endif %}">
         <h3>Total Profit</h3>
-        <div class="amount">₹{{ profit }}</div>
+        <div class="amount">₹{{ profit | round(2) }}</div>
       </div>
     </div>
 
