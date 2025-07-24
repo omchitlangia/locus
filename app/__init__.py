@@ -55,4 +55,8 @@ def create_app():
 
     from app.daily_streak.routes import streak_bp
     app.register_blueprint(streak_bp)
+
+    from app.feedback.routes import feedback_bp
+    app.register_blueprint(feedback_bp)
+
     return app
