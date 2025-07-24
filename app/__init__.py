@@ -47,10 +47,12 @@ def create_app():
 
     from app.business_health.routes import health_bp
     app.register_blueprint(health_bp)
+
     from app.profilepage.routes import profile_bp
     app.register_blueprint(profile_bp)
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
 
-
+    from app.daily_streak.routes import streak_bp
+    app.register_blueprint(streak_bp)
     return app

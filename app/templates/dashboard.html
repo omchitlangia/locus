@@ -848,14 +848,26 @@ button:hover, a:hover, .feature-card:hover {
     <div class="intro-grid">
       <div class="side-column">
         <div class="profile">
-          <img src="static/photos/avatar.gif" alt="Avatar" id="profile-avatar" onclick="cycleAvatar()">
-          <h2>{{ current_user.username }}</h2>
-          <p class="level">Level 1</p>
-          <div class="stats">
-            <div><span>🧿 0</span>Badges</div>
-            <div><span>🥉 Bronze</span>Rank</div>
-            <div><span>🔥 1</span>Day Streak</div>
+          <img src="{{ current_user.avatar_url or url_for('static', filename='photos/avatar.gif') }}" alt="Avatar" id="profile-avatar">
+          <h2 style="margin-bottom:18px;">{{ current_user.username }}</h2>
+          <div class="stats" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+            <div>
+              <span>🔥 {{ streak_count }} Days Streak</span>
+            </div>
+            <div>
+              <span>🏆 Rank
+                {% if user_rank %}
+                  #{{ user_rank }}
+                {% else %}
+                  Unranked
+                {% endif %}
+              </span>
+            </div>
+            <div>
+              <span>🧿 {{ achievements_unlocked }} Badges</span>
+            </div>
           </div>
+
           <a href="{{ url_for('profile.profile') }}">
             <div>
               <button>VIEW PROFILE</button>
@@ -940,6 +952,7 @@ button:hover, a:hover, .feature-card:hover {
             <h3>🥇 Leaderboard</h3>
             <p>See how you rank compared to others in performance.</p>
           </div>
+        </a>
         </a>
       </div>
     </div>
@@ -1338,6 +1351,7 @@ button:hover, a:hover, .feature-card:hover {
       buttonSound.play();
     });
   });
+  
 </script>
 </body>
 </html>

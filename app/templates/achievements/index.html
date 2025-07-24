@@ -4,136 +4,238 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Achievements</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --gold: #ffd274;
+            --pink: #fc5ca4;
+            --cyan: #5cfce4;
+            --bg: #181030;
+            --bg2: #22213a;
+            --border: #343471;
+            --accent-cyan: #3cfadf;
+            --accent-pink: #fd6da9;
+            --btn-gold: #ffe8b7;
+            --btn-text: #553c1a;
+        }
         body {
-            font-family: 'Courier New', monospace;
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            font-family: 'Press Start 2P', monospace;
+            background: 
+                linear-gradient(120deg, var(--bg) 64%, var(--bg2) 100%),
+                radial-gradient(circle 600px at 85% 15%, #21125a77 0, transparent 85%),
+                radial-gradient(circle 500px at 12% 92%, #45ffd44c 0, transparent 88%);
+            background-blend-mode: lighten, lighten, normal;
+            box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden;
         }
-        .header {
+        body::before {
+            content: '';
+            position: fixed; z-index: 0; left: 0; top: 0;
+            width: 100vw; height: 100vh; pointer-events: none;
+            opacity: 0.1;
+            background: 
+                linear-gradient(0deg, var(--cyan) 1.1px, transparent 1.1px 54px),
+                linear-gradient(90deg, var(--cyan) 1.1px, transparent 1.1px 54px);
+            background-size: 54px 54px;
+        }
+        h1 {
             text-align: center;
-            margin-bottom: 30px;
+            font-size: 1.25em;
+            color: var(--gold);
+            margin: 48px 0 16px 0;
+            letter-spacing: 0.045em;
+            text-shadow: 0 2px 8px #fc5ca448;
         }
-        .header h1 {
-            color: #55FF55;
-            text-shadow: 2px 2px #0a0a0a;
-            font-size: 2.5em;
+        p.header-desc {
+            text-align: center;
+            color: var(--cyan);
+            font-size: 1.03em;
+            margin-bottom: 2.3rem;
+            font-weight: 600;
         }
-        .badge-grid {
+        #achievements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 32px 28px;
+            max-width: 1100px;
+            margin: 0 auto 56px auto;
+            padding: 0 32px 65px 32px;
+            z-index: 2;
+            position: relative;
         }
-        .badge {
-            background: #333;
-            border: 4px solid #555;
-            padding: 15px;
-            text-align: center;
-            image-rendering: pixelated;
-            transition: all 0.3s ease;
+        /* Fix for overlapping: flex will stretch to fill height, min-height used for large, but overall force a fixed height per card for cleanliness */
+        .achievement-card {
+            background: rgba(30,26,50,0.98);
+            border-radius: 15px;
+            border: 2px solid var(--border);
+            box-shadow: 0 2px 12px -6px #18165225;
+            padding: 38px 20px 24px 20px; /* Ensure more padding at the bottom for footer */
+            min-height: 340px;
+            max-width: 367px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* The fix: force contents to never overlap by keeping flex column and add overflow auto for extra-tall cards. */
+            position: relative;
+            transition: background 0.12s, border 0.11s, box-shadow 0.13s, transform 0.12s;
+            height: 340px;
+            box-sizing: border-box;
+            justify-content: flex-start;
         }
-        .badge.unlocked {
-            border-color: #55FF55;
-            box-shadow: 0 0 15px #55FF55;
+        .achievement-card.unlocked {
+            border-color: var(--accent-cyan);
+            background: linear-gradient(122deg, #191f2f 68%, #22edda 151%);
         }
-        .pixel-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 10px;
-            image-rendering: pixelated;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+        .achievement-card.locked {
+            border: 2px dashed #8882aa;
+            background: linear-gradient(117deg, #221840 54%, #16162c 108%);
+            opacity: 0.62;
         }
-        .progress-container {
-            margin: 15px 0;
+        .achievement-card:hover {
+            background: #25244c;
+            border-color: var(--pink);
+            box-shadow: 0 8px 32px 1.5px #5cfce433;
+            transform: translateY(-1.5px) scale(1.013);
+            z-index: 1;
         }
-        .progress-bar {
-            background: #222;
-            height: 10px;
-            border-radius: 5px;
+        .badge-img-area {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--pink) 26%, var(--gold) 94%);
+            border-radius: 50%;
+            border: 2.5px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            margin-top: -18px;
+            box-shadow: 0 2px 8px #fffadd15;
             overflow: hidden;
         }
-        .progress-fill {
-            background: #55FF55;
-            height: 100%;
-            transition: width 0.5s ease;
+        .badge-img-area img {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #221d36;
+            border: 2px solid #fff3;
         }
-        .progress-text {
-            margin-top: 5px;
-            font-size: 0.8em;
+        .achievement-title {
+            font-size: 1.03em;
+            color: var(--pink);
+            margin-bottom: 7px;
+            margin-top: 2px;
+            text-align: center;
+            letter-spacing: 0.017em;
+            word-break: break-word;
         }
-        .locked-text {
-            color: #FF5555;
+        .achievement-desc {
+            font-size: 0.85em;
+            color: #eafdff;
+            margin-bottom: 12px;
+            text-align: center;
         }
-        .unlocked-text {
-            color: #55FF55;
+        .progress-meta {
+            font-size: 0.80em;
+            color: var(--gold);
+            margin-bottom: 9px;
+            text-align: center;
         }
-        .unlocked-date {
-            font-size: 0.9em;
-            margin-top: 3px;
-            opacity: 0.8;
+        /* The fix: footer is always at the card's bottom (flex:1 used above) */
+        .card-footer {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            min-height: 40px;
+        }
+        .status {
+            font-size: 0.83em;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 8px 17px 7px 17px;
+            min-width: 130px;
+            text-align: center;
+            background: linear-gradient(94deg, #ffe8b7 61%, #f8ddb9 100%);
+            color: #3e3413;
+            border: 1.5px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .status.unlocked {
+            background: linear-gradient(94deg, #fff7d8 70%, #f7e4b9 100%);
+            color: #3a3207;
+            border: 1.6px solid var(--gold);
+        }
+        .status.locked {
+            background: linear-gradient(92deg, #2e1c45 86%, #18151f 100%);
+            color: #fc5ca4;
+            border: 1.5px solid #bdb4cc;
+        }
+        .status .date {
+            font-size: 0.75em;
+            color: #b5962b;
+            margin-left: 13px;
+            padding-left: 11px;
+            border-left: 1.6px solid #ffe8b794;
+        }
+        .unlock-btn {
+            display: none !important;
+        }
+        @media (max-width: 840px) {
+            #achievements-grid {
+                grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
+                gap: 16px 6px;
+                padding: 0 3vw 21px 3vw;
+            }
+            .achievement-card {
+                padding: 13px 4px 7px 4px;
+                min-height: 122px;
+                height: 210px;
+            }
+            .badge-img-area { width: 42px; height: 42px; margin-top: -8px; margin-bottom: 8px;}
+            .badge-img-area img { width: 32px; height: 32px; }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>⛏️ Achievements</h1>
-    </div>
-
-    <div class="badge-grid">
+    <h1>Achievements</h1>
+    <p class="header-desc">Level Up Your Legacy: Unlock, Collect, Conquer!</p>
+    <section id="achievements-grid">
         {% for achievement in achievements %}
-        <div class="badge {% if not achievement.is_locked %}unlocked{% endif %}">
-            <div class="pixel-icon" 
-                 style="background-image: url('/static/pixel_icons/{{ achievement.icon }}.png')"></div>
-            <h3>{{ achievement.name }}</h3>
-            <p>{{ achievement.description }}</p>
-            
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" 
-                         style="width: {{ (achievement.progress / achievement.required_progress) * 100 }}%"></div>
-                </div>
-                <div class="progress-text">
-                    {{ achievement.progress }}/{{ achievement.required_progress }} 
-                    ({{ ((achievement.progress / achievement.required_progress) * 100)|round }}%)
-                </div>
+        <div class="achievement-card {% if not achievement.is_locked %}unlocked{% else %}locked{% endif %}">
+            <span class="badge-img-area">
+                <img src="/static/badges/{{ achievement.icon }}.png" alt="badge">
+            </span>
+            <div class="achievement-title">{{ achievement.name }}</div>
+            <div class="achievement-desc">{{ achievement.description }}</div>
+            <div class="progress-meta">
+                {{ achievement.progress }}/{{ achievement.required_progress }}
+                ({{ ((achievement.progress / achievement.required_progress) * 100)|round }}%)
             </div>
-            
-            {% if achievement.is_locked %}
-                <p class="locked-text"><i class="fas fa-lock"></i> Locked</p>
-            {% else %}
-                <div class="unlocked-text">
-                    <i class="fas fa-unlock"></i> Unlocked
-                    {% if achievement.unlocked_at %}
-                        <div class="unlocked-date">
-                            {{ achievement.unlocked_at.strftime('%b %d, %Y') }}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
+            <div class="card-footer">
+                {% if achievement.is_locked %}
+                    <span class="status locked">Locked</span>
+                {% else %}
+                    <span class="status unlocked">
+                        Unlocked
+                        {% if achievement.unlocked_at %}
+                            <span class="date">{{ achievement.unlocked_at.strftime('%b %d, %Y') }}</span>
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </div>
         </div>
         {% endfor %}
-    </div>
-
-    <script>
-        // Achievement cards animation
-        document.addEventListener('DOMContentLoaded', () => {
-            const badges = document.querySelectorAll('.badge');
-            badges.forEach((badge, index) => {
-                badge.style.opacity = 0;
-                badge.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    badge.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                    badge.style.opacity = 1;
-                    badge.style.transform = 'translateY(0)';
-                }, index * 100);
-            });
-        });
-    </script>
+    </section>
 </body>
 </html>
