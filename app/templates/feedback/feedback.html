@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ffd0;
+            --secondary-color: #ffd500;
+            --bg-color: #090c1a;
+            --card-bg: #14172b;
+            --text-color: #e4f1fe;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .feedback-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 2rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 208, 0.3);
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .feedback-header h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feedback-header p {
+            font-size: 0.8rem;
+            color: #aad9ff;
+        }
+
+        .rating-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .star-rating {
+            display: inline-block;
+            font-size: 2rem;
+            unicode-bidi: bidi-override;
+            direction: rtl;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #555;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: all 0.2s;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: var(--secondary-color);
+            text-shadow: 0 0 5px rgba(255, 213, 0, 0.5);
+        }
+
+        .rating-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #aad9ff;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #aad9ff;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 1rem;
+            background: #0f132a;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            resize: none;
+        }
+
+        .counter {
+            text-align: right;
+            font-size: 0.7rem;
+            color: #aad9ff;
+            margin-top: 0.3rem;
+        }
+
+        .submit-btn {
+            background: var(--secondary-color);
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: #e6b800;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 184, 0, 0.4);
+        }
+
+        .submit-btn i {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <div class="feedback-header">
+            <h1>Share Your Feedback</h1>
+            <p>We value your input to help us improve</p>
+        </div>
+        
+        <form method="POST" action="{{ url_for('feedback.feedback') }}" class="feedback-form">
+            <div class="rating-container">
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" checked>
+                    <label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1">★</label>
+                </div>
+                <div class="rating-labels">
+                    <span>Poor</span>
+                    <span>Excellent</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="feedback">Your Feedback (100 words max)</label>
+                <textarea id="feedback" name="feedback" 
+                          placeholder="What do you think about our service?"
+                          maxlength="500" required></textarea>
+                <div class="counter"><span id="word-count">0</span>/100 words</div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('feedback');
+            const wordCount = document.getElementById('word-count');
+            
+            textarea.addEventListener('input', function() {
+                const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                const count = words.length > 100 ? 100 : words.length;
+                
+                wordCount.textContent = count;
+                
+                if (count >= 100) {
+                    wordCount.style.color = '#ff6363';
+                    if (words.length > 100) {
+                        this.value = words.slice(0, 100).join(' ');
+                    }
+                } else {
+                    wordCount.style.color = '#aad9ff';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
