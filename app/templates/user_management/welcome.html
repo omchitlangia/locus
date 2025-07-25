@@ -275,27 +275,7 @@
       margin: 0 auto;
     }
 
-    .feature-card {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: slideUp 0.6s ease forwards;
-      animation-play-state: paused;
-      background: linear-gradient(135deg, #1f233a, #15182f);
-      border: 3px solid #00ffd0;
-      border-radius: 16px;
-      padding: 1.5rem;
-      text-align: left;
-      box-shadow: 0 6px 20px rgba(0, 255, 208, 0.3), inset 0 0 8px rgba(255, 255, 255, 0.1);
-    }
-
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Footer */
+        /* Footer */
     footer.footer {
       background-color: #090c1a;
       border-top: 4px solid #00ffd0;
@@ -320,12 +300,6 @@
       padding: 1rem;
       font-size: 0.65rem;
     }
-    .feature-card p {
-  font-size: 0.7rem;
-  line-height: 1.5;
-  font-family: 'Arial', sans-serif; /* ✅ restore clean text */
-  color: #aad9ff;
-}
 footer.footer,
 .footer-bottom {
   font-family: 'Arial', sans-serif;
@@ -523,7 +497,6 @@ body.light-mode .retro-img {
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
-      font-family: 'VT323', monospace;
       font-size: 1rem;
       color: #00ff00;
       line-height: 1.8;
@@ -541,6 +514,10 @@ body.light-mode .retro-img {
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
+        #loading-screen,
+#loading-steps {
+  font-family: 'Press Start 2P', cursive !important;
+}
 /* Replace the existing .sprite CSS with this */
 .sprite {
   width: 64px;
@@ -693,6 +670,488 @@ body.light-mode .retro-img {
       rotateZ(1deg)
       translateZ(-10px);
   }
+    .coin-image {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 0 #000);
+}
+.sprite-group {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.6rem; /* 🔧 Reduced from 1.5rem */
+  z-index: 99999;
+}
+
+.sprite-unit {
+  width: 90px;
+  height: auto;
+  image-rendering: pixelated;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  animation: floatGroup 2.5s ease-in-out infinite;
+}
+
+@keyframes floatGroup {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.topbar-sprite {
+  width: 48px;
+  height: 48px;
+  background-image: url('static/sprites/wiz_sw.gif'); /* new static sheet */
+  animation:
+    walk-side 0.7s steps(8) infinite,
+    move-left-right 20s linear infinite;
+  image-rendering: pixelated;
+  position: absolute;
+  top: 10px;
+  left: -48px;
+  z-index: 2000;
+  transform: scale(1.4);
+  filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+}
+
+@keyframes walk-side {
+  from { background-position: 0 0; }
+  to   { background-position: -384px 0; }
+}
+
+
+@keyframes move-left-right {
+  0% { left: -60px; }
+  50% { left: calc(100% + 60px); }
+  100% { left: -60px; }
+}
+/* Interactive Sprites */
+.interactive-sprite {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  image-rendering: pixelated;
+  filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.5));
+}
+
+.interactive-sprite:hover {
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(5px 5px 0 rgba(0,0,0,0.5)) brightness(1.2);
+}
+
+/* Hero section sprites */
+.hero-sprite {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* Feature card sprites */
+.feature-sprite {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-sprite {
+  opacity: 1;
+  transform: translateY(-10px);
+}
+
+/* Sprite animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.sprite-1 { background-image: url('static/sprites/sprite1.png'); }
+.sprite-2 { background-image: url('static/sprites/sprite2.png'); }
+.sprite-3 { background-image: url('static/sprites/sprite3.png'); }
+/* Transformation Sequence */
+
+
+/* Floating Sprite Styles */
+.section-sprite {
+  width: 150px; /* Increased size */
+  height: 150px;
+  image-rendering: pixelated;
+  filter: 
+    drop-shadow(4px 4px 0 rgba(0,0,0,0.7))
+    drop-shadow(0 0 10px rgba(250, 204, 21, 0.5));
+  transition: all 0.4s ease;
+  animation: float-gently 4s ease-in-out infinite;
+  background: transparent !important; /* Remove any background */
+  border: none !important; /* Remove any border */
+  box-shadow: none !important; /* Remove any box shadow */
+}
+
+/* Sprite positioning */
+.sprite-photo-pair {
+  position: relative;
+  display: inline-block;
+}
+
+.section-sprite {
+  position: absolute;
+  z-index: 10;
+}
+
+/* Position sprites beside photos */
+.split-section:nth-child(odd) .section-sprite {
+  right: -40px;
+  bottom: 20px;
+}
+
+.split-section:nth-child(even) .section-sprite {
+  left: -40px;
+  bottom: 20px;
+}
+
+/* Hover effects */
+.section-sprite:hover {
+  transform: scale(1.15) translateY(-5px);
+  filter: 
+    drop-shadow(4px 4px 0 rgba(0,0,0,0.7))
+    drop-shadow(0 0 15px rgba(250, 204, 21, 0.7));
+}
+
+/* Floating animation */
+@keyframes float-gently {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section-sprite {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .split-section:nth-child(odd) .section-sprite {
+    right: -20px;
+    bottom: 10px;
+  }
+  
+  .split-section:nth-child(even) .section-sprite {
+    left: -20px;
+    bottom: 10px;
+  }
+}
+.bonus-text {
+  font-size: 0.7rem;
+  color: #facc15;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-left: 3px solid #00ffd0;
+  font-style: italic;
+}
+/* Split Section Alignment */
+.split-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 2rem;
+  background-color: #0e132a;
+}
+
+.split-text, .split-image {
+  flex: 1 1 45%;
+  min-width: 300px;
+  padding: 1.5rem;
+}
+
+.split-text h2 {
+  font-size: 1.2rem;
+  color: #facc15;
+  margin-bottom: 1.2rem;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+}
+
+.split-text p {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  color: #aad9ff;
+}
+
+/* Pro Tip Styling */
+.pro-tip {
+  background: rgba(0, 255, 208, 0.1);
+  border-left: 3px solid #00ffd0;
+  padding: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border-radius: 0 8px 8px 0;
+}
+
+.pro-tip p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #facc15;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.tip-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 2px #facc15);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .split-text, .split-image {
+    flex: 1 1 100%;
+    padding: 1rem 0;
+  }
+  
+  .split-section {
+    flex-direction: column;
+    padding: 2rem 1rem;
+  }
+  
+  .split-section:nth-child(even) {
+    flex-direction: column-reverse;
+  }
+}
+.feature-sprite {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  bottom: -30px;
+  right: -20px;
+  opacity: 0;
+  transform: scale(0.5) rotate(-10deg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(4px 4px 0 #000);
+  z-index: 2;
+}
+
+.feature-card:hover .feature-sprite {
+  opacity: 1;
+  transform: scale(1) rotate(5deg);
+  filter: 
+    drop-shadow(4px 4px 0 #000)
+    drop-shadow(0 0 12px rgba(250, 204, 21, 0.7));
+}
+
+/* Individual sprite positioning */
+.feature-card:nth-child(1) .feature-sprite { right: -15px; bottom: -25px; } /* Report Generator */
+.feature-card:nth-child(2) .feature-sprite { right: -25px; bottom: -15px; } /* Dashboards */
+.feature-card:nth-child(3) .feature-sprite { right: -10px; bottom: -30px; } /* Simulator */
+.feature-card {
+  position: relative; /* Required for absolute positioning of sprite */
+  overflow: visible; /* Allows sprite to appear outside card */
+}
+
+.feature-sprite {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  bottom: -30px;
+  right: -20px;
+  opacity: 0;
+  transform: scale(0.5) rotate(-10deg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(4px 4px 0 #000);
+  z-index: 2;
+}
+
+.feature-card:hover .feature-sprite {
+  opacity: 1;
+  transform: scale(1) rotate(5deg);
+  filter: 
+    drop-shadow(4px 4px 0 #000)
+    drop-shadow(0 0 12px rgba(250, 204, 21, 0.7));
+}
+
+/* Pixel art styling for the sprite */
+.feature-sprite img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.feature-card {
+  z-index: 1;
+}
+.feature-sprite {
+  z-index: 10;
+}
+.feature-card {
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+  /* other existing styles */
+}
+
+.feature-sprite {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  bottom: -30px;
+  right: -20px;
+  opacity: 0;
+  transform: scale(0.5) rotate(-10deg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(4px 4px 0 #000);
+  z-index: 2;
+}
+
+.feature-card:hover .feature-sprite {
+  opacity: 1;
+  transform: scale(1) rotate(5deg);
+  filter: 
+    drop-shadow(4px 4px 0 #000)
+    drop-shadow(0 0 12px rgba(250, 204, 21, 0.7));
+}
+
+.feature-sprite img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+/* Add this to your existing feature card styles */
+.feature-card h3 {
+  font-size: 0.9rem;
+  color: #facc15;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+  position: relative;
+  display: inline-block;
+}
+
+.feature-card h3::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00ffd0, transparent);
+}
+
+.feature-card p {
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: #aad9ff;
+  margin-bottom: 0;
+  font-family: 'Arial', sans-serif;
+}
+.feature-card h3 {
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  0% { text-shadow: 0 0 5px rgba(250, 204, 21, 0.4); }
+  100% { text-shadow: 0 0 10px rgba(250, 204, 21, 0.8); }
+}
+.features-section {
+  padding: 6rem 2rem;
+  background-color: #090c1a;
+  text-align: center;
+  position: relative;
+}
+
+.features-title {
+  font-size: 1.5rem;
+  color: #facc15;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+  position: relative;
+  display: inline-block;
+}
+
+.features-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00ffd0, transparent);
+}
+
+.features-title::before {
+  content: '✦';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00ffd0;
+}
+
+.features-title::after {
+  content: '✦';
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00ffd0;
+}
+.loading-sprites {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2rem;
+}
+
+.loading-sprite {
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
+  filter: drop-shadow(3px 3px 0 #000);
+  animation: bounce 1s infinite alternate;
+}
+
+.loading-sprite:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-sprite:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-20px); }
+}
+/* Add this to your existing CSS */
+.split-image img.retro-img {
+  max-width: 100%;
+  min-width: 300px; /* Minimum size */
+  width: auto;
+  height: auto;
+  max-height: 400px; /* Adjust as needed */
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .split-image img.retro-img {
+    max-height: 300px;
+    min-width: 250px;
+  }
+}
+</style>
 </style>
 <script src="https://unpkg.com/scrollreveal"></script>
 </head>
@@ -700,9 +1159,12 @@ body.light-mode .retro-img {
 <body class="no-js">
   <div id="loading-screen">
   <pre id="loading-steps" class="loading-text"></pre>
+  <div class="loading-sprites">
+    <img src="static/sprites/master.gif" class="loading-sprite">
+    <img src="static/sprites/arch.walk.gif" class="loading-sprite">
+    <img src="static/sprites/warrior.gif" class="loading-sprite">
+  </div>
 </div>
-</div>
-
   <header class="header">
     <nav class="navbar">
       <div class="nav-left">
@@ -719,13 +1181,14 @@ body.light-mode .retro-img {
   </ul>
 </li>
 
-          <li><a href="{{ url_for('auth.login') }}">Contact</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Login In</a></li>
         </ul>
       </div>
       <div class="nav-right"> 
         <button id="themeToggle" class="theme-toggle">🌙</button>
       </div>
     </nav>
+    <div class="topbar-sprite"></div>
   </header>
 <div id="coin-shower"></div>
 
@@ -739,48 +1202,112 @@ body.light-mode .retro-img {
       <span class="typewriter-text" id="npcText">Welcome, hero. Your KPI Quest begins now!</span>
     </div>
   </section>
+ <!-- First Section - Data Upload -->
+<section class="split-section animated-section">
+  <div class="split-text">
+    <h2>Upload Your Quest Log</h2>
+    <p>Begin your adventure by submitting your business metrics - sales figures, expenses, customer engagement stats, or growth targets. Our system transforms raw numbers into actionable insights with RPG-style progression tracking.</p>
+    <div class="pro-tip">
+      <img src="static/photos/coin.png" alt="Tip Icon" class="tip-icon">
+      <p>Regular updates earn you XP and unlock advanced analytics powers!</p>
+    </div>
+  </div>
+  
+  <div class="split-image">
+    <div class="sprite-photo-pair">
+      <img src="static/photos/data.jpeg" alt="Data Upload" class="retro-img">
+      <img src="static/sprites/idk.gif" alt="Data Wizard" class="section-sprite">
+    </div>
+  </div>
+</section>
 
-  <section class="split-section animated-section">
-    <div class="split-text">
-      <h2>Submit Your Business Data</h2>
-      <p>Upload your sales, expenses, customer metrics or goals. Our platform analyzes them and instantly generates actionable reports to help you decide faster and smarter.</p>
+<!-- Second Section - Insights -->
+<section class="split-section animated-section">
+  <div class="split-image">
+    <div class="sprite-photo-pair">
+      <img src="static/photos/hidden.jpeg" alt="Report Dashboard" class="retro-img">
+      <img src="static/sprites/warrior.gif" alt="Analysis Warrior" class="section-sprite">
     </div>
-    <div class="split-image">
-      <img src="static/photos/data upload.jpeg" alt="Data Upload" class="retro-img" />
+  </div>
+  <div class="split-text">
+    <h2>Unlock Hidden Patterns</h2>
+    <p>Our AI-powered analysis acts like a magical scrying orb, revealing performance highlights, risk areas, and hidden opportunities in your data. Receive instant visual reports with retro-game aesthetics that make metrics exciting.</p>
+    <div class="pro-tip">
+      <img src="static/photos/coin.png" alt="Tip Icon" class="tip-icon">
+      <p>New Achievement Unlocked: "Data Diviner" - Analyze 5 reports consecutively</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="split-section animated-section">
-    <div class="split-image">
-      <img src="static/images/report-dashboard.png" alt="Report Dashboard" class="retro-img" />
+<!-- Third Section - Tracking -->
+<section class="split-section animated-section">
+  <div class="split-text">
+    <h2>Level Up Your Business</h2>
+    <p>Watch your KPIs evolve like character stats in an RPG. Each data upload compares against past performance, showing progress bars, trend arrows, and forecasted outcomes with 8-bit inspired visuals.</p>
+    <div class="pro-tip">
+      <img src="static/photos/coin.png" alt="Tip Icon" class="tip-icon">
+      <p>Quest Reward: "Trend Prophet" badge for accurate 3-month forecasts</p>
     </div>
-    <div class="split-text">
-      <h2>Instant Report Insights</h2>
-      <p>Receive AI-powered analysis including performance highlights, risks, trends and opportunities.</p>
+  </div>
+  <div class="split-image">
+    <div class="sprite-photo-pair">
+      <img src="static/photos/track.jpeg" alt="Growth Tracking" class="retro-img">
+      <img src="static/sprites/arch.dance.gif" alt="Tracking Archer" class="section-sprite">
     </div>
-  </section>
-
-  <section class="split-section animated-section">
-    <div class="split-text">
-      <h2>Track & Evolve</h2>
-      <p>Each time you upload updated data, we compare with past trends, showing you progress and forecasting outcomes.</p>
-    </div>
-    <div class="split-image">
-      <img src="static/images/your-qr.png" alt="Growth Forecast" class="retro-img" />
-    </div>
-  </section>
-
+  </div>
+</section>
   <section id="features" class="features-section">
-    <h2 class="features-title">Business Analysis Tools at Your Fingertips</h2>
-    <div class="features-grid">
-      <div class="feature-card"><h3>Smart Report Generator</h3><p>Submit your raw business data and receive pixel-perfect visual reports tailored to your KPIs.</p></div>
-      <div class="feature-card"><h3>Interactive Dashboards</h3><p>Drill into your revenue, growth, or churn insights using real-time retro dashboards.</p></div>
-      <div class="feature-card"><h3>Scenario Simulator</h3><p>Test decisions with simulations and explore how changes affect outcomes before taking action.</p></div>
-      <div class="feature-card"><h3>Performance Tracker</h3><p>Watch your business progress over time with XP-like metrics and trend indicators.</p></div>
-      <div class="feature-card"><h3>Case-Based Tutorials</h3><p>Learn by example with real business problems, explained and solved interactively.</p></div>
-      <div class="feature-card"><h3>Leaderboard & Rewards</h3><p>Earn achievements and see how your analytical skill ranks among others.</p></div>
+  <h2 class="features-title">Business Analysis Tools at Your Fingertips</h2>
+  <div class="features-grid">
+  <div class="feature-card">
+    <h3>Smart Report Generator</h3>
+    <p>Submit your raw business data and receive pixel-perfect visual reports tailored to your KPIs.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/sword.png" alt="Feature Icon">
     </div>
-  </section>
+  </div>
+  <div class="feature-card">
+    <h3>Interactive Dashboards</h3>
+    <p>Drill into your revenue, growth, or churn insights using real-time retro dashboards.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/sheild.png" alt="Feature Icon">
+    </div>
+  </div>
+  
+  <div class="feature-card">
+    <h3>Scenario Simulator</h3>
+    <p>Test decisions with simulations and explore how changes affect outcomes before taking action.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/potion.png" alt="Feature Icon">
+    </div>
+  </div>
+  
+  <div class="feature-card">
+    <h3>Performance Tracker</h3>
+    <p>Watch your business progress over time with XP-like metrics and trend indicators.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/potion2.png" alt="Feature Icon">
+    </div>
+  </div>
+  
+  <div class="feature-card">
+    <h3>Case-Based Tutorials</h3>
+    <p>Learn by example with real business problems, explained and solved interactively.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/book.png" alt="Feature Icon">
+    </div>
+  </div>
+  
+  <div class="feature-card">
+    <h3>Leaderboard & Rewards</h3>
+    <p>Earn achievements and see how your analytical skill ranks among others.</p>
+    <div class="feature-sprite">
+      <img src="static/sprites/king.png" alt="Feature Icon">
+    </div>
+  </div>
+</div>
+</div>
+</section>
 
   <footer class="footer" id="contact">
     <div><h4>LOCUS</h4><a href="#">Submit Data</a><a href="#">Generate Report</a><a href="#">Track Progress</a></div>
@@ -862,39 +1389,6 @@ body.light-mode .retro-img {
       themeToggle.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
     });
   </script>
-  <script>
-  let topCoinsDropped = false;
-
-  function spawnTopCoinShower(count = 25) {
-    const shower = document.getElementById("coin-shower");
-    for (let i = 0; i < count; i++) {
-      const coin = document.createElement("div");
-      coin.classList.add("coin-fall");
-      coin.textContent = "🪙"; // or use an <img> for pixel coin
-      coin.style.left = `${Math.random() * 100}vw`;
-      coin.style.animationDelay = `${Math.random() * 0.5}s`;
-      shower.appendChild(coin);
-
-      // Clean up after animation
-      setTimeout(() => coin.remove(), 2200);
-    }
-  }
-
-  const features = document.querySelector("#features");
-  const topShowerObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !topCoinsDropped) {
-          topCoinsDropped = true;
-          spawnTopCoinShower(200); // Drop 30 coins
-        }
-      });
-    },
-    { threshold: 0.2 }
-  );
-
-  if (features) topShowerObserver.observe(features);
-</script>
 <script>
   const loader = document.getElementById("loading-screen");
   const stepsEl = document.getElementById("loading-steps");
@@ -996,6 +1490,6 @@ body.light-mode .retro-img {
     easing: 'cubic-bezier(0.5, 0, 0, 1)',
     scale: 0.9
   });
-</script>
+</script> 
 </body>
 </html>
