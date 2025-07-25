@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
     industry = db.Column(db.String(50))
     location = db.Column(db.String(100))
     health_score = db.Column(db.Float)
-    # ... other fields ...
+    persona = db.Column(db.String(50))
 
     def is_authenticated(self):
         return True
