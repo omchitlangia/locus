@@ -35,9 +35,16 @@
       padding: 2em 1.1em 2em 2em;
       box-shadow: 0 0 10px #ffd50033;
     }
-    
+    .persona-emoji {
+      font-size: 3.2em;
+      line-height: 1;
+      margin-right: 14px;
+      margin-left: 8px;
+      user-select: none;
+    }
     .persona-details {
       margin-top: 0.2em;
+      color: #ffd500;
     }
     .score-badge {
       font-size: 2rem;
@@ -52,7 +59,6 @@
       display: inline-block;
       font-weight: 700;
       font-size: 1.12em;
-      color: #ffd500;
       padding-left: 0.35em;
     }
     .speedo-section {
@@ -81,6 +87,7 @@
       text-align: center;
       font-family: inherit;
       font-size: 0.97em;
+      user-select: none;
     }
     table {
       width: 100%;
@@ -121,6 +128,7 @@
       font-size: 1.02em;
       margin-bottom: 0.7em;
       text-align: center;
+      user-select: none;
     }
     .print-btn {
       background: #ffd500; 
@@ -138,6 +146,7 @@
       text-align: center;
       width: fit-content;
       text-decoration: none;
+      user-select: none;
     }
     .print-btn:hover { background: #ffe666; }
     @media (max-width: 700px) {
@@ -156,14 +165,13 @@
 <body>
 
   <h1>🧠 Unified Business Report – Your Business at a Glance</h1>
-
   <div class="top-card">
-    
+   
     <div class="persona-details">
       <span style="font-weight:700;color:#76ff88;font-size:1.18em;">
         {{ personality_profile.type if personality_profile.type else 'No Personality Result' }}
       </span>
-      
+
       <ul style="list-style: square; font-size:1.03em; padding-left: 1.1em; margin: 0.7em 0 0 0;">
         <li><b>Total Revenue:</b> ₹{{ total_revenue }}</li>
         <li><b>Total Profit:</b> ₹{{ profit }}</li>
@@ -243,18 +251,9 @@
   <div class="section">
     <h2>Visualization Insights</h2>
     <div class="charts-container">
-      <div class="chart-panel">
-        <h3>Sales Trends</h3>
-        <canvas id="salesTrendsChart"></canvas>
-      </div>
-      <div class="chart-panel">
-        <h3>Cost Breakdown</h3>
-        <canvas id="costBreakdownChart"></canvas>
-      </div>
-      <div class="chart-panel">
-        <h3>Profit/Loss Overview</h3>
-        <canvas id="profitLossChart"></canvas>
-      </div>
+      <div class="chart-panel"><h3>Sales Trends</h3><canvas id="salesTrendsChart"></canvas></div>
+      <div class="chart-panel"><h3>Cost Breakdown</h3><canvas id="costBreakdownChart"></canvas></div>
+      <div class="chart-panel"><h3>Profit/Loss Overview</h3><canvas id="profitLossChart"></canvas></div>
     </div>
   </div>
 
@@ -262,157 +261,66 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Custom color stops for Critical/Stable/Optimal regions
+  // Speedometer
   const healthScore = {{ kpis.business_health|default(0) }};
   const gaugeCanvas = document.getElementById('healthGauge');
-  const gaugeCtx = gaugeCanvas.getContext('2d');
-  const grad = gaugeCtx.createLinearGradient(0, 0, gaugeCanvas.width, 0);
+  const grad = gaugeCanvas.getContext('2d').createLinearGradient(0, 0, gaugeCanvas.width, 0);
   grad.addColorStop(0, '#e74c3c');
   grad.addColorStop(0.5, '#ffd500');
   grad.addColorStop(1, '#21ce99');
-  new Chart(gaugeCtx, {
+  new Chart(gaugeCanvas.getContext('2d'), {
     type: 'doughnut',
     data: {
       labels: ['Score', 'Remaining'],
-      datasets: [{
-        data: [healthScore, 100 - healthScore],
-        backgroundColor: [grad, '#141720'],
-        borderWidth: 0
-      }]
+      datasets: [{ data: [healthScore, 100-healthScore], backgroundColor: [grad, '#141720'], borderWidth: 0 }]
     },
     options: {
       circumference: 180,
       rotation: 270,
       cutout: '75%',
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
-        title: {
-          display: true,
-          text: healthScore + '%',
-          color: '#ffd500',
-          font: { size: 22 }
-        }
-      }
+      plugins: { legend: { display: false }, tooltip: { enabled: false }, title: { display: true, text: healthScore + '%', color: '#ffd500', font: { size: 22 } } }
     }
   });
 
-  // Forecast vs Actual Revenue Chart
+  // Forecast vs Actual
   new Chart(document.getElementById('forecastActualChart').getContext('2d'), {
     type: 'line',
     data: {
       labels: {{ forecast_actual_labels|tojson }},
       datasets: [
-        {
-          label: 'Actual Revenue',
-          data: {{ actual_revenue|tojson }},
-          borderColor: '#ffd500',
-          backgroundColor: '#ffd50033',
-          tension: 0.23,
-          pointRadius: 4
-        },
-        {
-          label: 'Forecasted Revenue',
-          data: {{ forecast_revenue|tojson }},
-          borderColor: '#00ffd0',
-          backgroundColor: '#00ffd033',
-          tension: 0.19,
-          borderDash: [5,2],
-          pointRadius: 4
-        }
+        { label: 'Actual Revenue', data: {{ actual_revenue|tojson }}, borderColor: '#ffd500', backgroundColor: '#ffd50033', tension: 0.23, pointRadius: 4 },
+        { label: 'Forecasted Revenue', data: {{ forecast_revenue|tojson }}, borderColor: '#00ffd0', backgroundColor: '#00ffd033', tension: 0.19, borderDash: [5,2], pointRadius: 4 }
       ]
     },
-    options: {
-      responsive:true, 
-      plugins:{legend:{labels:{color:'#ffd500'}}}, 
-      scales:{
-        x:{ticks:{color:'#ffd500'}}, 
-        y:{ticks:{color:'#ffd500'}}
-      }
-    }
+    options: { responsive:true, plugins:{legend:{labels:{color:'#ffd500'}}}, scales:{ x:{ticks:{color:'#ffd500'}}, y:{ticks:{color:'#ffd500'}} } }
   });
 
-  // Revenue Trend Chart
+  // Revenue Trend
   new Chart(document.getElementById('revenueTrendChart').getContext('2d'), {
     type: 'bar',
-    data: {
-      labels: {{ revenue_labels|tojson }},
-      datasets: [{
-        label: 'Revenue',
-        data: {{ monthly_revenue|tojson }},
-        backgroundColor: '#76ff88aa'
-      }]
-    },
-    options: {
-      responsive:true, 
-      plugins:{legend:{labels:{color:'#ffd500'}}}, 
-      scales:{
-        x:{ticks:{color:'#ffd500'}}, 
-        y:{ticks:{color:'#ffd500'}}
-      }
-    }
+    data: { labels: {{ revenue_labels|tojson }}, datasets: [{ label: 'Revenue', data: {{ monthly_revenue|tojson }}, backgroundColor: '#76ff88aa' }] },
+    options: { responsive:true, plugins:{legend:{labels:{color:'#ffd500'}}}, scales:{ x:{ticks:{color:'#ffd500'}}, y:{ticks:{color:'#ffd500'}} } }
   });
 
-  // Sales Trends Chart
+  // Sales Trends
   new Chart(document.getElementById('salesTrendsChart').getContext('2d'), {
     type: 'line',
-    data: {
-      labels: {{ sales_labels|tojson }},
-      datasets: [{
-        label: 'Sales',
-        data: {{ sales_trends_data|tojson }},
-        borderColor: '#08b2ff',
-        backgroundColor: '#08b2ff33',
-        fill: true,
-        tension: 0.22
-      }]
-    },
-    options: {
-      responsive:true,
-      plugins:{legend:{labels:{color:'#ffd500'}}},
-      scales:{
-        x:{ticks:{color:'#ffd500'}},
-        y:{ticks:{color:'#ffd500'}}
-      }
-    }
+    data: { labels: {{ sales_labels|tojson }}, datasets: [{ label: 'Sales', data: {{ sales_trends_data|tojson }}, borderColor: '#08b2ff', backgroundColor: '#08b2ff33', fill: true, tension: 0.22 }] },
+    options: { responsive:true, plugins:{legend:{labels:{color:'#ffd500'}}}, scales:{ x:{ticks:{color:'#ffd500'}}, y:{ticks:{color:'#ffd500'}} } }
   });
 
-  // Cost Breakdown Chart
+  // Cost Breakdown
   new Chart(document.getElementById('costBreakdownChart').getContext('2d'), {
     type: 'doughnut',
-    data: {
-      labels: {{ cost_labels|tojson }},
-      datasets: [{
-        data: {{ cost_data|tojson }},
-        backgroundColor: ['#ffd500','#00ffd0'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      cutout: '65%',
-      plugins: { legend:{labels:{color:'#ffd500'}} }
-    }
+    data: { labels: {{ cost_labels|tojson }}, datasets: [{ data: {{ cost_data|tojson }}, backgroundColor: ['#ffd500','#00ffd0'], borderWidth: 0 }] },
+    options: { cutout: '65%', plugins: { legend:{labels:{color:'#ffd500'}} } }
   });
 
-  // Profit/Loss Overview Chart
+  // Profit/Loss Overview
   new Chart(document.getElementById('profitLossChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: {{ profit_loss_labels|tojson }},
-      datasets: [{
-        label: 'Amount',
-        data: {{ profit_loss_data|tojson }},
-        backgroundColor: ['#76ff88', '#ffd500', '#00ffd0', '#e74c3c']
-      }]
-    },
-    options: {
-      responsive:true,
-      plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{color:'#ffd500'}},
-        y:{ticks:{color:'#ffd500'}}
-      }
-    }
+    type: 'line',
+    data: { labels: {{ profit_loss_labels|tojson }}, datasets: [{ label: 'Profit', data: {{ profit_loss_data|tojson }}, borderColor: '#e74c3c', backgroundColor: '#e74c3c33', fill: true }] },
+    options: { responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#ffd500'}}, y:{ticks:{color:'#ffd500'}} } }
   });
 });
 </script>
