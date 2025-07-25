@@ -825,8 +825,6 @@ button:hover, a:hover, .feature-card:hover {
   box-shadow: 5px 5px #000;
 }
 
-
-
   </style>
 </head>
 <body>
@@ -920,16 +918,33 @@ button:hover, a:hover, .feature-card:hover {
       <div class="side-column">
         <div class="profile">
           <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
-     class="profile-pic">
+            class="profile-pic">
           <h2 style="margin-bottom:18px">{{ current_user.username }}</h2>
-          <div class="stats" style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
-            <div><span>🔥 {{ streak_count }} Days Streak</span></div>
+          <div class="stats" style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
             <div>
-              <span>🏆 Rank
-                {% if user_rank %}#{{ user_rank }}{% else %}Unranked{% endif %}
-              </span>
+              <span style="margin-right:7px; margin-bottom:5px;">🔥 {{ streak_count }}</span>
+              <span>Day Streak</span>
             </div>
-            <div><span>🧿 {{ achievements_unlocked }} Badges</span></div>
+            <div>
+              <span style="margin-right:7px;margin-bottom:5px;">
+                {% if user_rank %}
+                  #{{ user_rank }}
+                {% else %}
+                  Unranked
+                {% endif %}
+              </span>
+              <span>Rank</span>
+            </div>
+            <div>
+              <span style="margin-right:7px;margin-bottom:5px;">🧿 {{ achievements_unlocked }}</span>
+              <span>Badges</span>
+            </div>
+            {% if current_user.persona %}
+              <div>
+                <span style="margin-right:7px;margin-bottom:5px;">🧠 {{ current_user.persona }}</span>
+                <span>Personality</span>
+              </div>
+            {% endif %}
           </div>
 
           <a href="{{ url_for('profile.profile') }}">
@@ -941,6 +956,12 @@ button:hover, a:hover, .feature-card:hover {
           <h3>Upcoming Events</h3>
           <div id="upcomingEventsContainer"><div class="no-events">Loading upcoming events...</div></div>
         </div>
+        <a href="{{ url_for('quiz.quiz') }}" class="feature-card">
+          <div class="feature-info">
+            <h3>🧠 Quiz</h3>
+            <p>Insightful. Fun. Reveals your unique traits..</p>
+          </div>
+        </a>
       </div>
 
       <div class="features">
@@ -1027,10 +1048,10 @@ button:hover, a:hover, .feature-card:hover {
             <p>Estimate GST and income tax based on your revenue and expenses.</p>
           </div>
         </a>
-        <a href="{{ url_for('quiz.quiz') }}" class="feature-card">
+        <a href="" class="feature-card">
           <div class="feature-info">
-            <h3>🧠 Quiz</h3>
-            <p>Insightful. Fun. Reveals your unique traits..</p>
+            <h3>🧠 ANY NEW FEATURE</h3>
+            <p>NOT INTRODUCED YET</p>
           </div>
         </a>
         <a href="{{ url_for('feedback.feedback') }}" class="feature-card">

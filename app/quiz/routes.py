@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, url_for
 from . import quiz_bp
 from .logic import calculate_result, descriptions
+from flask_login import current_user
+from app.extensions import db
 
 QUESTIONS = [
     {
@@ -78,7 +80,11 @@ def quiz():
         return redirect(url_for('quiz.result', persona=persona))
     return render_template('quiz/quiz.html', questions=QUESTIONS)
 
-@quiz_bp.route('/quiz/result/<persona>')
+@quiz_bp.route('/quiz/result/<persona>/')
 def result(persona):
     data = descriptions.get(persona)
+    # Save/update persona for this user
+    if current_user.is_authenticated and current_user.persona != persona:
+        current_user.persona = persona
+        db.session.commit()
     return render_template('quiz/result.html', persona=persona, data=data)
