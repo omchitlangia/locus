@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Unified Business Report – Locus</title>
+  <style>
+    body {
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      background: #0d1025;
+      color: #ffd500;
+      padding: 2rem;
+      max-width: 980px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #08b2ff;
+      margin-bottom: 0.5em;
+    }
+    .section {
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem 1.5rem 1.5rem;
+      background: #171b38;
+      border-radius: 12px;
+      box-shadow: 0 0 8px #00ffd0;
+    }
+    .top-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      margin-bottom: 2.2em;
+      justify-content: center;
+      background: #181935;
+      border-radius: 16px;
+      padding: 2em 1.1em 2em 2em;
+      box-shadow: 0 0 10px #ffd50033;
+    }
+    
+    .persona-details {
+      margin-top: 0.2em;
+    }
+    .score-badge {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #76ff88;
+      margin-bottom: 0.2em;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #21ce9940;
+      display: inline-block;
+    }
+    .score-label {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1.12em;
+      color: #ffd500;
+      padding-left: 0.35em;
+    }
+    .speedo-section {
+      width: 360px;
+      margin: 1.3em auto 2em auto;
+      background: #14171f;
+      border-radius: 18px;
+      padding: 2em 1em;
+      box-shadow: 0 0 12px #00ffd077;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .speedo-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      margin-top: -10px;
+      font-size: 0.9em;
+      color: #ffd500;
+      font-family: inherit;
+    }
+    .speedo-labels span {
+      min-width: 80px;
+      text-align: center;
+      font-family: inherit;
+      font-size: 0.97em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: monospace;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      padding: 0.7rem;
+      border-bottom: 1px solid #00ffd033;
+      text-align: center;
+    }
+    th {
+      background-color: #08b2ff33;
+      color: #00ffd0;
+      font-weight: bold;
+    }
+    .charts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: center;
+      margin-top: 2.2em;
+    }
+    .chart-panel {
+      background: #151b28;
+      border-radius: 14px;
+      box-shadow: 0 0 7px #aad9ff33;
+      padding: 1em 1.2em 2em 1.2em;
+      margin-bottom: 1em;
+      flex: 1 1 390px;
+      min-width: 320px;
+      max-width: 520px;
+    }
+    .chart-panel h3 {
+      color: #76ff88;
+      font-size: 1.02em;
+      margin-bottom: 0.7em;
+      text-align: center;
+    }
+    .print-btn {
+      background: #ffd500; 
+      color: #000; 
+      border: none; 
+      border-radius: 8px;
+      padding: 1.1em 2em; 
+      font-family: inherit; 
+      font-weight: bold; 
+      font-size: 1.05em;
+      box-shadow: 2px 2px #00ffd055; 
+      margin: 22px auto 20px auto; 
+      display: block; 
+      cursor: pointer;
+      text-align: center;
+      width: fit-content;
+      text-decoration: none;
+    }
+    .print-btn:hover { background: #ffe666; }
+    @media (max-width: 700px) {
+      .top-card { flex-direction: column; align-items: flex-start; gap: 4px; padding: 1.2em; }
+      .score-badge { font-size: 1.35rem; }
+      .speedo-section { width: 99vw; }
+    }
+    @media (max-width: 600px) {
+      .main, .section { padding: 1em !important; }
+      .charts-container { flex-direction: column; gap: 0.5em; }
+      .chart-panel { min-width: 0; max-width: 99vw;}
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h1>🧠 Unified Business Report – Your Business at a Glance</h1>
+
+  <div class="top-card">
+    
+    <div class="persona-details">
+      <span style="font-weight:700;color:#76ff88;font-size:1.18em;">
+        {{ personality_profile.type if personality_profile.type else 'No Personality Result' }}
+      </span>
+      
+      <ul style="list-style: square; font-size:1.03em; padding-left: 1.1em; margin: 0.7em 0 0 0;">
+        <li><b>Total Revenue:</b> ₹{{ total_revenue }}</li>
+        <li><b>Total Profit:</b> ₹{{ profit }}</li>
+        <li>
+          <span class="score-badge">{{ kpis.business_health }}%</span>
+          <span class="score-label">Business Health Score</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speedo-section">
+      <canvas id="healthGauge" width="260" height="140"></canvas>
+      <div class="speedo-labels">
+        <span style="color: #e74c3c;">Critical</span>
+        <span style="color: #ffd500;">Stable</span>
+        <span style="color: #21ce99;">Optimal</span>
+      </div>
+      <div style="color:#ffd500; font-weight: bold; font-size: 1.08em; margin-top: 0.9em;">Business Health Speedometer</div>
+  </div>
+
+  <div class="section">
+    <h2>KPI Dashboard</h2>
+    <table>
+      <tr><th>KPI</th><th>Value</th></tr>
+      <tr><td>Revenue Growth</td><td>{{ kpis.revenue_growth }}%</td></tr>
+      <tr><td>Gross Profit Margin</td><td>{{ kpis.gross_profit_margin }}%</td></tr>
+      <tr><td>Forecast Accuracy</td><td>{{ kpis.forecast_accuracy }}%</td></tr>
+      <tr><td>Customer Retention</td><td>{{ kpis.customer_retention }}%</td></tr>
+      <tr><td>Marketing ROI</td><td>{{ kpis.marketing_roi }}%</td></tr>
+      <tr><td>Inventory Turnover Ratio</td><td>{{ kpis.inventory_turnover }}</td></tr>
+      <tr><td>Team Efficiency</td><td>{{ kpis.team_efficiency }}%</td></tr>
+      <tr><td>User Growth</td><td>{{ kpis.user_growth }}%</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Billing & SKU Performance</h2>
+    <p>
+      <b>Total Bills:</b> {{ total_bills }} &nbsp;|&nbsp;
+      <b>Outstanding:</b> ₹{{ outstanding_amount }}
+    </p>
+    <p>
+      <b>Top SKUs by Sales:</b>
+      {% if top_skus %}
+        {% for sku in top_skus %}
+          {{ sku.name }} ({{ sku.sales }} units){% if not loop.last %}, {% endif %}
+        {% endfor %}
+      {% else %}
+        No sales data available.
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Forecasting & Revenue Analysis</h2>
+    <p>
+      <b>Latest Forecasted Revenue:</b> ₹{{ latest_forecast or 'N/A' }} <br>
+      <b>Forecast Accuracy:</b> {{ kpis.forecast_accuracy }}% <br>
+      <b>Trends:</b>
+      {% for trend in forecast_trends %}
+        {{ trend.description }}{% if not loop.last %}; {% endif %}
+      {% endfor %}
+    </p>
+    <div class="charts-container">
+      <div class="chart-panel">
+        <h3>Forecast vs Actual Revenue</h3>
+        <canvas id="forecastActualChart"></canvas>
+      </div>
+      <div class="chart-panel">
+        <h3>Revenue Trend</h3>
+        <canvas id="revenueTrendChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Visualization Insights</h2>
+    <div class="charts-container">
+      <div class="chart-panel">
+        <h3>Sales Trends</h3>
+        <canvas id="salesTrendsChart"></canvas>
+      </div>
+      <div class="chart-panel">
+        <h3>Cost Breakdown</h3>
+        <canvas id="costBreakdownChart"></canvas>
+      </div>
+      <div class="chart-panel">
+        <h3>Profit/Loss Overview</h3>
+        <canvas id="profitLossChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print This Report</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Custom color stops for Critical/Stable/Optimal regions
+  const healthScore = {{ kpis.business_health|default(0) }};
+  const gaugeCanvas = document.getElementById('healthGauge');
+  const gaugeCtx = gaugeCanvas.getContext('2d');
+  const grad = gaugeCtx.createLinearGradient(0, 0, gaugeCanvas.width, 0);
+  grad.addColorStop(0, '#e74c3c');
+  grad.addColorStop(0.5, '#ffd500');
+  grad.addColorStop(1, '#21ce99');
+  new Chart(gaugeCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Score', 'Remaining'],
+      datasets: [{
+        data: [healthScore, 100 - healthScore],
+        backgroundColor: [grad, '#141720'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      circumference: 180,
+      rotation: 270,
+      cutout: '75%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+        title: {
+          display: true,
+          text: healthScore + '%',
+          color: '#ffd500',
+          font: { size: 22 }
+        }
+      }
+    }
+  });
+
+  // Forecast vs Actual Revenue Chart
+  new Chart(document.getElementById('forecastActualChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ forecast_actual_labels|tojson }},
+      datasets: [
+        {
+          label: 'Actual Revenue',
+          data: {{ actual_revenue|tojson }},
+          borderColor: '#ffd500',
+          backgroundColor: '#ffd50033',
+          tension: 0.23,
+          pointRadius: 4
+        },
+        {
+          label: 'Forecasted Revenue',
+          data: {{ forecast_revenue|tojson }},
+          borderColor: '#00ffd0',
+          backgroundColor: '#00ffd033',
+          tension: 0.19,
+          borderDash: [5,2],
+          pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive:true, 
+      plugins:{legend:{labels:{color:'#ffd500'}}}, 
+      scales:{
+        x:{ticks:{color:'#ffd500'}}, 
+        y:{ticks:{color:'#ffd500'}}
+      }
+    }
+  });
+
+  // Revenue Trend Chart
+  new Chart(document.getElementById('revenueTrendChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: {{ revenue_labels|tojson }},
+      datasets: [{
+        label: 'Revenue',
+        data: {{ monthly_revenue|tojson }},
+        backgroundColor: '#76ff88aa'
+      }]
+    },
+    options: {
+      responsive:true, 
+      plugins:{legend:{labels:{color:'#ffd500'}}}, 
+      scales:{
+        x:{ticks:{color:'#ffd500'}}, 
+        y:{ticks:{color:'#ffd500'}}
+      }
+    }
+  });
+
+  // Sales Trends Chart
+  new Chart(document.getElementById('salesTrendsChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ sales_labels|tojson }},
+      datasets: [{
+        label: 'Sales',
+        data: {{ sales_trends_data|tojson }},
+        borderColor: '#08b2ff',
+        backgroundColor: '#08b2ff33',
+        fill: true,
+        tension: 0.22
+      }]
+    },
+    options: {
+      responsive:true,
+      plugins:{legend:{labels:{color:'#ffd500'}}},
+      scales:{
+        x:{ticks:{color:'#ffd500'}},
+        y:{ticks:{color:'#ffd500'}}
+      }
+    }
+  });
+
+  // Cost Breakdown Chart
+  new Chart(document.getElementById('costBreakdownChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: {{ cost_labels|tojson }},
+      datasets: [{
+        data: {{ cost_data|tojson }},
+        backgroundColor: ['#ffd500','#00ffd0'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      cutout: '65%',
+      plugins: { legend:{labels:{color:'#ffd500'}} }
+    }
+  });
+
+  // Profit/Loss Overview Chart
+  new Chart(document.getElementById('profitLossChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: {{ profit_loss_labels|tojson }},
+      datasets: [{
+        label: 'Amount',
+        data: {{ profit_loss_data|tojson }},
+        backgroundColor: ['#76ff88', '#ffd500', '#00ffd0', '#e74c3c']
+      }]
+    },
+    options: {
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#ffd500'}},
+        y:{ticks:{color:'#ffd500'}}
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
