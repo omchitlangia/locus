@@ -68,6 +68,10 @@ def create_app():
     from app.currency_converter.routes import currency_bp
     app.register_blueprint(currency_bp)
 
+    from app.checklist import checklist_bp
+    app.register_blueprint(checklist_bp)
+
+
     from app.business_report.routes import report_bp
     app.register_blueprint(report_bp)
 
