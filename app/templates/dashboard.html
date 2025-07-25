@@ -917,8 +917,12 @@ button:hover, a:hover, .feature-card:hover {
     <div class="intro-grid">
       <div class="side-column">
         <div class="profile">
-          <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) if user.profile_pic else url_for('static', filename='photos/default_profile.png') }}"
-            class="profile-pic">
+          <img 
+            src="{{ url_for('static', filename='uploads/' + current_user.profile_pic) if current_user.profile_pic else url_for('static', filename='photos/default_profile.png') }}" 
+            alt="Profile Picture" 
+            class="profile-pic" 
+            style="width:96px; height:96px; border-radius:50%; object-fit:cover; border: 2px solid #ffd500; box-shadow: 0 0 6px #00ffd0, 2px 2px #000; cursor: pointer;"
+          >
           <h2 style="margin-bottom:18px">{{ current_user.username }}</h2>
           <div class="stats" style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
             <div>
