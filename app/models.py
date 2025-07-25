@@ -208,3 +208,9 @@ class UserAchievement(db.Model):
     
     user = db.relationship('User', backref='user_achievements')
     achievement = db.relationship('Achievement')
+
+class StartupChecklist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    item_key = db.Column(db.String(50))  # e.g. 'gst', 'domain'
+    completed = db.Column(db.Boolean, default=False)
