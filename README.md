@@ -98,6 +98,7 @@ Open the app in the terminal and run the file (py main.py)
 this will give you a link for localhosting for you to run the application
 
 SQL WORKBENCH CODE(put the following code in sql workbench so that the app can stroe and retrive its data)
+```
 -- Enable foreign key constraints
 PRAGMA foreign_keys = ON;
 
@@ -275,7 +276,7 @@ CREATE TABLE startup_checklist (
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
-
+```
 
 
 
