@@ -15,3 +15,4 @@ Werkzeug==2.3.7
 Flask-WTF==1.2.1
 pymysql
 pulp
+matplotlib
