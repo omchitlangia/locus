@@ -16,3 +16,4 @@ Flask-WTF==1.2.1
 pymysql
 pulp
 matplotlib
+statsmodels
