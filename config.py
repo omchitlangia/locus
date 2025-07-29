@@ -9,7 +9,7 @@ class Config:
 
     # Database
     SQLALCHEMY_DATABASE_URI = (
-        'mysql+pymysql://avnadmin:<your_password>@locus-locus123.j.aivencloud.com:25327/logindata'
+        'mysql+pymysql://avnadmin:AVNS_RXM-NqbX7IPoOWx7mzY@locus-locus123.j.aivencloud.com:25327/logindata'
         '?ssl_ca=ca.pem'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
