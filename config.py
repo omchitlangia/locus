@@ -8,7 +8,10 @@ class Config:
     SECURITY_PASSWORD_SALT = 'fallback-salt'
 
     # Database
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:locus123@localhost/loginData'
+    SQLALCHEMY_DATABASE_URI = (
+        'mysql+pymysql://avnadmin:<your_password>@locus-locus123.j.aivencloud.com:25327/logindata'
+        '?ssl_ca=ca.pem'
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Email
