@@ -17,4 +17,4 @@ pymysql
 pulp
 matplotlib
 statsmodels
-sklearn
+scikit-learn
